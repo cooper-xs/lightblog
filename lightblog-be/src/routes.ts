@@ -1,9 +1,10 @@
 import Router from '@koa/router'
 const router = new Router();
 
-import ArticleController from './controller/ArticleController';
+import MainController from './controller/MainController';
 
-router.get('/article/list', ArticleController.getList);
-router.get('/article/view/:id', ArticleController.getById);
+router.get('/article/list', MainController.getArticleList);
+router.get('/article/show/:articleId', MainController.getArticleByIdForShow);
+router.get('/category/list/:parentId', MainController.getCategoryListFromParent);
 
 export default router;

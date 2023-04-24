@@ -1,32 +1,53 @@
 import { ArticleRepository } from '../config/data-source';
 import { Article } from '../entities/Article';
-import { ArticleItemView, QueryAsPageByCategoryAndTags } from '../types';
+import { ArticleDetailView, ArticleListView, QueryAsPageByCategoryAndTags } from '../types/article';
 import { tool } from '../utils/tool';
 
 export default class ArticleService {
-    public static async getArticleById(id: number): Promise<Article> {
-        const res = await ArticleRepository.findOne({
+    public static async getArticleById(params: { articleId: number; }): Promise<ArticleDetailView> {
+        const { articleId } = params;
+
+        const article = await ArticleRepository.findOne({
             where: {
-                articleId: id,
+                articleId: articleId,
             },
         });
-        return res;
+
+        return {
+            articleId: article.articleId,
+            title: article.title,
+            postAliasName: article.postAliasName,
+            summary: article.articleSummary,
+            updateTime: tool.formatDate(article.pushDate),
+            topFlag: article.topFlag,
+            commentCount: article.commentCount,
+            readCount: article.readCount,
+            contentHtml: article.contentHtml,
+            previewImageUrl: article.previewImageUrl,
+            category: {
+                categoryId: article.categoryId,
+                categoryName: null,
+                categoryAliasName: null,
+            },
+            tags: [{
+                tagId: null,
+                tagName: null,
+                tagAliasName: null,
+            }]
+        };
     }
 
-    public static async getArticleOrderByTopAndTime(params: QueryAsPageByCategoryAndTags): Promise<ArticleItemView> {
+    public static async getArticleOrderByTopAndTime(params: QueryAsPageByCategoryAndTags): Promise<ArticleListView> {
 
-        const { page, limit, categoryId, tagIds } = params;
-
-        // console.log('service 层 参数检查:');
-        // console.log('page = ', page, ' type = ', typeof page);
-        // console.log('limit = ', limit, ' type = ', typeof limit);
-        // console.log('categoryId = ', categoryId, ' type = ', typeof categoryId);
-        // console.log('tagIds = ', tagIds, ' type = ', typeof tagIds);
+        const { page, limit, categoryIds, tagIds } = params;
 
         const queryBuilder = ArticleRepository.createQueryBuilder('article');
-        
-        if (categoryId) {
-            queryBuilder.andWhere('article.categoryId = :categoryId', { categoryId });
+
+        if (categoryIds && categoryIds.length) {
+            queryBuilder
+                .where('article.categoryId IN (:...categoryIds)', {
+                    categoryIds,
+                });
         }
 
         if (tagIds && tagIds.length) {
@@ -60,6 +81,7 @@ export default class ArticleService {
                     summary: article.articleSummary,
                     updateTime: tool.formatDate(article.pushDate),
                     topFlag: article.topFlag,
+                    previewImageUrl: article.previewImageUrl,
                     category: {
                         categoryId: article.categoryId,
                         categoryName: null,

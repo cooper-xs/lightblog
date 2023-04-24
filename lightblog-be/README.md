@@ -3,7 +3,7 @@
 ## 安装依赖
 
 ```shell
-pnpm install
+pnpm i
 ```
 
 ## 配置环境变量
