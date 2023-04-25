@@ -4,15 +4,24 @@ import { ArticleDetailView, ArticleListView, newArticle, QueryAsPageByCategoryAn
 import { tool } from '../utils/tool';
 
 export default class ArticleService {
-    /** 添加新文章
-     */
-    public static addArticle(params: newArticle): Promise<Article> {
+    /** 添加新文章 */
+    public static async addArticle(params: newArticle): Promise<Article> {
         const { title, postAliasName } = params;
         const article = new Article();
         article.title = title;
         article.postAliasName = postAliasName;
         console.log('Service层添加的新文章:', article);
         return ArticleRepository.save(article);
+    }
+
+    /** 删除文章 */
+    public static async deleteArticle(articleId: number): Promise<Article> {
+        const article = await ArticleRepository.findOne({
+            where: {
+                articleId: articleId,
+            },
+        });
+        return ArticleRepository.remove(article);
     }
 
     /** 通过分类id查找文章
@@ -26,10 +35,8 @@ export default class ArticleService {
         return articles.map((article) => article.articleId);
     }
 
-    /** 通过别名查找文章
-     */
-    public static async getArticleByAliasName(params: { postAliasName: string; }): Promise<Article> {
-        const { postAliasName } = params;
+    /** 通过别名查找文章 */
+    public static async getArticleByAliasName(postAliasName: string): Promise<Article> {
         const article = await ArticleRepository.findOne({
             where: {
                 postAliasName: postAliasName,
@@ -38,10 +45,8 @@ export default class ArticleService {
         return article;
     }
 
-    /** 通过文章名称查找文章
-     */
-    public static async getArticleByTitle(params: { title: string; }): Promise<Article> {
-        const { title } = params;
+    /** 通过文章名称查找文章 */
+    public static async getArticleByTitle(title: string): Promise<Article> {
         const article = await ArticleRepository.findOne({
             where: {
                 title: title,
@@ -50,11 +55,8 @@ export default class ArticleService {
         return article;
     }
 
-    /** 通过文章id查找文章
-     */
-    public static async getArticleById(params: { articleId: number; }): Promise<ArticleDetailView> {
-        const { articleId } = params;
-
+    /** 通过文章id查找文章, 返回以展示博文内容 */
+    public static async getArticleByIdForDetail(articleId: number): Promise<ArticleDetailView> {
         const article = await ArticleRepository.findOne({
             where: {
                 articleId: articleId,
@@ -83,6 +85,16 @@ export default class ArticleService {
                 tagAliasName: null,
             }]
         };
+    }
+
+    /** 通过文章id查找文章, 返回全部 */
+    public static async getArticleById(articleId: number): Promise<Article> {
+        const article = await ArticleRepository.findOne({
+            where: {
+                articleId: articleId,
+            },
+        });
+        return article;
     }
 
     /** 查找文章列表, 按照置顶等级和时间排序

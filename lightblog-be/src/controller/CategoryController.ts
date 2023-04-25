@@ -4,8 +4,7 @@ import CategoryService from '../service/CategoryService';
 import { tool } from '../utils/tool';
 
 export default class CategoryController {
-    /** 添加新分类
-     */
+    /** 添加新分类 */
     public static async addCategory(ctx: Context) {
         try {
             let {
@@ -14,6 +13,8 @@ export default class CategoryController {
                 description,
                 parentId,
             } = ctx.request.body;
+
+            parentId = tool.toNumber(parentId);
 
             if (!categoryName) {
                 ctx.fail('分类名称不能为空');
@@ -26,7 +27,7 @@ export default class CategoryController {
             }
 
             // 检查分类名是否已存在
-            if (await CategoryService.getCategoryByName({categoryName})) {
+            if (await CategoryService.getCategoryByName(categoryName)) {
                 ctx.fail('分类名称已存在');
                 return;
             }
@@ -35,7 +36,7 @@ export default class CategoryController {
             categoryAliasName = tool.formatUrlPath(categoryAliasName);
 
             // 检查分类别名是否已存在
-            if (await CategoryService.getCategoryByAliasName({categoryAliasName})) {
+            if (await CategoryService.getCategoryByAliasName(categoryAliasName)) {
                 ctx.fail('分类别名已存在');
                 return;
             }
@@ -56,17 +57,16 @@ export default class CategoryController {
                 parentId,
             };
 
-            CategoryService.addCategory(params);
+            const category = await CategoryService.addCategory(params);
 
-            ctx.success('添加新分类成功');
+            ctx.success('添加新分类成功', category);
         } catch (err) {
             console.log(err);
             ctx.fail('添加新分类失败');
         }
     }
 
-    /** 修改分类
-     */
+    /** 修改分类 */
     public static async updateCategory(ctx: Context) {
         try {
             let {
@@ -76,6 +76,10 @@ export default class CategoryController {
                 description,
                 parentId,
             } = ctx.request.body;
+
+            categoryId = tool.toNumber(categoryId);
+
+            parentId = tool.toNumber(parentId);
 
             // 查找原先数据
             const category = await CategoryService.getCategoryById(categoryId);
@@ -96,7 +100,7 @@ export default class CategoryController {
             }
 
             // 检查分类名是否已存在
-            const category1 = await CategoryService.getCategoryByName({categoryName});
+            const category1 = await CategoryService.getCategoryByName(categoryName);
             if (category1 && category1.categoryId !== categoryId) {
                 ctx.fail('分类名称已存在');
                 return;
@@ -106,7 +110,7 @@ export default class CategoryController {
             categoryAliasName = tool.formatUrlPath(categoryAliasName);
 
             // 检查分类别名是否已存在
-            const category2 = await CategoryService.getCategoryByAliasName({categoryAliasName});
+            const category2 = await CategoryService.getCategoryByAliasName(categoryAliasName);
             if (category2 && category2.categoryId !== categoryId) {
                 ctx.fail('分类别名已存在');
                 return;
@@ -135,26 +139,27 @@ export default class CategoryController {
                 parentId,
             };
 
-            CategoryService.updateCategory(params);
+            const newCategory = await CategoryService.updateCategory(params);
 
-            ctx.success('修改分类成功');
+            ctx.success('修改分类成功', newCategory);
         } catch (err) {
             console.log(err);
             ctx.fail('修改分类失败');
         }
     }
 
-    /** 删除分类
-     */
+    /** 删除分类 */
     public static async deleteCategory(ctx: Context) {
         try {
-            const { categoryId } = ctx.params;
+            let { categoryId } = ctx.params;
+
+            categoryId = tool.toNumber(categoryId);
 
             // 查找原先数据
             const category = await CategoryService.getCategoryById(categoryId);
 
             if (!category) {
-                ctx.fail('分类不存在');
+                ctx.success('分类已经删除或不存在');
                 return;
             }
 
@@ -173,7 +178,7 @@ export default class CategoryController {
                 return;
             }
 
-            CategoryService.deleteCategory(categoryId);
+            await CategoryService.deleteCategory(categoryId);
 
             ctx.success('删除分类成功');
 
@@ -183,25 +188,24 @@ export default class CategoryController {
         }
     }
 
-    /** 根据父标签id查询分类的列表
-     */
+    /** 根据父标签id查询分类的列表 */
     public static async getCategoryListFromParent(ctx: Context) {
         try {
             let { parentId } = ctx.params;
 
-            console.log('parentId', parentId);
+            parentId = tool.toNumber(parentId);
 
             parentId = parentId ? Number(parentId) : undefined;
 
             if (!parentId) {
                 // 查询所有分类
                 const categoryList = await CategoryService.getAllCategory();
-                ctx.success(categoryList);
+                ctx.success('获取分类列表成功: 所有标签', categoryList);
             } else {
                 // 查询指定分类, 以及它的子分类
                 const categoryList = await CategoryService.getCategoryByParentId(parentId);
                 categoryList.parent = await CategoryService.getCategoryById(parentId);
-                ctx.success(categoryList);
+                ctx.success('获取分类列表成功: 父子标签', categoryList);
             }
         } catch (err) {
             console.log(err);

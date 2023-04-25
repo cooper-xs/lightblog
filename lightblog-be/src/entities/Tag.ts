@@ -5,6 +5,7 @@ import {
     OneToMany,
     PrimaryGeneratedColumn,
 } from "typeorm";
+import { tool } from "../utils/tool";
 import { ArticleTagReferenced } from "./ArticleTagReferenced";
 
 @Index("tag_name", ["tagName"], { unique: true })
@@ -50,4 +51,14 @@ export class Tag {
         (articleTagReferenced) => articleTagReferenced.tag
     )
     articleTagReferenceds: ArticleTagReferenced[];
+
+    toViewTag() {
+        return {
+            tagId: this.tagId,
+            tagName: this.tagName,
+            tagAliasName: this.tagAliasName,
+            description: this.description,
+            createTime: tool.formatDate(this.createTime),
+        };
+    }
 }

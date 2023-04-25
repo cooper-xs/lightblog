@@ -5,6 +5,7 @@ import {
     OneToMany,
     PrimaryGeneratedColumn,
     } from "typeorm";
+import { tool } from "../utils/tool";
 import { Article } from "./Article";
 
 @Index("category_name", ["categoryName"], { unique: true })
@@ -58,4 +59,15 @@ export class Category {
 
     @OneToMany(() => Article, (article) => article.category)
     articles: Article[];
+
+    toViewCategory() {
+        return {
+            categoryId: this.categoryId,
+            categoryName: this.categoryName,
+            categoryAliasName: this.categoryAliasName,
+            description: this.description,
+            parentId: this.parentId,
+            createTime: tool.formatDate(this.createTime),
+        };
+    }
 }

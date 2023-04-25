@@ -2,9 +2,11 @@ import { Context } from 'koa';
 
 export default function routerResponse(option = {} as any) {
     return async function (ctx, next) {
-        ctx.success = function (data) {
-            // 以树状结构打印对象
-            console.dir(data, { depth: null });
+        ctx.success = function (msg: 'success', data) {
+            console.log('msg: ', msg);
+            if(data) {
+                console.dir(data, { depth: null });
+            }
 
             ctx.type = option.type || 'json';
             ctx.body = {
@@ -15,6 +17,8 @@ export default function routerResponse(option = {} as any) {
         };
 
         ctx.fail = function (msg = 'fail', code = 10010) {
+            console.log('msg: ', msg);
+
             ctx.type = option.type || 'json';
             ctx.body = {
                 code: option.failCode || code,
