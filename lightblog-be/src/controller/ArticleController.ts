@@ -5,7 +5,7 @@ import TagService from '../service/TagService';
 import { newArticle, QueryAsPageByCategoryAndTags } from '../types/article';
 import { tool } from '../utils/tool';
 
-export default class MainController {
+export default class ArticleController {
     /**
      * 添加新文章, 需要指定文章标题和别名
      * 文章别名不能重复
@@ -36,7 +36,6 @@ export default class MainController {
 
             // 格式化别名
             postAliasName = tool.formatUrlPath(postAliasName);
-            console.log('新文章别名:', postAliasName)
 
             // 检查别名是否已存在
             if (await ArticleService.getArticleByAliasName({postAliasName})) {
@@ -142,7 +141,7 @@ export default class MainController {
 
     /**
      * 查询文章详细内容
-     * 
+     * 以文章id为参数
      */
     public static async getArticleByIdForShow(ctx: Context) {
         try {
@@ -187,27 +186,5 @@ export default class MainController {
         }
     }
 
-    public static async getCategoryListFromParent(ctx: Context) {
-        try {
-            let { parentId } = ctx.params;
-
-            console.log('parentId', parentId);
-
-            parentId = parentId ? Number(parentId) : undefined;
-
-            if (!parentId) {
-                // 查询所有分类
-                const categoryList = await CategoryService.getAllCategory();
-                ctx.success(categoryList);
-            } else {
-                // 查询指定分类, 以及它的子分类
-                const categoryList = await CategoryService.getCategoryByParentId(parentId);
-                categoryList.parent = await CategoryService.getCategoryById(parentId);
-                ctx.success(categoryList);
-            }
-        } catch (err) {
-            console.log(err);
-            ctx.fail('获取分类列表失败');
-        }
-    }
+    
 }

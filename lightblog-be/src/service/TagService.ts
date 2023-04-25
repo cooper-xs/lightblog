@@ -10,4 +10,15 @@ export default class TagService {
             .getMany();
         return res;
     }
+
+    public static async getAllTag(): Promise<Tag[]> {
+        const res = await TagRepository.find();
+        return res;
+    }
+
+    public static async addTag({}): Promise<Tag> {
+        const tag = new Tag();
+        const res = await TagRepository.save(tag);
+        return res;
+    }
 }

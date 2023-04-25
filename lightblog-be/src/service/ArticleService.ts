@@ -4,7 +4,9 @@ import { ArticleDetailView, ArticleListView, newArticle, QueryAsPageByCategoryAn
 import { tool } from '../utils/tool';
 
 export default class ArticleService {
-    static addArticle(params: newArticle): Promise<Article> {
+    /** 添加新文章
+     */
+    public static addArticle(params: newArticle): Promise<Article> {
         const { title, postAliasName } = params;
         const article = new Article();
         article.title = title;
@@ -13,6 +15,19 @@ export default class ArticleService {
         return ArticleRepository.save(article);
     }
 
+    /** 通过分类id查找文章
+     * 返回所有分类id为categoryId的文章id
+     */
+    public static async getArticleByCategoryId(categoryId: number): Promise<number[]> {
+        const articles = await ArticleRepository.createQueryBuilder('article')
+            .leftJoinAndSelect('article.category', 'category')
+            .where('category.categoryId = :categoryId', { categoryId })
+            .getMany();
+        return articles.map((article) => article.articleId);
+    }
+
+    /** 通过别名查找文章
+     */
     public static async getArticleByAliasName(params: { postAliasName: string; }): Promise<Article> {
         const { postAliasName } = params;
         const article = await ArticleRepository.findOne({
@@ -23,6 +38,8 @@ export default class ArticleService {
         return article;
     }
 
+    /** 通过文章名称查找文章
+     */
     public static async getArticleByTitle(params: { title: string; }): Promise<Article> {
         const { title } = params;
         const article = await ArticleRepository.findOne({
@@ -33,6 +50,8 @@ export default class ArticleService {
         return article;
     }
 
+    /** 通过文章id查找文章
+     */
     public static async getArticleById(params: { articleId: number; }): Promise<ArticleDetailView> {
         const { articleId } = params;
 
@@ -66,6 +85,10 @@ export default class ArticleService {
         };
     }
 
+    /** 查找文章列表, 按照置顶等级和时间排序
+     * 支持按照分类和标签查询
+     * 返回分页数据
+     */
     public static async getArticleOrderByTopAndTime(params: QueryAsPageByCategoryAndTags): Promise<ArticleListView> {
 
         const { page, limit, categoryIds, tagIds } = params;
