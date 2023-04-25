@@ -1,9 +1,38 @@
 import { ArticleRepository } from '../config/data-source';
 import { Article } from '../entities/Article';
-import { ArticleDetailView, ArticleListView, QueryAsPageByCategoryAndTags } from '../types/article';
+import { ArticleDetailView, ArticleListView, newArticle, QueryAsPageByCategoryAndTags } from '../types/article';
 import { tool } from '../utils/tool';
 
 export default class ArticleService {
+    static addArticle(params: newArticle): Promise<Article> {
+        const { title, postAliasName } = params;
+        const article = new Article();
+        article.title = title;
+        article.postAliasName = postAliasName;
+        console.log('Service层添加的新文章:', article);
+        return ArticleRepository.save(article);
+    }
+
+    public static async getArticleByAliasName(params: { postAliasName: string; }): Promise<Article> {
+        const { postAliasName } = params;
+        const article = await ArticleRepository.findOne({
+            where: {
+                postAliasName: postAliasName,
+            },
+        });
+        return article;
+    }
+
+    public static async getArticleByTitle(params: { title: string; }): Promise<Article> {
+        const { title } = params;
+        const article = await ArticleRepository.findOne({
+            where: {
+                title: title,
+            },
+        });
+        return article;
+    }
+
     public static async getArticleById(params: { articleId: number; }): Promise<ArticleDetailView> {
         const { articleId } = params;
 

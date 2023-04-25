@@ -117,7 +117,10 @@ export class Article {
         onDelete: "NO ACTION",
         onUpdate: "NO ACTION",
     })
-    @JoinColumn([{ name: "category_id", referencedColumnName: "categoryId" }])
+    @JoinColumn([{ 
+        name: "category_id", 
+        referencedColumnName: "categoryId"
+    }])
     category: Category;
 
     @OneToMany(

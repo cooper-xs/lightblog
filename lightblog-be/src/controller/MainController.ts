@@ -2,12 +2,79 @@ import { Context } from 'koa';
 import ArticleService from '../service/ArticleService';
 import CategoryService from '../service/CategoryService';
 import TagService from '../service/TagService';
-import { QueryAsPageByCategoryAndTags } from '../types/article';
+import { newArticle, QueryAsPageByCategoryAndTags } from '../types/article';
+import { tool } from '../utils/tool';
 
 export default class MainController {
+    /**
+     * 添加新文章, 需要指定文章标题和别名
+     * 文章别名不能重复
+     * 文章别名会作为文章的访问路径
+     * 文章别名只能包含字母, 数字, 下划线, 中划线
+     */
+    public static async addArticle(ctx: Context) {
+        try {
+            let {
+                title,
+                postAliasName,
+            } = ctx.request.body;
+
+            if (!title) {
+                ctx.fail('文章标题不能为空');
+                return;
+            }
+            if (!postAliasName) {
+                ctx.fail('文章别名不能为空');
+                return;
+            }
+            
+            // 检查文章名是否已存在
+            if (await ArticleService.getArticleByTitle({title})) {
+                ctx.fail('文章标题已存在');
+                return;
+            }
+
+            // 格式化别名
+            postAliasName = tool.formatUrlPath(postAliasName);
+            console.log('新文章别名:', postAliasName)
+
+            // 检查别名是否已存在
+            if (await ArticleService.getArticleByAliasName({postAliasName})) {
+                ctx.fail('文章别名已存在');
+                return;
+            }
+
+            const params: newArticle = {
+                title,
+                postAliasName,
+            };
+
+            ArticleService.addArticle(params);
+
+            ctx.success('添加新文章成功');
+        } catch (err) {
+            console.log(err);
+            ctx.fail('添加新文章失败');
+        }
+    }
+    
+    public static async updateArticle(ctx: Context) {
+        try {
+            // todo 更新文章内容
+        } catch (err) {
+            console.log(err);
+            ctx.fail('更新文章失败');
+        }
+    }
+    /**
+     * 查询文章列表, 可以指定分类和标签, 并指定分页条件
+     * default: page=1, limit=7, 即查询第一页, 每页7条
+     * 当查询分类为父级分类时, 会查询该父级分类下的所有子分类
+     * 查询的标签tag可以设置多个, 用逗号分隔, 如: tagIds=1,2,3
+     */
     public static async getArticleList(ctx: Context) {
         try {
-            // 1. 检查参数
+            // 检查参数
             let { page, limit, categoryId, tagIds } = ctx.query;
             
             page = page ? Number(page) : 1;
@@ -73,6 +140,10 @@ export default class MainController {
         }
     }
 
+    /**
+     * 查询文章详细内容
+     * 
+     */
     public static async getArticleByIdForShow(ctx: Context) {
         try {
             let { articleId } = ctx.params;

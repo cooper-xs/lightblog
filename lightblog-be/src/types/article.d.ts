@@ -58,3 +58,24 @@ export interface ArticleDetailView {
         tagAliasName: string;
     }[];
 }
+
+// 创建新文章时需要的数据格式
+export interface newArticle {
+    title: string;
+    postAliasName: string;
+}
+
+// 更新文章内容时的数据消息
+export interface updateArticle {
+    articleId: number;
+    title: string;
+    postAliasName: string;
+    pushDate: string;
+    topFlag: number;
+    articleSummary: string;
+    previewImageUrl: string;
+    categoryId: number;
+    contentMd: string;
+    contentHTML: string;
+    tagIds: number[];
+}
