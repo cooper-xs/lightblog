@@ -11,7 +11,7 @@
  Target Server Version : 80031
  File Encoding         : 65001
 
- Date: 25/04/2023 10:43:26
+ Date: 26/04/2023 11:15:12
 */
 
 SET NAMES utf8mb4;
@@ -45,16 +45,16 @@ CREATE TABLE `article`  (
 -- ----------------------------
 -- Records of article
 -- ----------------------------
-INSERT INTO `article` VALUES (1, '1.Koa实现Promise参数', 'first_post', 0, 100, 0, '2022-01-01 10:30:00', '2022-01-01 12:00:00', '# 我的第一篇文章 - Markdown 格式的内容', '<h1>我的第一篇文章 - HTML 格式的内容</h1>', '这是一篇很好的文章, 很不错, 值得一看', '/api/images/001.jpg', 5);
-INSERT INTO `article` VALUES (2, '2.Vue概况', 'second_post', 0, 50, 0, '2022-01-03 13:30:00', '2022-01-03 14:00:00', '# 我的第二篇文章 - Markdown 格式的内容', '<h1>我的第二篇文章 - HTML 格式的内容</h1>', '这是一篇很好的文章, 很值得一读', '/api/images/002.jpg', 4);
-INSERT INTO `article` VALUES (3, '3.typeorm技术', 'third_post', 0, 70, 1, '2022-01-05 15:30:00', '2022-01-05 16:00:00', '# 我的第三篇文章 - Markdown 格式的内容', '<h1>我的第三篇文章 - HTML 格式的内容</h1>', '这是一篇关于某个主题的深度探讨', '/api/images/003.jpg', 5);
-INSERT INTO `article` VALUES (4, '4.koa搭配typeorm', 'fourth_post', 0, 30, 0, '2022-01-07 17:30:00', '2022-01-28 18:00:00', '# 我的第四篇文章 - Markdown 格式的内容', '<h1>我的第四篇文章 - HTML 格式的内容</h1>', '这是一篇关于某个技术的介绍', '/api/images/004.jpg', 5);
-INSERT INTO `article` VALUES (5, '5.Vue中使用Element', 'fifth_post', 0, 80, 0, '2022-01-09 19:30:00', '2022-01-09 20:00:00', '# 我的第五篇文章 - Markdown 格式的内容', '<h1>我的第五篇文章 - HTML 格式的内容</h1>', '这是一篇关于某个事件的报道', '/api/images/005.jpg', 3);
-INSERT INTO `article` VALUES (6, '6.Element plus和WindiCSS兼容和覆盖', 'sixth_post', 0, 20, 0, '2022-01-11 21:30:00', '2022-01-11 22:00:00', '# 我的第六篇文章 - Markdown 格式的内容', '<h1>我的第六篇文章 - HTML 格式的内容</h1>', '这是一篇有趣的故事', '/api/images/006.jpg', 3);
-INSERT INTO `article` VALUES (7, '7.nodejs+koa+typeorm的后端架构', 'seventh_post', 0, 120, 0, '2022-01-13 09:30:00', '2022-01-10 10:00:00', '# 我的第七篇文章 - Markdown 格式的内容', '<h1>我的第七篇文章 - HTML 格式的内容</h1>', '这是一篇关于旅行的日记', '/api/images/007.jpg', 5);
-INSERT INTO `article` VALUES (8, '8.C#与Winform', 'eighth_post', 0, 60, 2, '2022-01-15 11:30:00', '2022-01-15 12:00:00', '# 我的第八篇文章 - Markdown 格式的内容', '<h1>我的第八篇文章 - HTML 格式的内容</h1>', '这是一篇关于某个产品的评测', '/api/images/008.jpg', 6);
-INSERT INTO `article` VALUES (9, '9.数据结构-链表', 'ninth_post', 0, 40, 0, '2022-01-17 11:40:00', '2022-01-17 14:00:00', '# 我的第就篇文章 - Markdown 格式的内容', '<h1>我的第九篇文章 - HTML 格式的内容</h1>', '这是一篇关于某个飞行器的评测', '/api/images/009.jpg', 7);
-INSERT INTO `article` VALUES (10, '10.数据结构-优先队列', 'tenth_post', 0, 90, 0, '2022-01-19 15:30:00', '2022-01-19 16:00:00', '# 我的第十篇文章 - Markdown 格式的内容', '<h1>我的第十篇文章 - HTML 格式的内容</h1>', '这是一篇感性的文字', '/api/images/010.jpg', 7);
+INSERT INTO `article` VALUES (1, '1.Koa实现Promise', 'first_post', 0, 100, 0, '2022-01-01 10:30:00', '2022-01-01 12:00:00', '# 我的第一篇文章 - Markdown 格式的内容', '<h1>我的第一篇文章 - HTML 格式的内容</h1>', '这是一篇Koa实现Promise的文章', '/api/images/001.jpg', 5);
+INSERT INTO `article` VALUES (2, '2.Vue概况', 'second_post', 0, 50, 0, '2022-01-03 13:30:00', '2022-01-03 14:00:00', '# 我的第二篇文章 - Markdown 格式的内容', '<h1>我的第二篇文章 - HTML 格式的内容</h1>', '这是一篇写Vue概况的文章', '/api/images/002.jpg', 4);
+INSERT INTO `article` VALUES (3, '3.typeorm技术', 'third_post', 0, 70, 1, '2022-01-05 15:30:00', '2022-01-05 16:00:00', '# 我的第三篇文章 - Markdown 格式的内容', '<h1>我的第三篇文章 - HTML 格式的内容</h1>', '这是一篇关于typeorm技术的探讨', '/api/images/003.jpg', 5);
+INSERT INTO `article` VALUES (4, '4.koa搭配typeorm', 'fourth_post', 0, 30, 0, '2022-01-07 17:30:00', '2022-01-28 18:00:00', '# 我的第四篇文章 - Markdown 格式的内容', '<h1>我的第四篇文章 - HTML 格式的内容</h1>', '这是一篇关于koa搭配typeorm技术的介绍', '/api/images/004.jpg', 5);
+INSERT INTO `article` VALUES (5, '5.Vue中使用Element', 'fifth_post', 0, 80, 0, '2022-01-09 19:30:00', '2022-01-09 20:00:00', '# 我的第五篇文章 - Markdown 格式的内容', '<h1>我的第五篇文章 - HTML 格式的内容</h1>', '这是一篇关于Vue中使用Element的文章', '/api/images/005.jpg', 3);
+INSERT INTO `article` VALUES (6, '6.Element plus和WindiCSS兼容和覆盖', 'sixth_post', 0, 20, 0, '2022-01-11 21:30:00', '2022-01-11 22:00:00', '# 我的第六篇文章 - Markdown 格式的内容', '<h1>我的第六篇文章 - HTML 格式的内容</h1>', '这是一篇关于Element和WindiCSS样式的文章', '/api/images/006.jpg', 3);
+INSERT INTO `article` VALUES (7, '7.nodejs+koa+typeorm的后端架构', 'seventh_post', 0, 120, 0, '2022-01-13 09:30:00', '2022-01-10 10:00:00', '# 我的第七篇文章 - Markdown 格式的内容', '<h1>我的第七篇文章 - HTML 格式的内容</h1>', '这是一篇关于nodejs+koa+typeorm的后端架构的文章', '/api/images/007.jpg', 5);
+INSERT INTO `article` VALUES (8, '8.C#与Winform', 'eighth_post', 0, 60, 2, '2022-01-15 11:30:00', '2022-01-15 12:00:00', '# 我的第八篇文章 - Markdown 格式的内容', '<h1>我的第八篇文章 - HTML 格式的内容</h1>', '这是一篇关于C#与Winform的文章', '/api/images/008.jpg', 6);
+INSERT INTO `article` VALUES (9, '9.数据结构-链表', 'ninth_post', 0, 40, 0, '2022-01-17 11:40:00', '2022-01-17 14:00:00', '# 我的第就篇文章 - Markdown 格式的内容', '<h1>我的第九篇文章 - HTML 格式的内容</h1>', '这是一篇关于数据结构-链表的文章', '/api/images/009.jpg', 7);
+INSERT INTO `article` VALUES (10, '10.数据结构-优先队列', 'tenth_post', 0, 90, 0, '2022-01-19 15:30:00', '2022-01-19 16:00:00', '# 我的第十篇文章 - Markdown 格式的内容', '<h1>我的第十篇文章 - HTML 格式的内容</h1>', '这是一篇关于数据结构-优先队列的文章', '/api/images/010.jpg', 7);
 
 -- ----------------------------
 -- Table structure for article_tag_referenced
@@ -74,13 +74,21 @@ CREATE TABLE `article_tag_referenced`  (
 -- ----------------------------
 -- Records of article_tag_referenced
 -- ----------------------------
-INSERT INTO `article_tag_referenced` VALUES (1, 1, 1);
-INSERT INTO `article_tag_referenced` VALUES (2, 1, 2);
-INSERT INTO `article_tag_referenced` VALUES (3, 1, 3);
-INSERT INTO `article_tag_referenced` VALUES (4, 2, 2);
-INSERT INTO `article_tag_referenced` VALUES (5, 2, 3);
-INSERT INTO `article_tag_referenced` VALUES (6, 3, 3);
-INSERT INTO `article_tag_referenced` VALUES (7, 1, 4);
+INSERT INTO `article_tag_referenced` VALUES (1, 1, 2);
+INSERT INTO `article_tag_referenced` VALUES (2, 1, 4);
+INSERT INTO `article_tag_referenced` VALUES (3, 2, 1);
+INSERT INTO `article_tag_referenced` VALUES (4, 3, 3);
+INSERT INTO `article_tag_referenced` VALUES (5, 4, 2);
+INSERT INTO `article_tag_referenced` VALUES (6, 4, 3);
+INSERT INTO `article_tag_referenced` VALUES (7, 5, 1);
+INSERT INTO `article_tag_referenced` VALUES (8, 5, 5);
+INSERT INTO `article_tag_referenced` VALUES (9, 6, 5);
+INSERT INTO `article_tag_referenced` VALUES (10, 6, 6);
+INSERT INTO `article_tag_referenced` VALUES (11, 7, 2);
+INSERT INTO `article_tag_referenced` VALUES (12, 7, 3);
+INSERT INTO `article_tag_referenced` VALUES (13, 8, 7);
+INSERT INTO `article_tag_referenced` VALUES (14, 9, 8);
+INSERT INTO `article_tag_referenced` VALUES (15, 10, 8);
 
 -- ----------------------------
 -- Table structure for category
@@ -137,6 +145,7 @@ INSERT INTO `discuss` VALUES (2, '2022-02-02 13:00:00', 2, 1, '支持楼上，�
 INSERT INTO `discuss` VALUES (3, '2022-02-03 14:00:00', 3, 2, '还有哪些关于这个话题的文章可以推荐吗？', NULL);
 INSERT INTO `discuss` VALUES (4, '2022-02-04 15:00:00', 4, 3, '感觉作者对这个问题的见解非常深刻，学习了！', NULL);
 INSERT INTO `discuss` VALUES (5, '2022-02-05 16:00:00', 5, 3, '同感，受益匪浅！', 4);
+INSERT INTO `discuss` VALUES (6, '2023-03-10 11:14:03', 2, 3, '所以爱会消失吗?', NULL);
 
 -- ----------------------------
 -- Table structure for tag
@@ -156,11 +165,14 @@ CREATE TABLE `tag`  (
 -- ----------------------------
 -- Records of tag
 -- ----------------------------
-INSERT INTO `tag` VALUES (1, 'Java', 'Java', '关于Java的标签', '2022-04-01 12:00:00');
-INSERT INTO `tag` VALUES (2, 'Python', 'Python', '关于Python的标签', '2022-04-02 13:00:00');
-INSERT INTO `tag` VALUES (3, 'Go', 'Go', '关于Go的标签', '2022-04-03 14:00:00');
-INSERT INTO `tag` VALUES (4, '机器学习', 'Machine_learning', '关于机器学习的标签', '2022-04-04 15:00:00');
-INSERT INTO `tag` VALUES (5, '数据分析', 'Data_analysis', '关于数据分析的标签', '2022-04-05 16:00:00');
+INSERT INTO `tag` VALUES (1, 'vue', 'vue', '关于vue的标签', '2022-04-01 12:00:00');
+INSERT INTO `tag` VALUES (2, 'koa', 'koa', '关于koa的标签', '2022-04-02 13:00:00');
+INSERT INTO `tag` VALUES (3, 'typeorm', 'typeorm', '关于typeorm的标签', '2022-04-03 14:00:00');
+INSERT INTO `tag` VALUES (4, 'promise', 'promise', '关于promise的标签', '2022-04-04 15:00:00');
+INSERT INTO `tag` VALUES (5, 'element plus', 'element_plus', '关于element plus的标签', '2022-04-05 16:00:00');
+INSERT INTO `tag` VALUES (6, 'WindiCSS', 'WindiCSS', 'WindiCSS样式标签', '2023-04-13 11:04:01');
+INSERT INTO `tag` VALUES (7, 'C#', 'Csharp', '关于C#的标签', '2023-04-23 14:04:48');
+INSERT INTO `tag` VALUES (8, '数据结构', 'data_structure', '关于数据结构的标签', '2023-04-24 13:05:30');
 
 -- ----------------------------
 -- Table structure for users

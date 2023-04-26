@@ -79,3 +79,10 @@ export interface updateArticle {
     contentHTML: string;
     tagIds: number[];
 }
+
+// 关键词查询文章列表时，传入的参数
+export interface QueryAsPageByKeyword {
+    page?: number;
+    limit?: number;
+    keywords: string[];
+}

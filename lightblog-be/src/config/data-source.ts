@@ -6,15 +6,16 @@ import { Category } from '../entities/Category';
 import { Discuss } from '../entities/Discuss';
 import { Tag } from '../entities/Tag';
 import { Users } from '../entities/Users';
+import { DATASOURCE } from '../config';
 
 export const AppDataSource = new DataSource({
     type: "mysql",
-    host: "localhost",
-    port: 3306,
-    username: "root",
-    password: "root",
-    database: "blog",
-    // synchronize: false,
+    host: DATASOURCE.host,
+    port: DATASOURCE.port,
+    username: DATASOURCE.username,
+    password: DATASOURCE.password,
+    database: DATASOURCE.database,
+    synchronize: DATASOURCE.synchronize,
     entities: [
         "src/entities/*.ts",
         Article,

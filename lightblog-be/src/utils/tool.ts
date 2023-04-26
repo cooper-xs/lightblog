@@ -9,7 +9,7 @@ export class tool {
     }
 
     /** 将别名转化为安全的url路径 */
-    public static formatUrlPath(str) {
+    public static formatUrlPath(str: string): string {
         const encodedStr = encodeURIComponent(str);
         return encodedStr.replace(/[!'()*]/g, (c) => {
             return '%' + c.charCodeAt(0).toString(16);
@@ -17,8 +17,8 @@ export class tool {
     }
 
     /** 将其他类型转换为数字类型 */
-    public static toNumber(value: any, set?: any): any {
-        return value ? Number(value) : set;
+    public static toNumber(value: any, setValue?: any): any {
+        return value ? Number(value) : setValue;
     }
 
     /** 检查邮箱格式是否正确 */

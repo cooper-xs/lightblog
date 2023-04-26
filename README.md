@@ -8,15 +8,15 @@
 * [ ] 状态管理：Pinia
 * [ ] 路由管理：Vue Router
 * [ ] 构建工具：Vite4
-* [ ] 后端开发语言：Node.js
-* [ ] 后端框架：koa / ~~egg.js~~ / ~~midway.js~~
-* [ ] 数据库：MySQL
+* [x] 后端开发语言：Node.js
+* [x] 后端框架：koa / ~~egg.js~~ / ~~midway.js~~
+* [x] 数据库：MySQL
 * [ ] DevOps相关：Docker、CI/CD、~~Nginx~~
 * [ ] 服务器端渲染（SSR）：<Mark>Vue SSR<Mark>
 * [ ] 构建和部署工具：GitHub
-* [ ] 代码规范：ESLint、Prettier
+* [x] 代码规范：ESLint、Prettier
 * [ ] <Mark>暗夜模式<Mark>（细节多，后期做）
-* [ ] 富文本编辑器：Quill / TinyMCE等富文本编辑器(TODO)
+* [ ] Markdown支持：markdown-it / mavonEditor?富文本编辑器
 
 ---
 
@@ -40,7 +40,7 @@
 * [ ] 对于需要服务器端渲染（SSR）的页面，可以在前端框架中集成实现，例如Vue SSR。
 * [ ] 设置构建工具，例如Vite4，并进行项目构建和打包。
 * [ ] 进行DevOps相关的设置，例如使用Docker进行部署、CI/CD流程的构建等。
-* [ ] 针对代码规范、日志管理等方面的问题，引入相应的工具和库进行优化。
+* [x] 针对代码规范、日志管理等方面的问题，引入相应的工具和库进行优化。
 * [ ] 最后再考虑其他细节性功能的添加和调整，例如暗夜模式、图片处理和管理、富文本编辑器等。
 
 # 项目功能

@@ -3,7 +3,7 @@ import ArticleService from '../service/ArticleService';
 import ArticleTagReferencedService from '../service/ArticleTagReferencedService';
 import CategoryService from '../service/CategoryService';
 import TagService from '../service/TagService';
-import { newArticle, QueryAsPageByCategoryAndTags } from '../types/article';
+import { newArticle, QueryAsPageByCategoryAndTags, QueryAsPageByKeyword } from '../types/article';
 import { tool } from '../utils/tool';
 
 export default class ArticleController {
@@ -215,6 +215,39 @@ export default class ArticleController {
         } catch (err) {
             console.log(err);
             ctx.fail('获取文章失败');
+        }
+    }
+
+    /** 关键字搜索文章 */
+    public static async searchArticle(ctx: Context) {
+        try {
+            let { page, limit, keywords } = ctx.query;
+            
+            page = tool.toNumber(page, 1);
+
+            limit = tool.toNumber(limit, 7);
+
+            keywords = tool.formatUrlPath(keywords);
+
+            keywords = keywords ? keywords.split('%20').map(String).filter(Boolean) : undefined;
+
+            if (!keywords) {
+                ctx.fail('关键字不能为空');
+                return;
+            }
+
+            const params: QueryAsPageByKeyword = {
+                page,
+                limit,
+                keywords,
+            };
+
+            const res = await ArticleService.getArticleByKeyword(params);
+
+            ctx.success('搜索文章成功', res);
+        } catch (err) {
+            console.log(err);
+            ctx.fail('搜索文章失败');
         }
     }
 }

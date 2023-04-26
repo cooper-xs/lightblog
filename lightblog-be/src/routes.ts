@@ -10,6 +10,7 @@ import UsersController from './controller/UsersController';
 
 router.get('/article/show/list', ArticleController.getArticleList);
 router.get('/article/show/:articleId', ArticleController.getArticleByIdForShow);
+router.get('/search', ArticleController.searchArticle);
 router.post('/article/add', ArticleController.addArticle);
 router.post('/article/update', ArticleController.updateArticle);
 router.delete('/article/delete/:articleId', ArticleController.deleteArticle);

@@ -1,6 +1,6 @@
 import { ArticleRepository } from '../config/data-source';
 import { Article } from '../entities/Article';
-import { ArticleDetailView, ArticleListView, newArticle, QueryAsPageByCategoryAndTags } from '../types/article';
+import { ArticleDetailView, ArticleListView, newArticle, QueryAsPageByCategoryAndTags, QueryAsPageByKeyword } from '../types/article';
 import { tool } from '../utils/tool';
 
 export default class ArticleService {
@@ -129,6 +129,58 @@ export default class ArticleService {
             .skip((page - 1) * limit)
             .take(limit)
             .getManyAndCount();
+
+        return {
+            info: {
+                currentPage: page,
+                totalPage: Math.ceil(count / limit),
+                totalItem: count,
+                pageSize: limit,
+            },
+            list: articles.map((article) => {
+                return {
+                    articleId: article.articleId,
+                    title: article.title,
+                    postAliasName: article.postAliasName,
+                    summary: article.articleSummary,
+                    updateTime: tool.formatDate(article.pushDate),
+                    topFlag: article.topFlag,
+                    previewImageUrl: article.previewImageUrl,
+                    category: {
+                        categoryId: article.categoryId,
+                        categoryName: null,
+                        categoryAliasName: null,
+                    },
+                    tags: [{
+                        tagId: null,
+                        tagName: null,
+                        tagAliasName: null,
+                    }] 
+                };
+            }
+        )};
+    }
+
+    /** 通过关键词搜索文章 */
+    public static async getArticleByKeyword(params: QueryAsPageByKeyword): Promise<ArticleListView> {
+        const { page, limit, keywords } = params;
+
+        const queryBuilder = ArticleRepository.createQueryBuilder('article')
+            .orderBy({
+                'article.topFlag': 'DESC',
+                'article.createTime': 'DESC'
+            })
+            .skip((page - 1) * limit)
+            .take(limit);
+        
+            if (keywords.length >= 1) {
+                const [firstKeyword, ...restKeywords] = keywords;
+                queryBuilder.where('article.title LIKE :firstKeyword', { firstKeyword: `%${firstKeyword}%` });
+                restKeywords.forEach((keyword) => {
+                    queryBuilder.orWhere('article.title LIKE :keyword', { keyword: `%${keyword}%` });
+                });
+            }
+        const [articles, count] = await queryBuilder.getManyAndCount();
 
         return {
             info: {
