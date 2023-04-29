@@ -9,22 +9,22 @@ export const DATASOURCE = {
     username: "root",
     password: "root",
     database: "blog",
-    synchronize: true,
+    synchronize: false,
 }
 
 // 全局变量声明
 declare global {
-    namespace NodeJS {
-        interface Global {
-            secretToken: string;
-            host: string;
-            port: number;
-            username: string;
-            password: string;
-            database: string;
-            synchronize: boolean;
-        }
+  namespace NodeJS {
+    interface Global {
+      secretToken: string;
+      host: string;
+      port: number;
+      username: string;
+      password: string;
+      database: string;
+      synchronize: boolean;
     }
+  }
 }
 
 global.secretToken = TOKEN_CONF.secretToken;

@@ -4,16 +4,18 @@ import cors from "@koa/cors";
 import bodyParser from "koa-bodyparser";
 import router from "./routes";
 import routerResponse from "./utils/routerResponse";
+// 允许静态资源
+import static_serve from "koa-static";
 import { AppDataSource } from "./config/data-source";
 import { logger } from './utils/logger';
-require ('dotenv').config();
 
 AppDataSource.initialize()
     .then(() => {
         const app = new Koa();
         
         // 注册中间件, 注意顺序
-        app.use(cors());
+        app.use(cors({origin: 'http://localhost:8080'}));
+        app.use(static_serve(__dirname + "/assets"));
         app.use(bodyParser());
         app.use(logger());
         app.use(routerResponse());

@@ -107,14 +107,14 @@ export default class ArticleService {
 
         const queryBuilder = ArticleRepository.createQueryBuilder('article');
 
-        if (categoryIds && categoryIds.length) {
+        if (categoryIds?.length) {
             queryBuilder
                 .where('article.categoryId IN (:...categoryIds)', {
                     categoryIds,
                 });
         }
 
-        if (tagIds && tagIds.length) {
+        if (tagIds?.length) {
             queryBuilder.innerJoin('article.articleTagReferenceds', 'atr', 'atr.tagId IN (:...tagIds)', {
                 tagIds,
             });

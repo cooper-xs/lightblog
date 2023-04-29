@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import { DataSource } from 'typeorm';
-import { Article } from '../entities/article';
+import { Article } from '../entities/Article';
 import { ArticleTagReferenced } from '../entities/ArticleTagReferenced';
 import { Category } from '../entities/Category';
 import { Discuss } from '../entities/Discuss';
