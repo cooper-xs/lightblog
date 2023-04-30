@@ -13,32 +13,33 @@ pnpm i
 ```ts
 // 修改为自己的数据库配置
 export const DATASOURCE = {
-    host: "localhost",
-    port: 3306,
-    username: "username",
-    password: "password",
-    database: "blog",
-    synchronize: true, // 是否自动修改表结构,
-}
+  host: 'localhost',
+  port: 3306,
+  username: 'username',
+  password: 'password',
+  database: 'blog',
+  synchronize: false, // 是否自动修改表结构
+};
 ```
 
-请注意: synchronize项 在生产环境中设为false; 开发环境中设可以为true. 否则会导致数据丢失.
+请注意: synchronize 项 在生产环境中设为 false; 开发环境中设可以为 true. 否则会导致数据丢失.
 
 ## 创建数据库
 
-1. 手动创建database
-  - 创建一个名为`blog`的数据库.
-  - 编码为`utf8mb4`
+1. 手动创建 database
 
+- 创建一个名为`blog`的数据库.
+- 编码为`utf8mb4`
 
 2. 创建数据库表结构
 
- - 手动执行
-   - 在数据库中执行`/misc/blog-init.sql`中的SQL语句. 
-   - 这样的好处是里面的`insert`数据也会一起放进去.
+- 手动执行
 
- - 自动执行
-   - 设置TypeORM的 `synchronize=true` 自动创建数据库表结构.
+  - 在数据库中执行`/src/config/blog-init.sql`中的 SQL 语句.
+  - 这样的好处是里面的`insert`数据也会一起放进去.
+
+- 自动执行
+  - 设置 TypeORM 的 `synchronize=true` 自动创建数据库表结构.
 
 ## 启动服务
 

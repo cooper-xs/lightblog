@@ -17,6 +17,7 @@
 * [x] 代码规范：ESLint、Prettier
 * [ ] <Mark>暗夜模式<Mark>（细节多，后期做）
 * [ ] Markdown支持：markdown-it / mavonEditor?富文本编辑器
+* [ ] 日志管理：Winston / Log4js(无所谓)
 
 ---
 
@@ -27,7 +28,6 @@
 * [ ] 测试框架：Vitest(TODO)
 * [ ] ~~接口开发：RESTful API设计原则(折磨自己)~~
 * [ ] ~~3D图形库：three.js(没空)~~
-* [ ] ~~日志管理：Winston / Log4js(无所谓)~~
 * [ ] ~~国际化(相对鸡肋)~~
 * [ ] ~~静态网站生成器（SSG）：VuePress(只做SSR)~~
 

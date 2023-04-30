@@ -31,7 +31,7 @@ onMounted(async () => {
 
 async function fetchArticleData() {
   const articleId = instance?.proxy?.$route?.params?.articleId;
-  
+
   return await Http.get('/article/show/' + articleId)
     .then(res => {
       const response = res.data as ApiResponse<ArticleDetailView>;

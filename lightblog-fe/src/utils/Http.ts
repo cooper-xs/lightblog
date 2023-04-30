@@ -1,27 +1,27 @@
-import type { AxiosRequestConfig, AxiosResponse } from "axios";
-import type { ApiResponse, MyAxiosConfig } from "@/types";
-import axios from "axios";
+import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+import type { ApiResponse, MyAxiosConfig } from '@/types';
+import axios from 'axios';
 
 class Http {
   private readonly client = axios.create({
-    baseURL: "/api",
+    baseURL: '/api',
     timeout: 2000,
   });
 
   public get<T>(url: string, config: AxiosRequestConfig = {}): Promise<ApiResponse<T>> {
-    return this.request<T>({ ...config, url, method: "get" });
+    return this.request<T>({ ...config, url, method: 'get' });
   }
 
   public post<T>(url: string, data?: any, config: AxiosRequestConfig = {}): Promise<ApiResponse<T>> {
-    return this.request<T>({ ...config, url, data, method: "post" });
+    return this.request<T>({ ...config, url, data, method: 'post' });
   }
 
   public put<T>(url: string, data?: any, config: AxiosRequestConfig = {}): Promise<ApiResponse<T>> {
-    return this.request<T>({ ...config, url, data, method: "put" });
+    return this.request<T>({ ...config, url, data, method: 'put' });
   }
 
   public delete<T>(url: string, config: AxiosRequestConfig = {}): Promise<ApiResponse<T>> {
-    return this.request<T>({ ...config, url, method: "delete" });
+    return this.request<T>({ ...config, url, method: 'delete' });
   }
 
   private async request<T>(config: MyAxiosConfig): Promise<ApiResponse<T>> {

@@ -1,16 +1,16 @@
 export const TOKEN_CONF = {
-    secretToken: 'light',
-}
+  secretToken: 'light',
+};
 
 // 数据库配置
 export const DATASOURCE = {
-    host: "localhost",
-    port: 3306,
-    username: "root",
-    password: "root",
-    database: "blog",
-    synchronize: false,
-}
+  host: 'localhost',
+  port: 3306,
+  username: 'root',
+  password: 'root',
+  database: 'blog',
+  synchronize: false,
+};
 
 // 全局变量声明
 declare global {

@@ -3,10 +3,10 @@
     <div class="flex flex-row">
       <h2 class="text-xl font-bold ml-10 cursor-pointer">
         <router-link :to="{
-            name: 'Post', 
-            params: {articleId: article.articleId}, 
-            query: {postAlaisName: article.postAliasName}
-          }">
+          name: 'Post',
+          params: { articleId: article.articleId },
+          query: { postAlaisName: article.postAliasName }
+        }">
           {{ article.title }}
         </router-link>
       </h2>
@@ -15,10 +15,13 @@
       </div>
     </div>
     <div class="flex flex-row p-2">
-      <div class="w-1/2 h-50 flex items-center justify-center overflow-hidden">
-        <div class="aspect-h-1 aspect-w-1 object-center" >
+      <!-- <div class="w-1/2 h-50 flex items-center justify-center overflow-hidden">
+        <div class="aspect-h-1 aspect-w-1 object-center"  >
           <img :src="article.previewImageUrl" alt="" class="w-full h-full object-cover" />
         </div>
+      </div> -->
+      <div class="flex items-center justify-center w-1/2 h-50 bg-cover bg-center"
+        :style="{ backgroundImage: `url(${article.previewImageUrl})` }">
       </div>
       <div class="w-1/2 mx-5 mt-5 flex flex-col">
         <div>
@@ -30,7 +33,6 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script setup lang="ts">

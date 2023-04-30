@@ -1,16 +1,16 @@
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
 
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
-import 'virtual:windi.css'
-import App from './App.vue'
-import router from './router'
+import ElementPlus from 'element-plus';
+import 'element-plus/dist/index.css';
+import 'virtual:windi.css';
+import App from './App.vue';
+import router from './router';
 
-const app = createApp(App)
+const app = createApp(App);
 
-app.use(createPinia())
-app.use(ElementPlus)
-app.use(router)
+app.use(createPinia());
+app.use(ElementPlus);
+app.use(router);
 
-app.mount('#app')
+app.mount('#app');

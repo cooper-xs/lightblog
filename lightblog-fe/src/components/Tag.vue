@@ -1,19 +1,19 @@
 <template>
-    <div class="bg-fuchsia-400">
-       <el-tag>
-            标签1
-       </el-tag>
-       <el-tag>
-            标签2
-       </el-tag>
-       <el-tag>
-            标签3
-       </el-tag>
-       <el-tag>
-            标签4
-       </el-tag>
-       <el-tag>
-            标签5
-       </el-tag>
-    </div>
+  <div class="bg-fuchsia-400">
+    <el-tag>
+      标签1
+    </el-tag>
+    <el-tag>
+      标签2
+    </el-tag>
+    <el-tag>
+      标签3
+    </el-tag>
+    <el-tag>
+      标签4
+    </el-tag>
+    <el-tag>
+      标签5
+    </el-tag>
+  </div>
 </template>

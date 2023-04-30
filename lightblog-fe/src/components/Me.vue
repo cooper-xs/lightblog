@@ -8,10 +8,10 @@
     </div>
     <div class="flex flex-row gap-4 text-sm">
       <div>
-          主页
+        主页
       </div>
       <div>
-          关于我
+        关于我
       </div>
     </div>
   </div>
