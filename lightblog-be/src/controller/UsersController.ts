@@ -4,8 +4,14 @@ import { newUser } from '../types/user';
 import * as tool from '../utils/tool';
 
 export default class UsersController {
+  // 依赖注入
+  private readonly _usersService: UsersService;
+  public constructor(private readonly ctx: Context) {
+    this._usersService = new UsersService(ctx);
+  }
+
   /** 注册新用户 */
-  public static async addUser(ctx: Context) {
+  public async addUser(ctx: Context) {
     try {
       let { userNickname, email } = ctx.request.body;
 
@@ -18,7 +24,7 @@ export default class UsersController {
         return;
       }
 
-      if (await UsersService.getUserByNickname(userNickname)) {
+      if (await this._usersService.getUserByNickname(userNickname)) {
         ctx.fail('用户昵称已存在');
         return;
       }
@@ -28,7 +34,7 @@ export default class UsersController {
         return;
       }
 
-      if (await UsersService.getUserByEmail(email)) {
+      if (await this._usersService.getUserByEmail(email)) {
         ctx.fail('用户邮箱已存在');
         return;
       }
@@ -38,7 +44,7 @@ export default class UsersController {
         email,
       };
 
-      const user = await UsersService.addUser(params);
+      const user = await this._usersService.addUser(params);
 
       console.log(user);
 
@@ -50,9 +56,9 @@ export default class UsersController {
   }
 
   /** 获取用户列表 */
-  public static async getUserList(ctx: Context) {
+  public async getUserListAll(ctx: Context) {
     try {
-      const userList = await UsersService.getUserList();
+      const userList = await this._usersService.getUserListAll();
 
       ctx.success('获取用户列表成功', userList);
     } catch (err) {
@@ -62,7 +68,7 @@ export default class UsersController {
   }
 
   /** 根据id删除用户 */
-  public static async deleteUser(ctx: Context) {
+  public async deleteUser(ctx: Context) {
     try {
       let { userId } = ctx.params;
 
@@ -73,12 +79,12 @@ export default class UsersController {
         return;
       }
 
-      if (!(await UsersService.getUserById(userId))) {
+      if (!(await this._usersService.getUserById(userId))) {
         ctx.success('用户已删除或不存在');
         return;
       }
 
-      await UsersService.deleteUser(userId);
+      await this._usersService.deleteUser(userId);
 
       ctx.success('删除用户成功');
     } catch (err) {

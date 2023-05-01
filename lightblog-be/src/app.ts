@@ -2,24 +2,30 @@ import 'reflect-metadata';
 import Koa from 'koa';
 import cors from '@koa/cors';
 import bodyParser from 'koa-bodyparser';
-import router from './routes';
+import Router from '@koa/router';
+import setupRouter from './routes';
 import routerResponse from './utils/routerResponse';
 // 允许静态资源
 import static_serve from 'koa-static';
 import { AppDataSource } from './config/data-source';
-import { logger } from './utils/logger';
+import { loggerMount } from './utils/winstonLogger';
+import errorHandler from './utils/errorHandler';
 
-function start() {
+async function start() {
   const app = new Koa();
 
   // 注册中间件, 注意顺序
   app.use(cors({ origin: 'http://localhost:8080' }));
   app.use(static_serve(__dirname + '/assets'));
   app.use(bodyParser());
-  app.use(logger());
-  app.use(routerResponse());
+  app.use(loggerMount());
+  app.use(routerResponse);
+  app.use(errorHandler);
 
+  const router = new Router();
+  setupRouter(router);
   app.use(router.routes()).use(router.allowedMethods());
+
   app.listen(3000, () => {
     console.log('后端运行在: http://localhost:3000');
   });

@@ -1,3 +1,4 @@
+import { Context } from 'koa';
 import { TagRepository, ArticleTagReferencedRepository } from '../config/data-source';
 import { Article } from '../entities/Article';
 import { Tag } from '../entities/Tag';
@@ -7,8 +8,12 @@ import * as tool from '../utils/tool';
 import { View } from 'typeorm/schema-builder/view/View';
 
 export default class TagService {
+  public constructor(private readonly ctx: Context) {
+    this.ctx = ctx;
+  }
+
   /** 添加标签 */
-  public static async addTag(params: newTag): Promise<Tag> {
+  public async addTag(params: newTag): Promise<Tag> {
     const tag = new Tag();
     tag.tagName = params.tagName;
     tag.tagAliasName = params.tagAliasName;
@@ -19,7 +24,7 @@ export default class TagService {
   }
 
   /** 修改标签 */
-  public static async updateTag(params: updateTag): Promise<Tag> {
+  public async updateTag(params: updateTag): Promise<Tag> {
     const tag = await TagRepository.findOne({
       where: {
         tagId: params.tagId,
@@ -33,7 +38,7 @@ export default class TagService {
   }
 
   /** 删除标签 */
-  public static async deleteTag(tagId: number): Promise<Tag> {
+  public async deleteTag(tagId: number): Promise<Tag> {
     const tag = await TagRepository.findOne({
       where: {
         tagId,
@@ -43,7 +48,7 @@ export default class TagService {
   }
 
   /** 通过文章id查找标签 */
-  public static async getTagByArticleId(articleId: number): Promise<Tag[]> {
+  public async getTagByArticleId(articleId: number): Promise<Tag[]> {
     const res = await TagRepository.createQueryBuilder('tag')
       .innerJoin('tag.articleTagReferenceds', 'atr', 'atr.articleId = :articleId', { articleId })
       .getMany();
@@ -51,13 +56,13 @@ export default class TagService {
   }
 
   /** 查找所有标签, 格式化日期返回 */
-  public static async getTagList(): Promise<ViewTag[]> {
+  public async getTagListAll(): Promise<ViewTag[]> {
     const res = await TagRepository.find();
     return res.map((item) => item.toViewTag());
   }
 
   /** 通过标签id查找标签 */
-  public static async getTagById(tagId: number): Promise<ViewTag> {
+  public async getTagById(tagId: number): Promise<ViewTag> {
     const res = await TagRepository.findOne({
       where: {
         tagId,
@@ -67,7 +72,7 @@ export default class TagService {
   }
 
   /** 通过标签名查找标签 */
-  public static async getTagByName(tagName: string): Promise<ViewTag> {
+  public async getTagByName(tagName: string): Promise<ViewTag> {
     const res = await TagRepository.findOne({
       where: {
         tagName,
@@ -77,7 +82,7 @@ export default class TagService {
   }
 
   /** 通过标签别名查找标签 */
-  public static async getTagByAliasName(tagAliasName: string): Promise<ViewTag> {
+  public async getTagByAliasName(tagAliasName: string): Promise<ViewTag> {
     const res = await TagRepository.findOne({
       where: {
         tagAliasName,

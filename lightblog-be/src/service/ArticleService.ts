@@ -1,3 +1,4 @@
+import { Context } from 'vm';
 import { ArticleRepository } from '../config/data-source';
 import { Article } from '../entities/Article';
 import {
@@ -10,18 +11,21 @@ import {
 import * as tool from '../utils/tool';
 
 export default class ArticleService {
+  public constructor(private readonly ctx: Context) {
+    this.ctx = ctx;
+  }
+
   /** 添加新文章 */
-  public static async addArticle(params: newArticle): Promise<Article> {
+  public async addArticle(params: newArticle): Promise<Article> {
     const { title, postAliasName } = params;
     const article = new Article();
     article.title = title;
     article.postAliasName = postAliasName;
-    console.log('Service层添加的新文章:', article);
     return ArticleRepository.save(article);
   }
 
   /** 删除文章 */
-  public static async deleteArticle(articleId: number): Promise<Article> {
+  public async deleteArticle(articleId: number): Promise<Article> {
     const article = await ArticleRepository.findOne({
       where: {
         articleId: articleId,
@@ -33,7 +37,7 @@ export default class ArticleService {
   /** 通过分类id查找文章
    * 返回所有分类id为categoryId的文章id
    */
-  public static async getArticleByCategoryId(categoryId: number): Promise<number[]> {
+  public async getArticleByCategoryId(categoryId: number): Promise<number[]> {
     const articles = await ArticleRepository.createQueryBuilder('article')
       .leftJoinAndSelect('article.category', 'category')
       .where('category.categoryId = :categoryId', { categoryId })
@@ -42,7 +46,7 @@ export default class ArticleService {
   }
 
   /** 通过别名查找文章 */
-  public static async getArticleByAliasName(postAliasName: string): Promise<Article> {
+  public async getArticleByAliasName(postAliasName: string): Promise<Article> {
     const article = await ArticleRepository.findOne({
       where: {
         postAliasName: postAliasName,
@@ -52,7 +56,7 @@ export default class ArticleService {
   }
 
   /** 通过文章名称查找文章 */
-  public static async getArticleByTitle(title: string): Promise<Article> {
+  public async getArticleByTitle(title: string): Promise<Article> {
     const article = await ArticleRepository.findOne({
       where: {
         title: title,
@@ -62,7 +66,7 @@ export default class ArticleService {
   }
 
   /** 通过文章id查找文章, 返回以展示博文内容 */
-  public static async getArticleByIdForDetail(articleId: number): Promise<ArticleDetailView> {
+  public async getArticleByIdForDetail(articleId: number): Promise<ArticleDetailView> {
     const article = await ArticleRepository.findOne({
       where: {
         articleId: articleId,
@@ -95,8 +99,42 @@ export default class ArticleService {
     };
   }
 
+  /** 通过文章别名查找文章, 返回以展示博文内容 */
+  public async getArticleByAliasNameForDetail(postAliasName: string): Promise<ArticleDetailView> {
+    const article = await ArticleRepository.findOne({
+      where: {
+        postAliasName: postAliasName,
+      },
+    });
+
+    return {
+      articleId: article.articleId,
+      title: article.title,
+      postAliasName: article.postAliasName,
+      summary: article.articleSummary,
+      updateTime: tool.formatDate(article.pushDate),
+      topFlag: article.topFlag,
+      commentCount: article.commentCount,
+      readCount: article.readCount,
+      contentHtml: article.contentHtml,
+      previewImageUrl: article.previewImageUrl,
+      category: {
+        categoryId: article.categoryId,
+        categoryName: null,
+        categoryAliasName: null,
+      },
+      tags: [
+        {
+          tagId: null,
+          tagName: null,
+          tagAliasName: null,
+        },
+      ],
+    };
+  }
+
   /** 通过文章id查找文章, 返回全部 */
-  public static async getArticleById(articleId: number): Promise<Article> {
+  public async getArticleById(articleId: number): Promise<Article> {
     const article = await ArticleRepository.findOne({
       where: {
         articleId: articleId,
@@ -109,7 +147,7 @@ export default class ArticleService {
    * 支持按照分类和标签查询
    * 返回分页数据
    */
-  public static async getArticleOrderByTopAndTime(params: QueryAsPageByCategoryAndTags): Promise<ArticleListView> {
+  public async getArticleOrderByTopAndTime(params: QueryAsPageByCategoryAndTags): Promise<ArticleListView> {
     const { page, limit, categoryIds, tagIds } = params;
 
     const queryBuilder = ArticleRepository.createQueryBuilder('article');
@@ -170,7 +208,7 @@ export default class ArticleService {
   }
 
   /** 通过关键词搜索文章 */
-  public static async getArticleByKeyword(params: QueryAsPageByKeyword): Promise<ArticleListView> {
+  public async getArticleByKeyword(params: QueryAsPageByKeyword): Promise<ArticleListView> {
     const { page, limit, keywords } = params;
 
     const queryBuilder = ArticleRepository.createQueryBuilder('article')

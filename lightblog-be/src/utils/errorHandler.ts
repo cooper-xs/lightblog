@@ -1,0 +1,26 @@
+import { Context, Next } from 'koa';
+import { ParamsError, DataValidationError } from '../errors';
+
+// 导出一个错误处理中间件
+export default async function errorHandler(ctx: Context, next: Next) {
+  try {
+    console.log('errorHandler start');
+    await next();
+    console.log('errorHandler end');
+  } catch (err) {
+    console.log('errorHandler catch');
+    if (err instanceof ParamsError) {
+      ctx.status = 400;
+      ctx.body = { message: err.message };
+    } else if (err instanceof DataValidationError) {
+      ctx.status = 409;
+      ctx.body = { message: err.message };
+    } else if (err instanceof Error) {
+      ctx.status = 500;
+      ctx.body = { message: err.message };
+    } else {
+      ctx.status = 500;
+      ctx.body = { message: '服务器内部错误' };
+    }
+  }
+}

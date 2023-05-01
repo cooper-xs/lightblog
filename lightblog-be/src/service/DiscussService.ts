@@ -1,10 +1,15 @@
+import { Context } from 'koa';
 import { DiscussRepository } from '../config/data-source';
 import { Discuss } from '../entities/Discuss';
 import { newDiscuss, viewDiscuss } from '../types/Discuss';
 import * as tool from '../utils/tool';
 
 export default class DiscussService {
-  public static async addDiscuss(params: newDiscuss): Promise<Discuss> {
+  public constructor(private readonly ctx: Context) {
+    this.ctx = ctx;
+  }
+
+  public async addDiscuss(params: newDiscuss): Promise<Discuss> {
     const discuss = new Discuss();
     discuss.articleId = params.articleId;
     discuss.userId = params.userId;
@@ -15,14 +20,14 @@ export default class DiscussService {
     return res;
   }
 
-  public static async getDiscussById(discussId: number): Promise<viewDiscuss> {
+  public async getDiscussById(discussId: number): Promise<viewDiscuss> {
     const res = await DiscussRepository.findOne({
       where: { discussId },
     });
     return res.toViewDiscusses();
   }
 
-  public static async getDiscussByArticleId(articleId: number): Promise<viewDiscuss[]> {
+  public async getDiscussByArticleId(articleId: number): Promise<viewDiscuss[]> {
     const res = await DiscussRepository.find({
       where: { articleId },
     });

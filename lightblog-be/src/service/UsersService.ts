@@ -1,9 +1,14 @@
+import { Context } from 'koa';
 import { Users } from '../entities/Users';
 import { newUser } from '../types/user';
 import { UsersRepository } from '../config/data-source';
 
 export default class UsersService {
-  public static async addUser(params: newUser): Promise<Users> {
+  public constructor(private readonly ctx: Context) {
+    this.ctx = ctx;
+  }
+
+  public async addUser(params: newUser): Promise<Users> {
     const user = new Users();
     user.userNickname = params.userNickname;
     user.email = params.email;
@@ -12,7 +17,7 @@ export default class UsersService {
     return user;
   }
 
-  public static async deleteUser(userId: number): Promise<Users> {
+  public async deleteUser(userId: number): Promise<Users> {
     const user = await UsersRepository.findOne({
       where: { userId: userId },
     });
@@ -20,23 +25,23 @@ export default class UsersService {
     return user;
   }
 
-  public static async getUserByEmail(email: string): Promise<Users | undefined> {
+  public async getUserByEmail(email: string): Promise<Users | undefined> {
     return await UsersRepository.findOne({
       where: { email: email },
     });
   }
 
-  public static async getUserByNickname(userNickname: string): Promise<Users | undefined> {
+  public async getUserByNickname(userNickname: string): Promise<Users | undefined> {
     return await UsersRepository.findOne({
       where: { userNickname: userNickname },
     });
   }
 
-  public static async getUserList(): Promise<Users[]> {
+  public async getUserListAll(): Promise<Users[]> {
     return await UsersRepository.find();
   }
 
-  public static async getUserById(userId: number): Promise<Users | undefined> {
+  public async getUserById(userId: number): Promise<Users | undefined> {
     return await UsersRepository.findOne({
       where: {
         userId: userId,

@@ -7,7 +7,17 @@ import UsersService from '../service/UsersService';
 import DiscussService from '../service/DiscussService';
 
 export default class DiscussController {
-  public static async addDiscuss(ctx: Context) {
+  // 依赖注入
+  private readonly _articleService: ArticleService;
+  private readonly _usersService: UsersService;
+  private readonly _discussService: DiscussService;
+  public constructor(private readonly ctx: Context) {
+    this._articleService = new ArticleService(ctx);
+    this._usersService = new UsersService(ctx);
+    this._discussService = new DiscussService(ctx);
+  }
+
+  public async addDiscuss(ctx: Context) {
     try {
       let { articleId, userId, content, parentId } = ctx.request.body;
 
@@ -29,17 +39,17 @@ export default class DiscussController {
         ctx.fail('评论内容不能为空');
         return;
       }
-      const article = await ArticleService.getArticleById(articleId);
+      const article = await this._articleService.getArticleById(articleId);
       if (!article) {
         ctx.fail('文章不存在');
         return;
       }
-      const user = await UsersService.getUserById(userId);
+      const user = await this._usersService.getUserById(userId);
       if (!user) {
         ctx.fail('用户不存在');
         return;
       }
-      const parentDiscuss = await DiscussService.getDiscussById(parentId);
+      const parentDiscuss = await this._discussService.getDiscussById(parentId);
       if (!parentDiscuss) {
         ctx.fail('父评论不存在');
         return;
@@ -52,7 +62,7 @@ export default class DiscussController {
         parentId,
       };
 
-      const res = await DiscussService.addDiscuss(params);
+      const res = await this._discussService.addDiscuss(params);
 
       ctx.success('添加评论成功', res);
     } catch (err) {
@@ -61,7 +71,7 @@ export default class DiscussController {
     }
   }
 
-  public static async getDiscussListByArticleId(ctx: Context) {
+  public async getDiscussListByArticleId(ctx: Context) {
     try {
       let { articleId } = ctx.params;
 
@@ -72,13 +82,13 @@ export default class DiscussController {
         return;
       }
 
-      const article = await ArticleService.getArticleById(articleId);
+      const article = await this._articleService.getArticleById(articleId);
       if (!article) {
         ctx.fail('文章不存在');
         return;
       }
 
-      const res = await DiscussService.getDiscussByArticleId(articleId);
+      const res = await this._discussService.getDiscussByArticleId(articleId);
 
       ctx.success('获取评论列表成功', res);
     } catch (err) {

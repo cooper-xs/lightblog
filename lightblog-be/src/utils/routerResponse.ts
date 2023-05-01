@@ -1,31 +1,23 @@
-import { Context } from 'koa';
+import { Context, Next } from 'koa';
 
-export default function routerResponse(option = {} as any) {
-  return async function (ctx, next) {
-    ctx.success = function (msg: 'success', data) {
-      console.log('msg: ', msg);
-      if (data) {
-        console.dir(data, { depth: null });
-      }
+/** 统一返回格式的中间件 */
+export default async function routerResponse(ctx: Context, next: Next) {
+  await next();
 
-      ctx.type = option.type || 'json';
-      ctx.body = {
-        code: option.successCode || 20000,
-        msg: option.successMsg || 'success',
-        data: data,
-      };
-    };
+  console.dir(ctx.body, { depth: null });
 
-    ctx.fail = function (msg = 'fail', code = 10010) {
-      console.log('msg: ', msg);
-
-      ctx.type = option.type || 'json';
-      ctx.body = {
-        code: option.failCode || code,
-        msg: option.successMsg || msg,
-      };
-    };
-
-    await next();
+  // 如果没有返回数据，并且状态码为 200 则设置状态码为 204
+  if (!ctx.body && ctx.status === 200) {
+    ctx.status = 204;
+  }
+  const data = ctx.body;
+  // 如果返回的数据为对象类型，则按照统一格式进行处理
+  ctx.body = {
+    code: 20000,
+    data: data,
   };
+  // 在执行完之后，手动抛出异常，让 errorHandler 中间件统一处理错误信息
+  if (ctx.status >= 400) {
+    throw new Error(`请求失败，状态码为 ${ctx.status}`);
+  }
 }
