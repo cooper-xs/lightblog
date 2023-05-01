@@ -2,8 +2,7 @@ import 'reflect-metadata';
 import Koa from 'koa';
 import cors from '@koa/cors';
 import bodyParser from 'koa-bodyparser';
-import Router from '@koa/router';
-import setupRouter from './routes';
+import router from './routes';
 import routerResponse from './utils/routerResponse';
 // 允许静态资源
 import static_serve from 'koa-static';
@@ -22,8 +21,6 @@ async function start() {
   app.use(routerResponse);
   app.use(errorHandler);
 
-  const router = new Router();
-  setupRouter(router);
   app.use(router.routes()).use(router.allowedMethods());
 
   app.listen(3000, () => {
