@@ -2,7 +2,7 @@ import { Context } from 'koa';
 import { DiscussRepository } from '../config/data-source';
 import { Discuss } from '../entities/Discuss';
 import { newDiscuss, viewDiscuss } from '../types/Discuss';
-import * as tool from '../utils/tool';
+import { tool } from '../utils/tool';
 
 export default class DiscussService {
   public constructor(private readonly ctx: Context) {

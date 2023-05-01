@@ -1,10 +1,11 @@
 import { Context } from 'koa';
 import { Discuss } from '../entities/Discuss';
 import { DiscussRepository } from '../config/data-source';
-import * as tool from '../utils/tool';
+import { tool } from '../utils/tool';
 import ArticleService from '../service/ArticleService';
 import UsersService from '../service/UsersService';
 import DiscussService from '../service/DiscussService';
+import { DataValidationError, ParamsError, DataNotFoundError } from '../errors';
 
 export default class DiscussController {
   // 依赖注入
@@ -17,83 +18,69 @@ export default class DiscussController {
     this._discussService = new DiscussService(ctx);
   }
 
-  public async addDiscuss(ctx: Context) {
-    try {
-      let { articleId, userId, content, parentId } = ctx.request.body;
+  public async addDiscuss() {
+    let { articleId, userId, content, parentId } = this.ctx.request.body;
 
-      articleId = tool.toNumber(articleId);
-      userId = tool.toNumber(userId);
-      parentId = tool.toNumber(parentId);
+    articleId = tool.toNumber(articleId);
+    userId = tool.toNumber(userId);
+    parentId = tool.toNumber(parentId);
 
-      console.log(articleId, userId, content, parentId);
+    console.log(articleId, userId, content, parentId);
 
-      if (!articleId) {
-        ctx.fail('文章ID不能为空');
-        return;
-      }
-      if (!userId) {
-        ctx.fail('用户ID不能为空');
-        return;
-      }
-      if (!content) {
-        ctx.fail('评论内容不能为空');
-        return;
-      }
-      const article = await this._articleService.getArticleById(articleId);
-      if (!article) {
-        ctx.fail('文章不存在');
-        return;
-      }
-      const user = await this._usersService.getUserById(userId);
-      if (!user) {
-        ctx.fail('用户不存在');
-        return;
-      }
-      const parentDiscuss = await this._discussService.getDiscussById(parentId);
-      if (!parentDiscuss) {
-        ctx.fail('父评论不存在');
-        return;
-      }
-
-      const params = {
-        articleId,
-        userId,
-        content,
-        parentId,
-      };
-
-      const res = await this._discussService.addDiscuss(params);
-
-      ctx.success('添加评论成功', res);
-    } catch (err) {
-      console.log(err);
-      ctx.fail('添加评论失败');
+    if (!articleId) {
+      throw new ParamsError('文章ID不能为空');
     }
+    if (!userId) {
+      throw new ParamsError('用户ID不能为空');
+    }
+    if (!content) {
+      throw new ParamsError('评论内容不能为空');
+    }
+    const article = await this._articleService.getArticleById(articleId);
+    if (!article) {
+      throw new DataNotFoundError('文章不存在');
+    }
+    const user = await this._usersService.getUserById(userId);
+    if (!user) {
+      throw new DataNotFoundError('用户不存在');
+    }
+    const parentDiscuss = await this._discussService.getDiscussById(parentId);
+    if (!parentDiscuss) {
+      throw new DataNotFoundError('父评论不存在');
+    }
+
+    const params = {
+      articleId,
+      userId,
+      content,
+      parentId,
+    };
+
+    const res = await this._discussService.addDiscuss(params);
+
+    this.ctx.info(`添加评论成功: ${JSON.stringify(res)}`);
+
+    return res;
   }
 
-  public async getDiscussListByArticleId(ctx: Context) {
-    try {
-      let { articleId } = ctx.params;
+  public async getDiscussListByArticleId() {
+    let { articleId } = this.ctx.params;
 
-      articleId = tool.toNumber(articleId);
+    articleId = tool.toNumber(articleId);
 
-      if (!articleId) {
-        ctx.fail('文章ID不能为空');
-        return;
-      }
-
-      const article = await this._articleService.getArticleById(articleId);
-      if (!article) {
-        ctx.fail('文章不存在');
-        return;
-      }
-
-      const res = await this._discussService.getDiscussByArticleId(articleId);
-
-      ctx.success('获取评论列表成功', res);
-    } catch (err) {
-      console.log(err);
-      ctx.fail('获取评论列表失败');
+    if (!articleId) {
+      throw new ParamsError('文章ID不能为空');
     }
+
+    const article = await this._articleService.getArticleById(articleId);
+    if (!article) {
+      throw new DataValidationError('文章不存在');
+    }
+
+    const res = await this._discussService.getDiscussByArticleId(articleId);
+
+    this.ctx.info(`获取评论列表成功: ${JSON.stringify(res)}`);
+
+    return res;
   }
 }

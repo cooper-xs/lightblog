@@ -1,5 +1,5 @@
 import Router from '@koa/router';
-import { Context } from 'vm';
+import { Context } from 'koa';
 
 import ArticleController from './controller/ArticleController';
 import ArticleTagReferencedController from './controller/ArticleTagReferencedController';
@@ -9,146 +9,143 @@ import TagController from './controller/TagController';
 import UsersController from './controller/UsersController';
 import { IRoute } from './types';
 
-// 缓存控制器工厂函数, 根据路由中的控制器名字生成对应的控制器实例, 避免每次请求都生成新的实例
-const controllerFactories = {
-  article: (ctx: Context) => new ArticleController(ctx),
-  articleTagReferenced: (ctx: Context) => new ArticleTagReferencedController(ctx),
-  category: (ctx: Context) => new CategoryController(ctx),
-  discuss: (ctx: Context) => new DiscussController(ctx),
-  tag: (ctx: Context) => new TagController(ctx),
-  users: (ctx: Context) => new UsersController(ctx),
-};
-
 const routes: IRoute[] = [
   {
     method: 'get',
     path: '/getArticleListByCategoriesAndTagsAsPage',
-    controller: controllerFactories.article,
+    controller: ArticleController,
     action: 'getArticleListByCategoriesAndTagsAsPage',
   },
   {
     method: 'get',
     path: '/getArticleForShow',
-    controller: controllerFactories.article,
+    controller: ArticleController,
     action: 'getArticleForShow',
   },
   {
     method: 'get',
     path: '/searchArticle',
-    controller: controllerFactories.article,
-    action: 'prototype.searchArticle',
+    controller: ArticleController,
+    action: 'searchArticle',
   },
   {
     method: 'post',
     path: '/addArticle',
-    controller: controllerFactories.article,
-    action: 'prototype.addArticle',
+    controller: ArticleController,
+    action: 'addArticle',
   },
+  // todo 设计获取文章的分类和标签的实现
   {
     method: 'post',
     path: '/updateArticle',
-    controller: controllerFactories.article,
-    action: 'prototype.updateArticle',
+    controller: ArticleController,
+    action: 'updateArticle',
   },
   {
     method: 'delete',
     path: '/deleteArticle',
-    controller: controllerFactories.article,
-    action: 'prototype.deleteArticle',
+    controller: ArticleController,
+    action: 'deleteArticle',
   },
   {
     method: 'post',
     path: '/addCategory',
-    controller: controllerFactories.category,
-    action: 'prototype.addCategory',
+    controller: CategoryController,
+    action: 'addCategory',
   },
   {
     method: 'post',
     path: '/updateCategory',
-    controller: controllerFactories.category,
-    action: 'prototype.updateCategory',
+    controller: CategoryController,
+    action: 'updateCategory',
   },
   {
     method: 'delete',
     path: '/deleteCategory',
-    controller: controllerFactories.category,
-    action: 'prototype.deleteCategory',
+    controller: CategoryController,
+    action: 'deleteCategory',
   },
   {
     method: 'post',
     path: '/addTag',
-    controller: controllerFactories.tag,
-    action: 'prototype.addTag',
+    controller: TagController,
+    action: 'addTag',
+    needLogin: true,
   },
   {
     method: 'post',
     path: '/updateTag',
-    controller: controllerFactories.tag,
-    action: 'prototype.updateTag',
+    controller: TagController,
+    action: 'updateTag',
   },
   {
     method: 'delete',
     path: '/deleteTag',
-    controller: controllerFactories.tag,
-    action: 'prototype.deleteTag',
+    controller: TagController,
+    action: 'deleteTag',
   },
   {
     method: 'get',
     path: '/getTagList',
-    controller: controllerFactories.tag,
-    action: 'prototype.getTagList',
+    controller: TagController,
+    action: 'getTagList',
   },
   {
     method: 'post',
     path: '/addArticleTagReferenced',
-    controller: controllerFactories.articleTagReferenced,
-    action: 'prototype.addArticleTagReferenced',
+    controller: ArticleTagReferencedController,
+    action: 'addArticleTagReferenced',
   },
   {
     method: 'post',
     path: '/deleteArticleTagReferenced',
-    controller: controllerFactories.articleTagReferenced,
-    action: 'prototype.deleteArticleTagReferenced',
+    controller: ArticleTagReferencedController,
+    action: 'deleteArticleTagReferenced',
   },
   {
     method: 'post',
     path: '/addUser',
-    controller: controllerFactories.users,
-    action: 'prototype.addUser',
+    controller: UsersController,
+    action: 'addUser',
   },
   {
     method: 'delete',
     path: '/deleteUser',
-    controller: controllerFactories.users,
-    action: 'prototype.deleteUser',
+    controller: UsersController,
+    action: 'deleteUser',
   },
   {
     method: 'get',
     path: '/getUserListAll',
-    controller: controllerFactories.users,
-    action: 'prototype.getUserListAll',
+    controller: UsersController,
+    action: 'getUserListAll',
   },
   {
     method: 'post',
     path: '/addDiscuss',
-    controller: controllerFactories.discuss,
-    action: 'prototype.addDiscuss',
+    controller: DiscussController,
+    action: 'addDiscuss',
   },
   {
     method: 'get',
     path: '/getDiscussListByArticleId',
-    controller: controllerFactories.discuss,
-    action: 'prototype.getDiscussListByArticleId',
+    controller: DiscussController,
+    action: 'getDiscussListByArticleId',
   },
 ];
 
 const router = new Router();
 
 routes.forEach((route) => {
-  console.info(`[Route] method = ${route.method.toUpperCase()} path = ${route.path}`);
-  router[route.method](route.path, async (ctx: Context) => {
-    const controller = route.controller(ctx);
-    await controller[route.action]();
+  // todo 用于鉴权处理
+  const middlewares = [];
+  if (route.needLogin) {
+    middlewares.push();
+  }
+  router[route.method](route.path, ...middlewares, async (ctx: Context) => {
+    // eslint-disable-next-line new-cap
+    const controller = new route.controller(ctx);
+    return await controller[route.action]();
   });
 });
 

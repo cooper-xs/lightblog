@@ -10,10 +10,9 @@ import {
   QueryAsPageByKeyword,
   updateArticle,
 } from '../types/article';
-import * as tool from '../utils/tool';
-// 导入markdown-it
+import { tool } from '../utils/tool';
 import MarkdownIt from 'markdown-it';
-import { DataValidationError, ParamsError } from '../errors';
+import { DataNotFoundError, DataValidationError, ParamsError } from '../errors';
 
 const md = new MarkdownIt();
 
@@ -36,8 +35,8 @@ export default class ArticleController {
    * 文章别名会作为文章的访问路径
    * 文章别名只能包含字母, 数字, 下划线, 中划线
    */
-  public async addArticle(ctx: Context) {
-    let { title, postAliasName } = ctx.request.body;
+  public async addArticle() {
+    let { title, postAliasName } = this.ctx.request.body;
 
     if (!title) {
       throw new ParamsError('文章标题不能为空');
@@ -68,140 +67,125 @@ export default class ArticleController {
 
     const article = await this._articleService.addArticle(params);
 
-    ctx.info(`添加文章: ${title}`);
+    this.ctx.info(`添加文章: ${title}`);
 
     return article;
   }
 
   /** post 更新文章內容 */
-  public async updateArticle(ctx: Context) {
-    try {
-      let {
-        articleId,
-        title,
-        postAliasName,
-        pushDate,
-        topFlag,
-        articleSummary,
-        previewImageUrl,
-        categoryId,
-        contentMd,
-        tagIds,
-      } = ctx.request.body;
+  public async updateArticle() {
+    let {
+      articleId,
+      title,
+      postAliasName,
+      pushDate,
+      topFlag,
+      articleSummary,
+      previewImageUrl,
+      categoryId,
+      contentMd,
+      tagIds,
+    } = this.ctx.request.body;
 
-      articleId = tool.toNumber(articleId);
+    articleId = tool.toNumber(articleId);
 
-      if (!articleId) {
-        ctx.fail('文章id不能为空');
-        return;
-      }
-
-      if (!title) {
-        ctx.fail('文章标题不能为空');
-        return;
-      }
-
-      if (!postAliasName) {
-        ctx.fail('文章别名不能为空');
-        return;
-      }
-
-      // 检查文章是否存在
-      const article = await this._articleService.getArticleById(articleId);
-      if (!article) {
-        ctx.fail('文章不存在');
-        return;
-      }
-
-      // 检查文章名是否已存在
-      if (await this._articleService.getArticleByTitle(title)) {
-        ctx.fail('文章标题已存在');
-        return;
-      }
-
-      // 格式化别名
-      postAliasName = tool.formatUrlPath(postAliasName);
-
-      // 检查别名是否已存在
-      if (await this._articleService.getArticleByAliasName(postAliasName)) {
-        ctx.fail('文章别名已存在');
-        return;
-      }
-
-      // 检查分类是否存在
-      if (categoryId) {
-        const category = await this._categoryService;
-        if (!category) {
-          ctx.fail('分类不存在');
-          return;
-        }
-      }
-
-      // 检查标签是否存在
-      if (tagIds) {
-        tagIds.map(async (tagId: number) => {
-          const tag = await this._tagService.getTagById(tagId);
-          if (!tag) {
-            ctx.fail('标签不存在');
-            return;
-          }
-        });
-      }
-
-      // todo 通过markdown-it将md转为html
-
-      const contentHtml: string = md.render(contentMd);
-
-      // const params: updateArticle = {
-      //   articleId,
-      //   title,
-      //   postAliasName,
-      //   pushDate,
-      //   topFlag,
-      //   articleSummary,
-      //   previewImageUrl,
-      //   categoryId,
-      //   contentMd,
-      //   contentHtml,
-      //   tagIds,
-      // };
-    } catch (err) {
-      console.log(err);
-      ctx.fail('更新文章失败');
+    if (!articleId) {
+      throw new ParamsError('文章ID不能为空');
     }
+
+    if (!title) {
+      throw new ParamsError('文章标题不能为空');
+    }
+
+    if (!postAliasName) {
+      throw new ParamsError('文章别名不能为空');
+    }
+
+    // 检查文章是否存在
+    const article = await this._articleService.getArticleById(articleId);
+    if (!article) {
+      throw new DataNotFoundError('文章不存在');
+    }
+
+    // 检查文章名是否已存在
+    if (await this._articleService.getArticleByTitle(title)) {
+      throw new DataValidationError('文章标题已存在');
+    }
+
+    // 格式化别名
+    postAliasName = tool.formatUrlPath(postAliasName);
+
+    // 检查别名是否已存在
+    if (await this._articleService.getArticleByAliasName(postAliasName)) {
+      throw new DataValidationError('文章别名已存在');
+    }
+
+    // 检查分类是否存在
+    if (categoryId) {
+      const category = await this._categoryService;
+      if (!category) {
+        throw new DataNotFoundError('分类不存在');
+      }
+    }
+
+    // 检查标签是否存在
+    if (tagIds) {
+      tagIds.map(async (tagId: number) => {
+        const tag = await this._tagService.getTagById(tagId);
+        if (!tag) {
+          throw new DataNotFoundError('标签不存在');
+        }
+      });
+    }
+
+    // todo 通过markdown-it将md转为html
+
+    const contentHtml: string = md.render(contentMd);
+
+    // const params: updateArticle = {
+    //   articleId,
+    //   title,
+    //   postAliasName,
+    //   pushDate,
+    //   topFlag,
+    //   articleSummary,
+    //   previewImageUrl,
+    //   categoryId,
+    //   contentMd,
+    //   contentHtml,
+    //   tagIds,
+    // };
+
+    return;
   }
 
   /** delete删除文章 */
-  public async deleteArticle(ctx: Context) {
-    try {
-      let { articleId } = ctx.params;
+  public async deleteArticle() {
+    let { articleId } = this.ctx.params;
 
-      articleId = tool.toNumber(articleId);
+    articleId = tool.toNumber(articleId);
 
-      // 检查文章是否存在
-      const article = await this._articleService.getArticleById(articleId);
-      if (!article) {
-        ctx.success('文章已经删除或不存在');
-        return;
-      }
-
-      // 检查文章是否有标签约束
-      const atr = await this._articleTagReferencedService.getArticleTagReferencedByArticleId(articleId);
-      if (atr) {
-        // 删除约束
-        atr.map(async (item) => {
-          await this._articleTagReferencedService.deleteArticleTagReferencedById(item.atrId);
-        });
-      }
-
-      // 删除文章
-      await this._articleService.deleteArticle(articleId);
-
-      ctx.success('删除文章成功');
-    } catch (err) {
-      console.log(err);
-      ctx.fail('删除文章失败');
+    // 检查文章是否存在
+    const article = await this._articleService.getArticleById(articleId);
+    if (!article) {
+      throw new DataNotFoundError('文章不存在');
     }
+
+    // 检查文章是否有标签约束
+    const atr = await this._articleTagReferencedService.getArticleTagReferencedByArticleId(articleId);
+    if (atr) {
+      // 删除约束
+      atr.map(async (item) => {
+        await this._articleTagReferencedService.deleteArticleTagReferencedById(item.atrId);
+      });
+    }
+
+    // 删除文章
+    const res = await this._articleService.deleteArticle(articleId);
+
+    this.ctx.info(`删除文章: ${article.title}`);
+
+    return res;
   }
 
   /** 分页查询文章列表
@@ -210,9 +194,9 @@ export default class ArticleController {
    * 当查询分类为父级分类时, 会查询该父级分类下的所有子分类
    * 查询的标签tag可以设置多个, 用逗号分隔, 如: tagIds=1,2,3
    */
-  public async getArticleListByCategoriesAndTagsAsPage(ctx: Context) {
+  public async getArticleListByCategoriesAndTagsAsPage() {
     // 检查参数
-    let { page, limit, categoryId, tagIds } = ctx.query;
+    let { page, limit, categoryId, tagIds } = this.ctx.query;
 
     page = tool.toNumber(page, 1);
 
@@ -273,6 +257,8 @@ export default class ArticleController {
       }));
     }
 
+    this.ctx.info(`查询文章列表, page: ${page}, limit: ${limit}, categoryId: ${categoryId}, tagIds: ${tagIds}`);
+
     return res;
   }
 
@@ -281,17 +267,16 @@ export default class ArticleController {
    * 没有id有aliasName, 则通过aliasName查询
    * 如果两个都没有, 则返回错误
    */
-  public async getArticleForShow(ctx: Context) {
-    let { articleId, postAliasName } = ctx.query;
+  public async getArticleForShow() {
+    let { articleId, postAliasName } = this.ctx.query;
 
-    ctx.info(`查询文章, articleId: ${articleId}, postAliasName: ${postAliasName}`);
+    this.ctx.info(`查询文章, articleId: ${articleId}, postAliasName: ${postAliasName}`);
 
     articleId = tool.toNumber(articleId);
 
     // 检查参数
     if (!articleId && !postAliasName) {
-      ctx.fail('参数错误');
-      return;
+      throw new ParamsError('查询文章缺少参数articleId或postAliasName');
     }
 
     // 获取文章
@@ -303,8 +288,7 @@ export default class ArticleController {
     }
 
     if (!article) {
-      ctx.fail('文章不存在');
-      return;
+      throw new DataNotFoundError('文章不存在');
     }
 
     // 获取文章分类信息
@@ -326,12 +310,14 @@ export default class ArticleController {
       tagAliasName: tag.tagAliasName,
     }));
 
+    this.ctx.info(`查询文章成功, articleId: ${article.articleId}, postAliasName: ${article.postAliasName}`);
+
     return article;
   }
 
   /** 关键字搜索文章 */
-  public async searchArticle(ctx: Context) {
-    let { page, limit, keywords } = ctx.query;
+  public async searchArticle() {
+    let { page, limit, keywords } = this.ctx.query;
 
     page = tool.toNumber(page, 1);
 
@@ -342,9 +328,8 @@ export default class ArticleController {
     keywords = keywords ? keywords.split('%20').map(String).filter(Boolean) : undefined;
 
     if (!keywords) {
-      ctx.fail('关键字不能为空');
-      return;
-    }
+      throw new ParamsError('搜索文章缺少参数keywords');
+    }  
 
     const params: QueryAsPageByKeyword = {
       page,
@@ -353,6 +338,8 @@ export default class ArticleController {
     };
 
     const res = await this._articleService.getArticleByKeyword(params);
+
+    this.ctx.info(`搜索文章结果, res: ${res}`);
 
     return res;
   }

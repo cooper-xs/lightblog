@@ -9,7 +9,7 @@ export const DATASOURCE = {
   username: 'root',
   password: 'root',
   database: 'blog',
-  synchronize: false,
+  synchronize: true,
 };
 
 // 全局变量声明

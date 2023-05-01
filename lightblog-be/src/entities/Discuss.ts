@@ -1,5 +1,5 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import * as tool from '../utils/tool';
+import { tool } from '../utils/tool';
 import { Article } from './Article';
 import { Users } from './Users';
 

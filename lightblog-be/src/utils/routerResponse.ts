@@ -2,9 +2,11 @@ import { Context, Next } from 'koa';
 
 /** 统一返回格式的中间件 */
 export default async function routerResponse(ctx: Context, next: Next) {
-  await next();
+  const res = await next();
 
-  console.dir(ctx.body, { depth: null });
+  ctx.body = res;
+
+  console.dir(ctx.body, { depth: null }); // 以递归的形式打印对象
 
   // 如果没有返回数据，并且状态码为 200 则设置状态码为 204
   if (!ctx.body && ctx.status === 200) {

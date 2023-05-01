@@ -4,7 +4,7 @@ import { Article } from '../entities/Article';
 import { Tag } from '../entities/Tag';
 import { ArticleTagReferenced } from '../entities/ArticleTagReferenced';
 import { newTag, updateTag, ViewTag } from '../types/tag';
-import * as tool from '../utils/tool';
+import { tool } from '../utils/tool';
 import { View } from 'typeorm/schema-builder/view/View';
 
 export default class TagService {

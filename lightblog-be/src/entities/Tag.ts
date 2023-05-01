@@ -1,5 +1,5 @@
 import { Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import * as tool from '../utils/tool';
+import { tool } from '../utils/tool';
 import { ArticleTagReferenced } from './ArticleTagReferenced';
 
 @Index('tag_name', ['tagName'], { unique: true })

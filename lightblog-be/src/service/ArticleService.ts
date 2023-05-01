@@ -8,7 +8,7 @@ import {
   QueryAsPageByCategoryAndTags,
   QueryAsPageByKeyword,
 } from '../types/article';
-import * as tool from '../utils/tool';
+import { tool } from '../utils/tool';
 
 export default class ArticleService {
   public constructor(private readonly ctx: Context) {
@@ -72,6 +72,10 @@ export default class ArticleService {
         articleId: articleId,
       },
     });
+
+    if(!article) {
+      return null;
+    }
 
     return {
       articleId: article.articleId,

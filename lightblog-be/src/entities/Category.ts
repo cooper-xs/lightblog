@@ -1,5 +1,5 @@
 import { Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import * as tool from '../utils/tool';
+import { tool } from '../utils/tool';
 import { Article } from './Article';
 
 @Index('category_name', ['categoryName'], { unique: true })

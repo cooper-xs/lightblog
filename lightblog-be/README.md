@@ -44,7 +44,9 @@ export const DATASOURCE = {
 ## 启动服务
 
 ```shell
-pnpm start
+# pnpm start
+# 支持热修改
+pnpm dev
 ```
 
 # 项目结构:
@@ -63,17 +65,19 @@ lightblog-be
 │   ├── types : 类型声明
 │   │   ├── index.d.ts : 通用类型声明
 │   │   └── ...d.ts : ...类型声明
+│   ├── errors : 自定义错误
 │   ├── config
 │   │   ├── index.ts : 声明全局变量等配置
 │   │   ├── data-source.ts : 数据库配置
-│   │   └── blog-init.sql : 初始化数据库SQL语句
-│   ├── utils
-│   │   ├── logger.ts : 控制台打印日志: 方法 / 请求位置 / 状态 / 用时
-│   │   ├── routerResponse.ts : 统一响应格式
-│   │   └── tool.ts : 常用工具类
-│   └── app.ts : 入口文件
+│   │   └── blog-init.sql : 初始化数据库SQL语句, 带一些测试数据
+│   └── utils
+│       ├── winstonLogger.ts : 日志工具
+│       ├── routerResponse.ts : 统一响应格式
+│       ├── errorHandler.ts : 统一错误处理
+│       └── tool.ts : 常用工具类
 ├── misc : 项目相关的一些文件, 杂项
 ├── node_modules : 依赖包
-├── public : API文档、管理员后台界面、日志文件等。(暂时都没有)
+├── public : 静态资源
+├── logs : 日志文件
 └── README.md : 项目说明
 ```
