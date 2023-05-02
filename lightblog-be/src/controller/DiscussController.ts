@@ -57,14 +57,12 @@ export default class DiscussController {
     };
 
     const res = await this._discussService.addDiscuss(params);
-
-    this.ctx.info(`添加评论成功: ${JSON.stringify(res)}`);
-
+    
     return res;
   }
 
   public async getDiscussListByArticleId() {
-    let { articleId } = this.ctx.params;
+    let { articleId } = this.ctx.query;
 
     articleId = tool.toNumber(articleId);
 
@@ -78,8 +76,6 @@ export default class DiscussController {
     }
 
     const res = await this._discussService.getDiscussByArticleId(articleId);
-
-    this.ctx.info(`获取评论列表成功: ${JSON.stringify(res)}`);
 
     return res;
   }

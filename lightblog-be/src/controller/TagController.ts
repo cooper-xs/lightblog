@@ -15,8 +15,9 @@ export default class TagController {
 
   /** 添加标签 */
   public async addTag() {
+    
     let { tagName, tagAliasName, description } = this.ctx.request.body;
-
+    
     if (!tagName) {
       throw new ParamsError('标签名称不能为空');
     }
@@ -97,7 +98,7 @@ export default class TagController {
 
   /** 删除标签 */
   public async deleteTag() {
-    let { tagId } = this.ctx.params;
+    let { tagId } = this.ctx.query;
 
     tagId = tool.toNumber(tagId);
 
@@ -123,7 +124,7 @@ export default class TagController {
     return res;
   }
 
-  /** 获取标签列表 */
+  /** 获取所有标签列表 */
   public async getTagListAll() {
     const tagList = await this._tagService.getTagListAll();
 

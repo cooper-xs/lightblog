@@ -31,6 +31,9 @@ export default class ArticleService {
         articleId: articleId,
       },
     });
+    if(!article) {
+      return null;
+    }
     return ArticleRepository.remove(article);
   }
 
@@ -42,6 +45,9 @@ export default class ArticleService {
       .leftJoinAndSelect('article.category', 'category')
       .where('category.categoryId = :categoryId', { categoryId })
       .getMany();
+      if(!articles) {
+        return null;
+      }
     return articles.map((article) => article.articleId);
   }
 
@@ -52,6 +58,9 @@ export default class ArticleService {
         postAliasName: postAliasName,
       },
     });
+    if(!article) {
+      return null;
+    }
     return article;
   }
 
@@ -62,6 +71,9 @@ export default class ArticleService {
         title: title,
       },
     });
+    if(!article) {
+      return null;
+    }
     return article;
   }
 
@@ -111,6 +123,10 @@ export default class ArticleService {
       },
     });
 
+    if(!article) {
+      return null;
+    }
+
     return {
       articleId: article.articleId,
       title: article.title,
@@ -144,6 +160,11 @@ export default class ArticleService {
         articleId: articleId,
       },
     });
+
+    if(!article) {
+      return null;
+    }
+
     return article;
   }
 
@@ -177,6 +198,10 @@ export default class ArticleService {
       .skip((page - 1) * limit)
       .take(limit)
       .getManyAndCount();
+
+    if (!articles.length) {
+      return null;
+    }
 
     return {
       info: {
@@ -231,6 +256,10 @@ export default class ArticleService {
       });
     }
     const [articles, count] = await queryBuilder.getManyAndCount();
+
+    if (!articles.length) {
+      return null;
+    }
 
     return {
       info: {

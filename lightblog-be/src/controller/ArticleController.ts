@@ -13,6 +13,7 @@ import {
 import { tool } from '../utils/tool';
 import MarkdownIt from 'markdown-it';
 import { DataNotFoundError, DataValidationError, ParamsError } from '../errors';
+import DiscussService from '../service/DiscussService';
 
 const md = new MarkdownIt();
 
@@ -22,11 +23,13 @@ export default class ArticleController {
   private readonly _categoryService: CategoryService;
   private readonly _tagService: TagService;
   private readonly _articleTagReferencedService: ArticleTagReferencedService;
+  private readonly _discussService: DiscussService;
   public constructor(private readonly ctx: Context) {
     this._articleService = new ArticleService(ctx);
     this._categoryService = new CategoryService(ctx);
     this._tagService = new TagService(ctx);
     this._articleTagReferencedService = new ArticleTagReferencedService(ctx);
+    this._discussService = new DiscussService(ctx);
   }
 
   /** 添加新文章
@@ -66,8 +69,6 @@ export default class ArticleController {
     };
 
     const article = await this._articleService.addArticle(params);
-
-    this.ctx.info(`添加文章: ${title}`);
 
     return article;
   }
@@ -160,8 +161,8 @@ export default class ArticleController {
   }
 
   /** delete删除文章 */
-  public async deleteArticle() {
-    let { articleId } = this.ctx.params;
+  public async deleteArticleById() {
+    let { articleId } = this.ctx.query;
 
     articleId = tool.toNumber(articleId);
 
@@ -179,11 +180,19 @@ export default class ArticleController {
         await this._articleTagReferencedService.deleteArticleTagReferencedById(item.atrId);
       });
     }
+    
+    // 检查是否有评论
+    const discuss = await this._discussService.getDiscussByArticleId(articleId);
+
+    if (discuss) {
+      // 删除评论
+      discuss.map(async (item) => {
+        await this._discussService.deleteDiscussById(item.discussId);
+      });
+    }
 
     // 删除文章
     const res = await this._articleService.deleteArticle(articleId);
-
-    this.ctx.info(`删除文章: ${article.title}`);
 
     return res;
   }
@@ -257,8 +266,6 @@ export default class ArticleController {
       }));
     }
 
-    this.ctx.info(`查询文章列表, page: ${page}, limit: ${limit}, categoryId: ${categoryId}, tagIds: ${tagIds}`);
-
     return res;
   }
 
@@ -269,8 +276,6 @@ export default class ArticleController {
    */
   public async getArticleForShow() {
     let { articleId, postAliasName } = this.ctx.query;
-
-    this.ctx.info(`查询文章, articleId: ${articleId}, postAliasName: ${postAliasName}`);
 
     articleId = tool.toNumber(articleId);
 
@@ -310,8 +315,6 @@ export default class ArticleController {
       tagAliasName: tag.tagAliasName,
     }));
 
-    this.ctx.info(`查询文章成功, articleId: ${article.articleId}, postAliasName: ${article.postAliasName}`);
-
     return article;
   }
 
@@ -338,8 +341,6 @@ export default class ArticleController {
     };
 
     const res = await this._articleService.getArticleByKeyword(params);
-
-    this.ctx.info(`搜索文章结果, res: ${res}`);
 
     return res;
   }

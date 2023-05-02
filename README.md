@@ -2,22 +2,22 @@
 
 高优先级:
 
-* [ ] 前端框架：Vue3.2 + setup
-* [ ] 样式库：Element Plus
-* [ ] CSS框架：WindiCSS(TODO)
-* [ ] 状态管理：Pinia
-* [ ] 路由管理：Vue Router
-* [ ] 构建工具：Vite4
+* [x] 前端框架：Vue3.2 + setup
+* [x] 样式库：Element Plus
+* [x] CSS框架：WindiCSS(TODO)
+* [x] 状态管理：Pinia
+* [x] 路由管理：Vue Router
+* [x] 构建工具：Vite4
 * [x] 后端开发语言：Node.js
 * [x] 后端框架：koa / ~~egg.js~~ / ~~midway.js~~
 * [x] 数据库：MySQL
 * [ ] DevOps相关：Docker、CI/CD、~~Nginx~~
 * [ ] 服务器端渲染（SSR）：<Mark>Vue SSR<Mark>
-* [ ] 构建和部署工具：GitHub
+* [x] 构建和部署工具：GitHub
 * [x] 代码规范：ESLint、Prettier
 * [ ] <Mark>暗夜模式<Mark>（细节多，后期做）
-* [ ] Markdown支持：markdown-it / mavonEditor?富文本编辑器
-* [ ] 日志管理：Winston / Log4js(无所谓)
+* [x] Markdown支持：markdown-it / mavonEditor?富文本编辑器
+* [x] 日志管理：Winston
 
 ---
 

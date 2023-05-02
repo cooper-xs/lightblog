@@ -1,4 +1,6 @@
+import { ParamName } from '@koa/router';
 import { Context } from 'koa';
+import { DataNotFoundError, DataValidationError, ParamsError } from '../errors';
 import ArticleService from '../service/ArticleService';
 import ArticleTagReferencedService from '../service/ArticleTagReferencedService';
 import TagService from '../service/TagService';
@@ -25,15 +27,13 @@ export default class ArticleTagReferencedController {
     // 检查文章是否存在
     const article = await this._articleService.getArticleById(articleId);
     if (!article) {
-      this.ctx.fail('文章不存在');
-      return;
+      throw new DataNotFoundError('文章不存在');
     }
 
     // 检查标签是否存在
     const tag = await this._tagService.getTagById(tagId);
     if (!tag) {
-      this.ctx.fail('标签不存在');
-      return;
+      throw new DataNotFoundError('标签不存在');
     }
 
     const params = {
@@ -42,10 +42,9 @@ export default class ArticleTagReferencedController {
     };
 
     // 检查文章-标签关联是否已存在
-    const atr = await this._articleTagReferencedService.getArticleTagReferenced(params);
+    const atr = await this._articleTagReferencedService.getArticleTagReferencedByTagIdAndArticleId(params);
     if (atr) {
-      this.ctx.fail('文章-标签关联已存在');
-      return;
+      throw new DataValidationError('文章-标签关联已存在');
     }
 
     const articleTagReferenced = await this._articleTagReferencedService.addArticleTagReferenced(params);
@@ -53,25 +52,39 @@ export default class ArticleTagReferencedController {
     return articleTagReferenced;
   }
 
-  /** 删除文章-标签关联 */
+  /** 删除文章-标签关联
+   * 如果有关联id, 则根据关联id删除
+   * 如果没有关联id, 则根据文章id和标签id删除
+   */
   public async deleteArticleTagReferenced() {
-    let { articleId, tagId } = this.ctx.request.body;
+    let { atrId, articleId, tagId } = this.ctx.request.query;
 
+    atrId = tool.toNumber(atrId);
     articleId = tool.toNumber(articleId);
     tagId = tool.toNumber(tagId);
+
+    this.ctx.info(`删除文章-标签关联: atrId: ${atrId}, articleId: ${articleId}, tagId: ${tagId}`);
+
+    // 检查文章-标签关联是否已存在
+    let atr = await this._articleTagReferencedService.getArticleTagReferencedById(atrId);
+    if (atr) {
+      return await this._articleTagReferencedService.deleteArticleTagReferencedById(atrId);
+    }
+
+    if(!articleId || !tagId) {
+      throw new ParamsError('文章id或标签id不能为空');
+    }
 
     // 检查文章是否存在
     const article = await this._articleService.getArticleById(articleId);
     if (!article) {
-      this.ctx.fail('文章不存在');
-      return;
+      throw new DataNotFoundError('文章不存在');
     }
 
     // 检查标签是否存在
     const tag = await this._tagService.getTagById(tagId);
     if (!tag) {
-      this.ctx.fail('标签不存在');
-      return;
+      throw new DataNotFoundError('标签不存在');
     }
 
     const params = {
@@ -80,10 +93,9 @@ export default class ArticleTagReferencedController {
     };
 
     // 检查文章-标签关联是否已存在
-    const atr = await this._articleTagReferencedService.getArticleTagReferenced(params);
+    atr = await this._articleTagReferencedService.getArticleTagReferencedByTagIdAndArticleId(params);
     if (!atr) {
-      this.ctx.success('文章-标签关联已经删除或不存在');
-      return;
+      throw new DataValidationError('文章-标签关联不存在');
     }
 
     const articleTagReferenced = await this._articleTagReferencedService.deleteArticleTagReferencedById(atr.atrId);

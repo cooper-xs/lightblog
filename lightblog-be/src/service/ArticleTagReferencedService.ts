@@ -27,7 +27,7 @@ export default class ArticleTagReferencedService {
   }
 
   /** 查询是否已经存在某文章和某标签的关联 */
-  public async getArticleTagReferenced(params: {
+  public async getArticleTagReferencedByTagIdAndArticleId(params: {
     articleId: number;
     tagId: number;
   }): Promise<ArticleTagReferenced> {
@@ -36,6 +36,22 @@ export default class ArticleTagReferencedService {
         ...params,
       },
     });
+    if (!res) {
+      return null;
+    }
+    return res;
+  }
+
+  /** 通过关联id查找所有关联 */
+  public async getArticleTagReferencedById(atrId: number): Promise<ArticleTagReferenced> {
+    const res = await ArticleTagReferencedRepository.findOne({
+      where: {
+        atrId,
+      },
+    });
+    if (!res) {
+      return null;
+    }
     return res;
   }
 

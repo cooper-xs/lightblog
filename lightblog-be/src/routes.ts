@@ -43,9 +43,9 @@ const routes: IRoute[] = [
   },
   {
     method: 'delete',
-    path: '/deleteArticle',
+    path: '/deleteArticleById',
     controller: ArticleController,
-    action: 'deleteArticle',
+    action: 'deleteArticleById',
   },
   {
     method: 'post',
@@ -64,6 +64,12 @@ const routes: IRoute[] = [
     path: '/deleteCategory',
     controller: CategoryController,
     action: 'deleteCategory',
+  },
+  {
+    method: 'get',
+    path: '/getCategoryList',
+    controller: CategoryController,
+    action: 'getCategoryList',
   },
   {
     method: 'post',
@@ -86,9 +92,9 @@ const routes: IRoute[] = [
   },
   {
     method: 'get',
-    path: '/getTagList',
+    path: '/getTagListAll',
     controller: TagController,
-    action: 'getTagList',
+    action: 'getTagListAll',
   },
   {
     method: 'post',
@@ -97,7 +103,7 @@ const routes: IRoute[] = [
     action: 'addArticleTagReferenced',
   },
   {
-    method: 'post',
+    method: 'delete',
     path: '/deleteArticleTagReferenced',
     controller: ArticleTagReferencedController,
     action: 'deleteArticleTagReferenced',

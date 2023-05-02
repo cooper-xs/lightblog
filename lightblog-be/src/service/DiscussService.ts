@@ -41,4 +41,35 @@ export default class DiscussService {
     }));
     return viewDiscussList;
   }
+
+  public async getDiscussListByUserId(userId: number): Promise<Discuss[]> {
+    const res = await DiscussRepository.find({
+      where: { userId },
+    });
+    if (!res) {
+      return null;
+    }
+    return res;
+  }
+
+  public async deleteDiscussById(discussId: number): Promise<Discuss> {
+    const res = await DiscussRepository.findOne({
+      where: { discussId },
+    });
+    if (!res) {
+      return null;
+    }
+    const discuss = await DiscussRepository.remove(res);
+    return discuss;
+  }
+
+  public async deleteDiscussByUserId(userId: number): Promise<Discuss> {
+    const res = await DiscussRepository.findOne({
+      where: { userId },
+    });
+    if (!res) {
+      return null;
+    }
+    return await DiscussRepository.remove(res);
+  }
 }

@@ -6,7 +6,8 @@ export default async function routerResponse(ctx: Context, next: Next) {
 
   ctx.body = res;
 
-  console.dir(ctx.body, { depth: null }); // 以递归的形式打印对象
+  // console.dir(ctx.body, { depth: null }); // 以递归的形式打印对象
+  ctx.info(`请求结果: ${JSON.stringify(ctx.body)}`);
 
   // 如果没有返回数据，并且状态码为 200 则设置状态码为 204
   if (!ctx.body && ctx.status === 200) {

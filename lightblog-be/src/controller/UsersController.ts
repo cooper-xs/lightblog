@@ -1,5 +1,6 @@
 import { Context } from 'koa';
 import { DataValidationError, ParamsError } from '../errors';
+import DiscussService from '../service/DiscussService';
 import UsersService from '../service/UsersService';
 import { newUser } from '../types/user';
 import { tool } from '../utils/tool';
@@ -7,8 +8,10 @@ import { tool } from '../utils/tool';
 export default class UsersController {
   // 依赖注入
   private readonly _usersService: UsersService;
+  private readonly _discussService: DiscussService;
   public constructor(private readonly ctx: Context) {
     this._usersService = new UsersService(ctx);
+    this._discussService = new DiscussService(ctx);
   }
 
   /** 注册新用户 */
@@ -53,7 +56,7 @@ export default class UsersController {
 
   /** 根据id删除用户 */
   public async deleteUser() {
-    let { userId } = this.ctx.params;
+    let { userId } = this.ctx.query;
 
     userId = tool.toNumber(userId);
 
@@ -63,6 +66,13 @@ export default class UsersController {
 
     if (!(await this._usersService.getUserById(userId))) {
       throw new DataValidationError('用户不存在');
+    }
+
+    // 删除用户相关的评论
+    const discussList = await this._discussService.getDiscussListByUserId(userId);
+    if (discussList.length) {
+      await this._discussService.deleteDiscussByUserId(userId);
+      this.ctx.warn('删除用户相关评论成功, 用户id = ', userId);
     }
 
     const res = await this._usersService.deleteUser(userId);

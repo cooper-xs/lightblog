@@ -52,12 +52,18 @@ export default class TagService {
     const res = await TagRepository.createQueryBuilder('tag')
       .innerJoin('tag.articleTagReferenceds', 'atr', 'atr.articleId = :articleId', { articleId })
       .getMany();
+    if (!res) {
+      return null;
+    }
     return res;
   }
 
   /** 查找所有标签, 格式化日期返回 */
   public async getTagListAll(): Promise<ViewTag[]> {
     const res = await TagRepository.find();
+    if (!res) {
+      return null;
+    }
     return res.map((item) => item.toViewTag());
   }
 
@@ -68,6 +74,9 @@ export default class TagService {
         tagId,
       },
     });
+    if (!res) {
+      return null;
+    }
     return res.toViewTag();
   }
 
@@ -78,6 +87,9 @@ export default class TagService {
         tagName,
       },
     });
+    if(!res) {
+      return null;
+    }
     return res.toViewTag();
   }
 
@@ -88,6 +100,9 @@ export default class TagService {
         tagAliasName,
       },
     });
+    if(!res) {
+      return null;
+    }
     return res.toViewTag();
   }
 }

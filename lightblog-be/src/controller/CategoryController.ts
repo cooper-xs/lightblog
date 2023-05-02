@@ -127,7 +127,7 @@ export default class CategoryController {
 
   /** 删除分类 */
   public async deleteCategory() {
-    let { categoryId } = this.ctx.params;
+    let { categoryId } = this.ctx.query;
 
     categoryId = tool.toNumber(categoryId);
 
@@ -153,18 +153,14 @@ export default class CategoryController {
 
     const res = await this._categoryService.deleteCategory(categoryId);
 
-    this.ctx.info(`删除分类: ${category.categoryName}`);
-
     return res;
   }
 
-  /** 根据父标签id查询分类的列表 */
-  public async getCategoryListFromParent() {
-    let { parentId } = this.ctx.params;
+  /** 查询分类的列表, 如果有父标签则返回其子标签 */
+  public async getCategoryList() {
+    let { parentId } = this.ctx.query;
 
     parentId = tool.toNumber(parentId);
-
-    parentId = parentId ? Number(parentId) : undefined;
 
     let categoryList = null;
 
@@ -176,8 +172,6 @@ export default class CategoryController {
       categoryList = await this._categoryService.getCategoryByParentId(parentId);
       categoryList.parent = await this._categoryService.getCategoryById(parentId);
     }
-
-    this.ctx.info(`查询分类列表: ${categoryList.length}条, 父分类id: ${parentId}, 父分类名称: ${categoryList.parent ? categoryList.parent.categoryName : '无'}`);
 
     return categoryList;
   }
