@@ -29,9 +29,10 @@ class Http {
 
     const apiResponse: ApiResponse<T> = {
       code: response.status,
-      msg: response.statusText,
       data: response.data,
     };
+
+    console.log('[apiResponse]: ', apiResponse);
 
     return apiResponse;
   }

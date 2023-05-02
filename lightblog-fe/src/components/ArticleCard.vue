@@ -3,11 +3,10 @@
     <div class="flex flex-row">
       <h2 class="text-xl font-bold ml-10 cursor-pointer">
         <router-link :to="{
-          name: 'Post',
-          params: { articleId: article.articleId },
-          query: { postAlaisName: article.postAliasName }
+          name: 'Article',
+          params: { postAliasName: article.postAliasName }
         }">
-          {{ article.title }}
+          文章标题: {{ article.title }}
         </router-link>
       </h2>
       <div class="ml-auto">
@@ -15,11 +14,6 @@
       </div>
     </div>
     <div class="flex flex-row p-2">
-      <!-- <div class="w-1/2 h-50 flex items-center justify-center overflow-hidden">
-        <div class="aspect-h-1 aspect-w-1 object-center"  >
-          <img :src="article.previewImageUrl" alt="" class="w-full h-full object-cover" />
-        </div>
-      </div> -->
       <div class="flex items-center justify-center w-1/2 h-50 bg-cover bg-center"
         :style="{ backgroundImage: `url(${article.previewImageUrl})` }">
       </div>
@@ -42,7 +36,7 @@ import type { ArticleCardView } from '@/types/Article';
 const props = defineProps<{ article: ArticleCardView }>();
 
 onMounted(() => {
-  console.log(props.article);
+  // console.log("卡片组件参数: ", props.article);
 });
 
 // const instance = getCurrentInstance();

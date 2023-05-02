@@ -4,15 +4,19 @@
       <img src="../assets/img/avatar.jpg" alt="avatar">
     </div>
     <div class="text-2xl font-bold">
-      <span>LightBlog</span>
+      <RouterLink to="/">
+        <span>LightBlog</span>
+      </RouterLink>
     </div>
-    <div class="flex flex-row gap-4 text-sm">
+    <!-- <div class="flex flex-row gap-4 text-sm">
       <div>
-        主页
+        <RouterLink to="/">
+          主页
+        </RouterLink>
       </div>
       <div>
         关于我
       </div>
-    </div>
+    </div> -->
   </div>
 </template>

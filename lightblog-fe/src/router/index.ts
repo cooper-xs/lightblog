@@ -1,32 +1,36 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import ContentVue from '@/views/Content.vue';
+import Main from '@/views/Main.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'Home',
-      component: ContentVue,
+      component: Main,
+      children: [
+        {
+          path: '',
+          name: 'Home',
+          component: () => import('@/components/Content.vue'),
+        },
+        {
+          path: 'article/:postAliasName',
+          name: 'Article',
+          component: () => import('@/components/Post.vue'),
+          props: route => ({ postAliasName: route.params.postAliasName }),
+        },
+      ],
     },
     {
-      path: '/post/:articleId',
-      name: 'Post',
-      component: () => import('@/views/Post.vue'),
-      alias: '/post/:postAliasName',
-      // redirect: to => ({ name: 'Post', params: { articleId: to.params.articleId } }),
-      // children: [
-      // ]
+      path: '/admin',
+      name: 'Admin',
+      component: () => import('@/views/Admin.vue'),
     },
-    // {
-    //   path: '/post/:postAliasName',
-    //   name: 'Post',
-    //   component: () => import('@/views/Post.vue'),
-    // },
-    // {
-    //   path: '/post/:articleId',
-    //   redirect: to => `/post/${to.params.postAliasName}`
-    // },
+    {
+      path: '/login',
+      name: 'Login',
+      component: () => import('@/views/Login.vue'),
+    },
     {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',

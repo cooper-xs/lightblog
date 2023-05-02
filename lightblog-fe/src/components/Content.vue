@@ -30,7 +30,7 @@ onMounted(async () => {
 });
 
 async function fetchPageData(params: QueryAsPageByCategoryAndTags) {
-  return await Http.get('/article/show/list', { params })
+  return await Http.get('/getArticleListByCategoriesAndTagsAsPage', { params })
     .then(res => {
       const response = res.data as ApiResponse<ArticleListView>;
       console.log(response.data?.info);
