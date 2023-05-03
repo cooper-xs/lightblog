@@ -127,6 +127,12 @@ const routes: IRoute[] = [
     action: 'getUserListAll',
   },
   {
+    method: 'get',
+    path: '/getUserByEmail',
+    controller: UsersController,
+    action: 'getUserByEmail',
+  },
+  {
     method: 'post',
     path: '/addDiscuss',
     controller: DiscussController,

@@ -13,39 +13,51 @@ export default class UsersService {
     user.userNickname = params.userNickname;
     user.email = params.email;
     user.createTime = new Date();
-    await UsersRepository.save(user);
-    return user;
+    const res = await UsersRepository.save(user);
+    return res;
   }
 
   public async deleteUser(userId: number): Promise<Users> {
     const user = await UsersRepository.findOne({
       where: { userId: userId },
     });
-    await UsersRepository.remove(user);
-    return user;
+    const res = await UsersRepository.remove(user);
+    return res;
   }
 
-  public async getUserByEmail(email: string): Promise<Users | undefined> {
-    return await UsersRepository.findOne({
+  public async getUserByEmail(email: string): Promise<Users> {
+    const res = await UsersRepository.findOne({
       where: { email: email },
     });
+    if (!res) {
+      return null;
+    }
+    return res;
   }
 
-  public async getUserByNickname(userNickname: string): Promise<Users | undefined> {
-    return await UsersRepository.findOne({
+  public async getUserByNickname(userNickname: string): Promise<Users> {
+    const res = await UsersRepository.findOne({
       where: { userNickname: userNickname },
     });
+    if (!res) {
+      return null;
+    }
+    return res;
   }
 
   public async getUserListAll(): Promise<Users[]> {
     return await UsersRepository.find();
   }
 
-  public async getUserById(userId: number): Promise<Users | undefined> {
-    return await UsersRepository.findOne({
+  public async getUserById(userId: number): Promise<Users> {
+    const res = await UsersRepository.findOne({
       where: {
         userId: userId,
       },
     });
+    if (!res) {
+      return null;
+    }
+    return res;
   }
 }

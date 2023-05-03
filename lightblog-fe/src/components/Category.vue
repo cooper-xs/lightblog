@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-sky-400">
+  <div class="bg-sky-50">
     <!-- 有很多列 -->
     <el-tag>
       分类1

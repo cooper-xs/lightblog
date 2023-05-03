@@ -1,5 +1,5 @@
 import { Context } from 'koa';
-import { DataValidationError, ParamsError } from '../errors';
+import { DataNotFoundError, DataValidationError, ParamsError } from '../errors';
 import DiscussService from '../service/DiscussService';
 import UsersService from '../service/UsersService';
 import { newUser } from '../types/user';
@@ -12,6 +12,27 @@ export default class UsersController {
   public constructor(private readonly ctx: Context) {
     this._usersService = new UsersService(ctx);
     this._discussService = new DiscussService(ctx);
+  }
+
+  /** 通过邮箱查询用户 */
+  public async getUserByEmail() {
+    let { email } = this.ctx.query;
+
+    if (!email) {
+      throw new ParamsError('用户邮箱不能为空');
+    }
+
+    if (!tool.checkEmail(email)) {
+      throw new DataValidationError('用户邮箱格式不正确');
+    }
+
+    const user = await this._usersService.getUserByEmail(email);
+
+    if(!user) {
+      return null;
+    }
+
+    return user;
   }
 
   /** 注册新用户 */

@@ -1,18 +1,3 @@
-<template>
-  <div class="article-detail p-4 bg-white rounded-lg shadow">
-    <div class="article-header">
-      <h1 class="text-2xl font-bold">
-        {{ article?.title }}
-      </h1>
-    </div>
-    <div class="article-content mt-4" v-html="article?.contentHtml">
-    </div>
-  </div>
-  <div>
-    <Discuss />
-  </div>
-</template>
-
 <script setup lang="ts">
 import type { ApiResponse } from '@/types';
 import type { ArticleDetailView } from '@/types/Article';
@@ -24,7 +9,6 @@ const instance = getCurrentInstance();
 const article = ref<ArticleDetailView>();
 
 onMounted(async () => {
-  console.log('文章详情页');
   fetchArticleData();
 })
 
@@ -34,7 +18,6 @@ async function fetchArticleData() {
   return await Http.get('/getArticleForShow', { params: { postAliasName } })
     .then(res => {
       const response = res.data as ApiResponse<ArticleDetailView>;
-      console.log(response.data);
       article.value = response.data;
     })
     .catch(err => {
@@ -43,3 +26,23 @@ async function fetchArticleData() {
     });
 }
 </script>
+
+<template>
+  <div class="article-detail p-4 bg-white rounded-lg shadow">
+    <div class="article-header">
+      <h1 class="text-2xl font-bold">
+        {{ article?.title }}
+      </h1>
+    </div>
+    <div>
+      <span class="text-gray-500">分类: {{ article?.category.categoryName }}</span>
+      <span class="text-gray-500 ml-4">发布时间: {{ article?.updateTime }}</span>
+      <span class="text-gray-500 ml-4">阅读量: {{ article?.readCount }}</span>
+    </div>
+    <div class="article-content mt-4" v-html="article?.contentHtml">
+    </div>
+  </div>
+  <div>
+    <Discuss :articleId="article?.articleId ?? 1" />
+  </div>
+</template>

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-fuchsia-400">
+  <div class="bg-fuchsia-50">
     <el-tag>
       标签1
     </el-tag>

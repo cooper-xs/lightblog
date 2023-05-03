@@ -7,21 +7,21 @@ import Search from '@/components/Search.vue';
 import Category from '@/components/Category.vue';
 import Tag from '@/components/Tag.vue';
 import myAxios from '@/utils/Http';
-import Content from '@/components/Content.vue';
+import Content from '@/components/PostList.vue';
 </script>
 
 <template>
-  <div
-    class="flex justify-center items-center absolute w-4/5 mt-15 mb-30 min-w-2xl mx-auto left-1/2 transform -translate-x-1/2">
+  <div class="flex justify-center items-center absolute w-4/5 mt-15 mb-30 min-w-2xl mx-auto left-1/2 transform -translate-x-1/2">
     <el-container>
       <el-aside class="w-ms bg-teal-50">
         <Me />
-        <!-- <Search />
-        <Category />
-        <Tag /> -->
+        <el-card class="box-card my-10 mx-2" shadow="hover">
+          <Search />
+          <Category />
+          <Tag />
+        </el-card>
       </el-aside>
       <el-main class="bg-blue-50 p-5">
-        <!-- <Content /> -->
         <RouterView />
       </el-main>
     </el-container>

@@ -3,6 +3,7 @@ import type { AxiosRequestConfig } from 'axios';
 export interface ApiResponse<T> {
   code: number;
   data?: T;
+  message?: string;
 }
 
 export interface MyAxiosConfig extends AxiosRequestConfig {
@@ -11,4 +12,10 @@ export interface MyAxiosConfig extends AxiosRequestConfig {
 
 export interface AdminState {
   isAuthenticated: boolean;
+}
+
+export interface DiscussForm {
+  nickname: string;
+  email: string;
+  content: string;
 }
