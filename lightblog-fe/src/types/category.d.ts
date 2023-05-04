@@ -1,5 +1,3 @@
-import { Category } from '../entities/Category';
-
 export interface CategoryFamily {
   parent: ViewCategory;
   children: ViewCategory[];

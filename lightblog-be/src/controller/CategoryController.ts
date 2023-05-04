@@ -158,9 +158,17 @@ export default class CategoryController {
 
   /** 查询分类的列表, 如果有父标签则返回其子标签 */
   public async getCategoryList() {
-    let { parentId } = this.ctx.query;
+    let { parentId, categoryAliasName } = this.ctx.query;
 
     parentId = tool.toNumber(parentId);
+
+    // 如果不存在id但存在别名, 则根据别名先查询id
+    if (!parentId && categoryAliasName) {
+      const category = await this._categoryService.getCategoryByAliasName(categoryAliasName);
+      if (category) {
+        parentId = category.categoryId;
+      }
+    }
 
     let categoryList = null;
 

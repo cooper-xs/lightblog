@@ -2,7 +2,7 @@
 export interface QueryAsPageByCategoryAndTags {
   page?: number;
   limit?: number;
-  categoryIds?: number[];
+  categoryId?: number;
   tagIds?: number[];
 }
 
@@ -85,5 +85,5 @@ export interface updateArticle {
 export interface QueryAsPageByKeyword {
   page?: number;
   limit?: number;
-  keywords: string[];
+  keywords?: string;
 }

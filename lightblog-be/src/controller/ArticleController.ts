@@ -326,9 +326,11 @@ export default class ArticleController {
 
     limit = tool.toNumber(limit, 7);
 
-    keywords = tool.formatUrlPath(keywords);
+    // keywords = tool.formatUrlPath(keywords);
 
-    keywords = keywords ? keywords.split('%20').map(String).filter(Boolean) : undefined;
+    keywords = keywords ? keywords.split(',').map(String).filter(Boolean) : undefined;
+
+    this.ctx.info('keywords', keywords);
 
     if (!keywords) {
       throw new ParamsError('搜索文章缺少参数keywords');
@@ -341,6 +343,28 @@ export default class ArticleController {
     };
 
     const res = await this._articleService.getArticleByKeyword(params);
+
+    // 获取文章标签信息
+    for (const article of res.list) {
+      if (article.category.categoryId !== null) {
+        // 如果该文章没有分类信息，则跳过
+        const category = await this._categoryService.getCategoryById(article.category.categoryId);
+        article.category = {
+          categoryId: category.categoryId,
+          categoryName: category.categoryName,
+          categoryAliasName: category.categoryAliasName,
+        };
+      }
+    }
+    // 获取文章标签信息
+    for (const article of res.list) {
+      const tags = await this._tagService.getTagByArticleId(article.articleId);
+      article.tags = tags.map((tag) => ({
+        tagId: tag.tagId,
+        tagName: tag.tagName,
+        tagAliasName: tag.tagAliasName,
+      }));
+    }
 
     return res;
   }

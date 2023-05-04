@@ -1,18 +1,8 @@
 <script setup lang="ts">
-import { getCurrentInstance, onMounted, ref } from 'vue';
 import type { ArticleCardView } from '@/types/Article';
 
 const props = defineProps<{ article: ArticleCardView }>();
 
-onMounted(() => {
-  // console.log("卡片组件参数: ", props.article);
-});
-
-// const instance = getCurrentInstance();
-
-// function viewArticle () {
-//   instance!.appContext.config.globalProperties.$router.push({ path: `/${props.article.postAliasName}` });
-// }
 </script>
 
 <template>

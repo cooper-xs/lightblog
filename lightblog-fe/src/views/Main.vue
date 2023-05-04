@@ -15,7 +15,7 @@ import Content from '@/components/PostList.vue';
     <el-container>
       <el-aside class="w-ms bg-teal-50">
         <Me />
-        <el-card class="box-card my-10 mx-2" shadow="hover">
+        <el-card class="box-card my-10 mx-4" shadow="hover">
           <Search />
           <Category />
           <Tag />

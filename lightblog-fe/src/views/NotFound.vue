@@ -11,12 +11,12 @@
         您正在寻找的页面不存在
       </div>
       <div>
-        <button
-          class="font-medium text-2xl bg-gradient-to-r rounded-md py-3 px-6 transition duration-300 ease-in-out transform hover:scale-115 from-blue-400 to-green-400 active:scale-95">
-          <router-link to="/">
+        <router-link to="/">
+          <button
+            class="font-medium text-2xl bg-gradient-to-r rounded-md py-3 px-6 transition duration-300 ease-in-out transform hover:scale-115 from-blue-400 to-green-400 active:scale-95">
             首页
-          </router-link>
-        </button>
+          </button>
+        </router-link>
       </div>
     </div>
   </div>

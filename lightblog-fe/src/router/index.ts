@@ -20,7 +20,17 @@ const router = createRouter({
           // props: route => ({ postAliasName: route.params.postAliasName }),
         },
         {
-          path: 'search/:keywords',
+          path: 'category/:categoryId',
+          name: 'Category',
+          component: () => import('@/components/PostList.vue'),
+        },
+        {
+          path: 'tag/:tagId',
+          name: 'Tag',
+          component: () => import('@/components/PostList.vue'),
+        },
+        {
+          path: 'search',
           name: 'Search',
           component: () => import('@/components/PostList.vue'),
         }
