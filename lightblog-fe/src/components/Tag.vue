@@ -2,37 +2,29 @@
 import type { ApiResponse } from '@/types';
 import type { ViewTag } from '@/types/tag';
 import Http from '@/utils/Http';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watchEffect } from 'vue';
 
 const tags = ref<ViewTag[]>([]);
 
-onMounted(() => {
+watchEffect(() => {
   fetchTagAll();
 });
 
 async function fetchTagAll() {
-  return await Http.get('/getTagListAll')
-    .then(res => {
-      const response = res.data as ApiResponse<ViewTag[]>;
-      // 设置文章信息
-      tags.value = response.data ?? [];
-    })
-    .catch(err => {
-      console.log(err);
-      return err;
-    });
+  const res = await Http.get<ViewTag[]>('/getTagListAll');
+  tags.value = res;
 }
 </script>
 
 <template>
   <div class="flex flex-wrap gap-2 my-2">
     <el-tag v-for="tag in tags" :key="tag.tagId" class="mx-1" round>
-      <router-link :to="{
+      <!-- <router-link :to="{
         name: 'Tag',
         params: { tagId: tag.tagId }
-      }">
+      }"> -->
         {{ tag.tagName }}
-      </router-link>
+      <!-- </router-link> -->
     </el-tag>
   </div>
 </template>

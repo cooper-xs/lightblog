@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { reactive, ref, watchEffect } from 'vue'
 import Http from '@/utils/Http';
 import type { ApiResponse, DiscussForm } from '@/types'
 import type { newUser, User } from '@/types/user'
 import type { newDiscuss, viewDiscuss } from '@/types/Discuss'
+import { ElNotification } from 'element-plus';
 
 const props = defineProps({
   articleId: {
@@ -20,34 +21,28 @@ const initDiscussForm: DiscussForm = {
 }
 const discussForm = reactive({ ...initDiscussForm })
 
+const getDiscussListByArticleId = async () => {
+  const res = await Http.get<viewDiscuss[]>(
+    '/getDiscussListByArticleId', 
+    { params: { articleId: props.articleId } 
+  })
+  discussList.value = res;
+}
 
-onMounted(async () => {
+watchEffect(async () => {
   await getDiscussListByArticleId();
 })
-
-const getDiscussListByArticleId = () => {
-  // console.log("生成评论的文章id:", props.articleId)
-  return Http.get('/getDiscussListByArticleId', { params: { articleId: props.articleId } })
-    .then(res => {
-      const response = res.data as ApiResponse<viewDiscuss[]>;
-      discussList.value = response.data;
-    })
-    .catch(err => {
-      console.log(err);
-      return err;
-    });
-}
 
 // 提交留言按钮
 const submitDiscussForm = async () => {
   // 查询用户是否存在
-  if(await checkUser(discussForm.email)) {
+  if (await checkUser(discussForm.email)) {
     // 修改昵称为正确的昵称
     discussForm.nickname = user.value!.userNickname;
   } else {
     console.log('用户不存在, 创建用户');
     // 创建用户
-    await createUser({ userNickname: discussForm.nickname, email: discussForm.email});
+    await createUser({ userNickname: discussForm.nickname, email: discussForm.email });
   }
   // 组成提交表单
   const newDiscussForm: newDiscuss = {
@@ -57,7 +52,7 @@ const submitDiscussForm = async () => {
   }
   console.log(newDiscussForm);
   // 提交留言
-  if(await submitDiscuss(newDiscussForm)) {
+  if (await submitDiscuss(newDiscussForm)) {
     // 提交成功
     console.log('提交成功');
     // 清空表单
@@ -71,55 +66,35 @@ const submitDiscussForm = async () => {
 
 // 查询用户是否存在
 async function checkUser(email: string) {
-  return await Http.get('/getUserByEmail', { params: { email } })
-    .then(res => {
-      const response = res.data as ApiResponse<User>;
-      if (response.code === 20000) {
-        user.value = response.data;
-      }
-      return response.code === 20000;
-    })
-    .catch(err => {
-      console.log(err);
-      return err;
-    });
+  const res = await Http.get<User>('/getUserByEmail', { params: { email } })
+  return res;
 }
 
 // 创建用户
 async function createUser(params: newUser) {
-  return await Http.post('/addUser', params)
-    .then(res => {
-      const response = res.data as ApiResponse<User>;
-      console.log('创建用户请求结果: ', response);
-      if (response.code === 20000) {
-        user.value = response.data;
-      }
-      return response.code === 20000;
+  // error
+  try {
+    const res = await Http.post<User>('/addUser', params)
+    user.value = res;
+  } catch (err) {
+    ElNotification({
+      title: '错误',
+      message: '创建用户失败',
+      type: 'error',
     })
-    .catch(err => {
-      console.log(err);
-      return err;
-    });
+  }
 }
 
 // 提交留言请求
 async function submitDiscuss(newDiscussForm: newDiscuss) {
-  return await Http.post('/addDiscuss', newDiscussForm)
-    .then(res => {
-      const response = res.data as ApiResponse<null>;
-      console.log(response);
-      return response.code === 20000;
-    })
-    .catch(err => {
-      console.log(err);
-      return err;
-    });
+  const res = await Http.post<User>('/addDiscuss', newDiscussForm)
+  return res
 }
 </script>
 
 <template>
   <div class="mt-10">
-    <el-form :model="discussForm" label-width="80px" @submit.prevent >
+    <el-form :model="discussForm" label-width="80px" @submit.prevent>
       <el-form-item label="昵称">
         <el-input v-model="discussForm.nickname" placeholder="请输入昵称" maxlength="20" show-word-limit />
       </el-form-item>
@@ -127,7 +102,8 @@ async function submitDiscuss(newDiscussForm: newDiscuss) {
         <el-input v-model="discussForm.email" placeholder="请输入电子邮箱" />
       </el-form-item>
       <el-form-item label="留言内容">
-        <el-input v-model="discussForm.content" type="textarea" :autosize="{ minRows: 2, maxRows: 4 }" placeholder="请输入留言内容" maxlength="200" show-word-limit />
+        <el-input v-model="discussForm.content" type="textarea" :autosize="{ minRows: 2, maxRows: 4 }"
+          placeholder="请输入留言内容" maxlength="200" show-word-limit />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitDiscussForm">

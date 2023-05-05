@@ -6,6 +6,10 @@ const router = createRouter({
   routes: [
     {
       path: '/',
+      redirect: '/home',
+    },
+    {
+      path: '/home',
       component: Main,
       children: [
         {
@@ -17,23 +21,7 @@ const router = createRouter({
           path: 'article/:postAliasName',
           name: 'Article',
           component: () => import('@/components/Post.vue'),
-          // props: route => ({ postAliasName: route.params.postAliasName }),
         },
-        {
-          path: 'category/:categoryId',
-          name: 'Category',
-          component: () => import('@/components/PostList.vue'),
-        },
-        {
-          path: 'tag/:tagId',
-          name: 'Tag',
-          component: () => import('@/components/PostList.vue'),
-        },
-        {
-          path: 'search',
-          name: 'Search',
-          component: () => import('@/components/PostList.vue'),
-        }
       ],
     },
     {

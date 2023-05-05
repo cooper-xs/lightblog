@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { RouterView } from 'vue-router'
 import Footer from '@/components/Footer.vue';
 import Me from '@/components/Me.vue';
@@ -8,6 +8,14 @@ import Category from '@/components/Category.vue';
 import Tag from '@/components/Tag.vue';
 import myAxios from '@/utils/Http';
 import Content from '@/components/PostList.vue';
+import TagBar from '@/components/TagBar.vue';
+
+const categoryId = ref(0);
+
+function addCategory(id: number) {
+  categoryId.value = id;
+  console.log("Main: ", categoryId.value);
+}
 </script>
 
 <template>
@@ -17,13 +25,14 @@ import Content from '@/components/PostList.vue';
         <Me />
         <el-card class="box-card my-10 mx-4" shadow="hover">
           <Search />
-          <Category />
+          <Category @tag-clicked="addCategory" />
           <Tag />
         </el-card>
       </el-aside>
       <el-main class="bg-blue-50 p-5">
+        <!-- <TagBar :categoryId="categoryId" /> -->
         <RouterView />
       </el-main>
     </el-container>
   </div>
-</template>
+</template> 
