@@ -1,29 +1,29 @@
 <script setup lang="ts">
-import type { ApiResponse } from '@/types';
-import type { ArticleDetailView } from '@/types/Article';
+import router from '@/router';
 import Http from '@/utils/Http';
 import { ElNotification } from 'element-plus';
-import { getCurrentInstance, ref, watchEffect } from 'vue';
+import { onMounted, ref } from 'vue';
 import Discuss from './Discuss.vue';
+import type { ArticleDetailView } from '@/types/Article';
 
 const loading = ref(false)
 const error = ref(false)
-const instance = getCurrentInstance();
 const article = ref<ArticleDetailView>();
 
-watchEffect(async () => {
-  fetchArticleData();
-})
+onMounted(async () => {
+  const postAliasName = router.currentRoute.value.params.postAliasName;
+  await fetchArticleData(postAliasName);
+  // 根据文章的标签和分类修改Category和Tag组件的选中状态, 但不修改路由
+  const category = article.value?.category;
+  const tags = article.value?.tags;
+  
+});
 
-async function fetchArticleData() {
-  try{
+async function fetchArticleData(postAliasName: string | string[]) {
+  try {
     loading.value = true
     error.value = false
-    const postAliasName = instance?.proxy?.$route?.params?.postAliasName;
-    const res = await Http.get<ArticleDetailView>(
-      '/getArticleForShow', 
-      { params: { postAliasName } 
-    })
+    const res = await Http.get<ArticleDetailView>('/getArticleForShow', { params: { postAliasName } })
     article.value = res;
     loading.value = false;
   } catch (err) {
@@ -41,16 +41,12 @@ async function fetchArticleData() {
 <template>
   <div v-if="loading">
     <div>
-      <div class="flex justify-center items-center h-64">
-        <div class="text-2xl text-gray-500">文章不存在</div>
-      </div>
+      <el-empty description="正在加载中..." />
     </div>
   </div>
   <div v-else-if="error">
     <div>
-      <div class="flex justify-center items-center h-64">
-        <div class="text-2xl text-gray-500">文章不存在</div>
-      </div>
+      <el-empty description="文章不存在" />
     </div>
   </div>
   <div v-else-if="article">

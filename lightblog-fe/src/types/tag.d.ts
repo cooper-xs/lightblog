@@ -18,3 +18,8 @@ export interface ViewTag {
   description: string;
   createTime: string;
 }
+
+export interface TagState {
+  tags: ViewTag[];
+  currentTagsId: number[];
+}

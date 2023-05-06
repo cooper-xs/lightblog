@@ -26,3 +26,8 @@ export interface ViewCategory {
   parentId: number;
   createTime: string;
 }
+
+export interface CategoryState {
+  categorys: ViewCategory[];
+  currentCategoryId: number;
+}

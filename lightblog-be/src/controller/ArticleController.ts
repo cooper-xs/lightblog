@@ -244,6 +244,10 @@ export default class ArticleController {
     // 获取文章列表
     const res = await this._articleService.getArticleOrderByTopAndTime(params);
 
+    if(!res) {
+      return null;
+    }
+
     // 获取文章标签信息
     for (const article of res.list) {
       if (article.category.categoryId !== null) {
@@ -343,6 +347,10 @@ export default class ArticleController {
     };
 
     const res = await this._articleService.getArticleByKeyword(params);
+
+    if(!res) {
+      return null;
+    }
 
     // 获取文章标签信息
     for (const article of res.list) {

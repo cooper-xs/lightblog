@@ -3,13 +3,6 @@ import { Context, Next } from 'koa';
 import { tool } from './tool';
 import "winston-daily-rotate-file";
 
-const defaultOptions = {
-  datePattern: "YYYY-MM-DD",
-  zippedArchive: true,
-  maxSize: "20m",
-  maxFiles: "14d",
-};
-
 // 创建Winston日志记录器
 const logger = createLogger({
   level: 'info',

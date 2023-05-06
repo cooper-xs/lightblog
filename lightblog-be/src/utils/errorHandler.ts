@@ -6,7 +6,7 @@ export default async function errorHandler(ctx: Context, next: Next) {
   try {
     await next();
   } catch (err) {
-    ctx.error(err);
+    
     if (err instanceof ParamsError) {
       ctx.status = 400;
       ctx.body = { message: err.message };
@@ -19,6 +19,11 @@ export default async function errorHandler(ctx: Context, next: Next) {
     } else {
       ctx.status = 500;
       ctx.body = { message: '服务器内部错误' };
+    }
+    if(ctx.status === 500) {
+      ctx.error(err);
+    } else {
+      ctx.warn(err);
     }
   }
 }

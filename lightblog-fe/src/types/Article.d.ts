@@ -3,7 +3,7 @@ export interface QueryAsPageByCategoryAndTags {
   page?: number;
   limit?: number;
   categoryId?: number;
-  tagIds?: number[];
+  tagIds?: string;
 }
 
 // 查询文章列表时，返回的数据结构
