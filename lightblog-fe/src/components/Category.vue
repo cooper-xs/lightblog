@@ -1,8 +1,15 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue';
+import { onMounted, ref, watchEffect } from 'vue';
 import router from '@/router';
 import Http from '@/utils/Http';
 import type { CategoryFamily, CategoryState, ViewCategory } from '@/types/category';
+
+const props = defineProps({
+  categoryId: {
+    type: Number,
+    default: 0,
+  }
+});
 
 const categoryState = ref<CategoryState>({
   categorys: [],
@@ -27,6 +34,12 @@ function clickCategory(id: number) {
     query: newQuery
   });
 }
+
+onMounted(() => {
+  if (props.categoryId) {
+    categoryState.value.currentCategoryId = props.categoryId;
+  }
+});
 
 watchEffect(() => {
   fetchCategoryAll();

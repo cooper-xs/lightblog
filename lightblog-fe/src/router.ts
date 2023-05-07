@@ -28,6 +28,17 @@ const router = createRouter({
       path: '/admin',
       name: 'Admin',
       component: () => import('@/views/Admin.vue'),
+      children: [
+        {
+          path: '',
+          redirect: '/admin/dashboard',
+        },
+        {
+          path: '/admin/dashboard',
+          name: 'Dashboard',
+          component: () => import('@/components/Admin/Dashboard.vue'),
+        },
+      ],
     },
     {
       path: '/login',

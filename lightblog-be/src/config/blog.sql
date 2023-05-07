@@ -145,7 +145,16 @@ INSERT INTO `discuss` VALUES (2, '2022-02-02 13:00:00', 2, 1, '支持楼上，�
 INSERT INTO `discuss` VALUES (3, '2022-02-03 14:00:00', 3, 2, '还有哪些关于这个话题的文章可以推荐吗？', NULL);
 INSERT INTO `discuss` VALUES (4, '2022-02-04 15:00:00', 4, 3, '感觉作者对这个问题的见解非常深刻，学习了！', NULL);
 INSERT INTO `discuss` VALUES (5, '2022-02-05 16:00:00', 5, 3, '同感，受益匪浅！', 4);
-INSERT INTO `discuss` VALUES (6, '2023-03-10 11:14:03', 2, 3, '所以爱会消失吗?', NULL);
+INSERT INTO `discuss` VALUES (6, '2022-05-05 10:00:00', 3, 8, '非常好的文章，解释得非常清楚！', NULL);
+INSERT INTO `discuss` VALUES (7, '2022-05-06 11:00:00', 4, 6, '我觉得这篇文章还可以再更进一步。', NULL);
+INSERT INTO `discuss` VALUES (8, '2022-05-07 12:00:00', 2, 5, '这篇文章让我想到了一个类似的话题，但是不同的观点。', NULL);
+INSERT INTO `discuss` VALUES (9, '2022-05-08 13:00:00', 1, 4, '写得很好，我学到了很多！', NULL);
+INSERT INTO `discuss` VALUES (10, '2022-05-09 14:00:00', 5, 9, '这篇文章让我对这个问题有了新的看法。', NULL);
+INSERT INTO `discuss` VALUES (11, '2022-05-10 15:00:00', 3, 2, '我也认为这个观点非常有道理！', 8);
+INSERT INTO `discuss` VALUES (12, '2022-05-11 16:00:00', 4, 7, '我对这个话题一直很感兴趣，谢谢您分享这篇文章！', NULL);
+INSERT INTO `discuss` VALUES (13, '2022-05-12 17:00:00', 1, 10, '这篇文章让我看到了一些之前没有想过的东西。', NULL);
+INSERT INTO `discuss` VALUES (14, '2022-05-13 18:00:00', 5, 1, '非常喜欢这篇文章，感谢分享！', NULL);
+INSERT INTO `discuss` VALUES (15, '2022-05-14 19:00:00', 2, 3, '我觉得这个问题的解决方法还有其他可行的方案。', NULL);
 
 -- ----------------------------
 -- Table structure for tag

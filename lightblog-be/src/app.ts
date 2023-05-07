@@ -8,6 +8,8 @@ import static_serve from 'koa-static';
 import { AppDataSource } from './config/data-source';
 import { loggerMount } from './utils/winstonLogger';
 import errorHandler from './utils/errorHandler';
+import koaJWT from 'koa-jwt';
+import { TOKEN_CONF } from './config';
 
 async function start() {
   const app = new Koa();
@@ -18,6 +20,11 @@ async function start() {
   app.use(loggerMount());
   app.use(errorHandler);
   app.use(routerResponse);
+  // app.use(
+  //   koaJWT({ secret: TOKEN_CONF.secretKey, algorithms: ['HS256'] }).unless({
+  //     path: [/^\/auth\/login/, /^\/auth\/register/],
+  //   }),
+  // );
   app.use(router.routes()).use(router.allowedMethods());
 
   app.listen(3000, () => {

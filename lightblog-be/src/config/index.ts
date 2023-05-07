@@ -1,5 +1,7 @@
 export const TOKEN_CONF = {
   secretToken: 'light',
+  secretKey: 'access-token',
+  expiresIn: '2h',
 };
 
 // 数据库配置
@@ -28,6 +30,8 @@ declare global {
 }
 
 global.secretToken = TOKEN_CONF.secretToken;
+global.secretKey = TOKEN_CONF.secretKey;
+global.expiresIn = TOKEN_CONF.expiresIn;
 global.host = DATASOURCE.host;
 global.port = DATASOURCE.port;
 global.username = DATASOURCE.username;

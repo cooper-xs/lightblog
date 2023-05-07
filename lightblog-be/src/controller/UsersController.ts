@@ -1,9 +1,12 @@
 import { Context } from 'koa';
-import { DataNotFoundError, DataValidationError, ParamsError } from '../errors';
+import { DataValidationError, ParamsError } from '../errors';
 import DiscussService from '../service/DiscussService';
 import UsersService from '../service/UsersService';
 import { newUser } from '../types/user';
 import { tool } from '../utils/tool';
+import { TOKEN_CONF } from '../config';
+// 引入jwt
+// import jwt from 'jsonwebtoken';
 
 export default class UsersController {
   // 依赖注入
@@ -99,5 +102,19 @@ export default class UsersController {
     const res = await this._usersService.deleteUser(userId);
 
     return res;
+  }
+
+  /** 管理员登录 */
+  public async login() {
+    let pws = this.ctx.request.body.pws;
+    this.ctx.info('管理员登录, pws = ', pws);
+    if(pws === TOKEN_CONF.secretToken) {
+      this.ctx.info('管理员登录成功');
+      // 直接生成token
+
+
+      
+
+    }
   }
 }

@@ -144,6 +144,12 @@ const routes: IRoute[] = [
     controller: DiscussController,
     action: 'getDiscussListByArticleId',
   },
+  {
+    method: 'post',
+    path: '/login',
+    controller: UsersController,
+    action: 'login',
+  },
 ];
 
 const router = new Router();

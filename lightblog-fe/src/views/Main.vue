@@ -4,8 +4,24 @@ import Me from '@/components/Me.vue';
 import Search from '@/components/Search.vue';
 import Category from '@/components/Category.vue';
 import Tag from '@/components/Tag.vue';
-import { ref } from 'vue';
+import { onMounted, ref, watchEffect } from 'vue';
+import router from '@/router';
+import Http from '@/utils/Http';
+import type { ArticleDetailView } from '@/types/Article';
 
+const article = ref<ArticleDetailView>();
+const categoryId = ref(0);
+const tagIds = ref([] as number[]);
+
+onMounted(async () => {
+  if (router.currentRoute.value.path.startsWith('/home/article')) {
+    const postAliasName = router.currentRoute.value.params.postAliasName;
+    const res = await Http.get<ArticleDetailView>('/getArticleForShow', { params: { postAliasName } })
+    article.value = res;
+    categoryId.value = res.category.categoryId;
+    tagIds.value = res.tags.map(tag => tag.tagId);
+  }
+})
 </script>
 
 <template>
@@ -16,12 +32,12 @@ import { ref } from 'vue';
         <Me />
         <el-card class="box-card my-10 mx-4" shadow="hover">
           <Search />
-          <Category />
-          <Tag />
+          <Category v-if="categoryId || router.currentRoute.value.path === '/home'" :categoryId="categoryId" />
+          <Tag v-if="tagIds.length > 0 || router.currentRoute.value.path === '/home'" :tagIds="tagIds" />
         </el-card>
       </el-aside>
       <el-main class="bg-blue-50 p-5">
-        <RouterView />
+        <RouterView v-if="article || router.currentRoute.value.path === '/home'" :article="article" />
       </el-main>
     </el-container>
   </div>

@@ -1,12 +1,19 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect } from 'vue';
+import { ref, computed, watchEffect, onMounted } from 'vue';
 import router from '@/router';
 import Http from '@/utils/Http';
 import type { TagState, ViewTag } from '@/types/tag';
 
+const props = defineProps({
+  tagIds: {
+    type: Array as () => number[],
+    default: []
+  }
+});
+
 const tagState = ref<TagState>({
-  tags: [], // 所有标签
-  currentTagsId: router.currentRoute.value.query.tagIds ? (router.currentRoute.value.query.tagIds as string).split(',').map(Number) : [] // 当前选中的标签
+  tags: [],
+  currentTagsId: (router.currentRoute.value.query.tagIds as string)?.split(',').map(id => parseInt(id, 10)) ?? [],
 });
 
 async function fetchTagAll() {
@@ -37,6 +44,12 @@ watchEffect(() => {
   fetchTagAll();
 });
 
+
+onMounted(() => {
+  if (props.tagIds.length) {
+    tagState.value.currentTagsId = props.tagIds;
+  }
+});
 </script>
 
 <template>
