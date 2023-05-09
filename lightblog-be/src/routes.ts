@@ -24,6 +24,12 @@ const routes: IRoute[] = [
   },
   {
     method: 'get',
+    path: '/getArticleDetailForEdit',
+    controller: ArticleController,
+    action: 'getArticleDetailForEdit',
+  },
+  {
+    method: 'get',
     path: '/searchArticle',
     controller: ArticleController,
     action: 'searchArticle',
@@ -34,7 +40,6 @@ const routes: IRoute[] = [
     controller: ArticleController,
     action: 'addArticle',
   },
-  // todo 设计获取文章的分类和标签的实现
   {
     method: 'post',
     path: '/updateArticle',

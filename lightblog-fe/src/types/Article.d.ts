@@ -1,3 +1,5 @@
+import type { Category } from "./category";
+
 // 查询文章列表时, 传入的参数
 export interface QueryAsPageByCategoryAndTags {
   page?: number;
@@ -72,13 +74,11 @@ export interface updateArticle {
   articleId: number;
   title: string;
   postAliasName: string;
-  pushDate: string;
   topFlag: number;
   articleSummary: string;
   previewImageUrl: string;
   categoryId: number;
   contentMd: string;
-  tagIds: number[];
 }
 
 // 关键词查询文章列表时，传入的参数
@@ -86,4 +86,20 @@ export interface QueryAsPageByKeyword {
   page?: number;
   limit?: number;
   keywords?: string;
+}
+
+export interface Article {
+  articleId: number;
+  title: string;
+  postAliasName: string;
+  commentCount: number;
+  readCount: number;
+  topFlag: number;
+  createTime: string;
+  pushDate: string;
+  contentMd: string;
+  contentHtml: string;
+  articleSummary: string;
+  previewImageUrl: string;
+  categoryId: number;
 }

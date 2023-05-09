@@ -14,6 +14,8 @@ import { tool } from '../utils/tool';
 import MarkdownIt from 'markdown-it';
 import { DataNotFoundError, DataValidationError, ParamsError } from '../errors';
 import DiscussService from '../service/DiscussService';
+import { Article } from '../entities/Article';
+import { ViewCategory } from '../types/category';
 
 const md = new MarkdownIt();
 
@@ -79,13 +81,11 @@ export default class ArticleController {
       articleId,
       title,
       postAliasName,
-      pushDate,
       topFlag,
       articleSummary,
       previewImageUrl,
       categoryId,
       contentMd,
-      tagIds,
     } = this.ctx.request.body;
 
     articleId = tool.toNumber(articleId);
@@ -109,7 +109,8 @@ export default class ArticleController {
     }
 
     // 检查文章名是否已存在
-    if (await this._articleService.getArticleByTitle(title)) {
+    const existingTitle = await this._articleService.getArticleByTitle(title);
+    if (existingTitle && existingTitle.articleId !== articleId) {
       throw new DataValidationError('文章标题已存在');
     }
 
@@ -117,7 +118,8 @@ export default class ArticleController {
     postAliasName = tool.formatUrlPath(postAliasName);
 
     // 检查别名是否已存在
-    if (await this._articleService.getArticleByAliasName(postAliasName)) {
+    const existingAliasName = await this._articleService.getArticleByAliasName(postAliasName);
+    if (existingAliasName && existingAliasName.articleId !== articleId) {
       throw new DataValidationError('文章别名已存在');
     }
 
@@ -129,35 +131,24 @@ export default class ArticleController {
       }
     }
 
-    // 检查标签是否存在
-    if (tagIds) {
-      tagIds.map(async (tagId: number) => {
-        const tag = await this._tagService.getTagById(tagId);
-        if (!tag) {
-          throw new DataNotFoundError('标签不存在');
-        }
-      });
-    }
-
-    // todo 通过markdown-it将md转为html
-
+    // 通过markdown-it将md转为html
     const contentHtml: string = md.render(contentMd);
 
-    // const params: updateArticle = {
-    //   articleId,
-    //   title,
-    //   postAliasName,
-    //   pushDate,
-    //   topFlag,
-    //   articleSummary,
-    //   previewImageUrl,
-    //   categoryId,
-    //   contentMd,
-    //   contentHtml,
-    //   tagIds,
-    // };
+    const params: updateArticle = {
+      articleId,
+      title,
+      postAliasName,
+      topFlag,
+      articleSummary,
+      previewImageUrl,
+      categoryId,
+      contentMd,
+      contentHtml,
+    };
 
-    return;
+    const res = await this._articleService.updateArticle(params);
+
+    return res;
   }
 
   /** delete删除文章 */
@@ -180,7 +171,7 @@ export default class ArticleController {
         await this._articleTagReferencedService.deleteArticleTagReferencedById(item.atrId);
       });
     }
-    
+
     // 检查是否有评论
     const discuss = await this._discussService.getDiscussByArticleId(articleId);
 
@@ -244,7 +235,7 @@ export default class ArticleController {
     // 获取文章列表
     const res = await this._articleService.getArticleOrderByTopAndTime(params);
 
-    if(!res) {
+    if (!res) {
       return null;
     }
 
@@ -272,6 +263,61 @@ export default class ArticleController {
 
     return res;
   }
+  
+    /** 关键字搜索文章 */
+    public async searchArticle() {
+      let { page, limit, keywords } = this.ctx.query;
+  
+      page = tool.toNumber(page, 1);
+  
+      limit = tool.toNumber(limit, 7);
+  
+      // keywords = tool.formatUrlPath(keywords);
+  
+      keywords = keywords ? keywords.split(',').map(String).filter(Boolean) : undefined;
+  
+      this.ctx.info('keywords', keywords);
+  
+      if (!keywords) {
+        throw new ParamsError('搜索文章缺少参数keywords');
+      }
+  
+      const params: QueryAsPageByKeyword = {
+        page,
+        limit,
+        keywords,
+      };
+  
+      const res = await this._articleService.getArticleByKeyword(params);
+  
+      if (!res) {
+        return null;
+      }
+  
+      // 获取文章标签信息
+      for (const article of res.list) {
+        if (article.category.categoryId !== null) {
+          // 如果该文章没有分类信息，则跳过
+          const category = await this._categoryService.getCategoryById(article.category.categoryId);
+          article.category = {
+            categoryId: category.categoryId,
+            categoryName: category.categoryName,
+            categoryAliasName: category.categoryAliasName,
+          };
+        }
+      }
+      // 获取文章标签信息
+      for (const article of res.list) {
+        const tags = await this._tagService.getTagByArticleId(article.articleId);
+        article.tags = tags.map((tag) => ({
+          tagId: tag.tagId,
+          tagName: tag.tagName,
+          tagAliasName: tag.tagAliasName,
+        }));
+      }
+  
+      return res;
+    }
 
   /** 查询文章详细内容
    * 如有id, 则通过id查询
@@ -300,6 +346,10 @@ export default class ArticleController {
       throw new DataNotFoundError('文章不存在');
     }
 
+    // 文章浏览量+1
+    article.readCount += 1;
+    this._articleService.updateArticleViewCount(article.articleId);
+
     // 获取文章分类信息
     if (article.category.categoryId !== null) {
       // 如果该文章没有分类信息，则跳过
@@ -322,58 +372,25 @@ export default class ArticleController {
     return article;
   }
 
-  /** 关键字搜索文章 */
-  public async searchArticle() {
-    let { page, limit, keywords } = this.ctx.query;
+  /** 获取文章详细内容, 获取更新文章需要的内容 */
+  public async getArticleDetailForEdit() {
+    let { articleId } = this.ctx.query;
 
-    page = tool.toNumber(page, 1);
+    articleId = tool.toNumber(articleId);
 
-    limit = tool.toNumber(limit, 7);
-
-    // keywords = tool.formatUrlPath(keywords);
-
-    keywords = keywords ? keywords.split(',').map(String).filter(Boolean) : undefined;
-
-    this.ctx.info('keywords', keywords);
-
-    if (!keywords) {
-      throw new ParamsError('搜索文章缺少参数keywords');
-    }  
-
-    const params: QueryAsPageByKeyword = {
-      page,
-      limit,
-      keywords,
-    };
-
-    const res = await this._articleService.getArticleByKeyword(params);
-
-    if(!res) {
-      return null;
+    // 检查参数
+    if (!articleId) {
+      throw new ParamsError('查询文章缺少参数');
     }
 
-    // 获取文章标签信息
-    for (const article of res.list) {
-      if (article.category.categoryId !== null) {
-        // 如果该文章没有分类信息，则跳过
-        const category = await this._categoryService.getCategoryById(article.category.categoryId);
-        article.category = {
-          categoryId: category.categoryId,
-          categoryName: category.categoryName,
-          categoryAliasName: category.categoryAliasName,
-        };
-      }
-    }
-    // 获取文章标签信息
-    for (const article of res.list) {
-      const tags = await this._tagService.getTagByArticleId(article.articleId);
-      article.tags = tags.map((tag) => ({
-        tagId: tag.tagId,
-        tagName: tag.tagName,
-        tagAliasName: tag.tagAliasName,
-      }));
+    // 获取文章
+    let article: Article = null;
+    article = await this._articleService.getArticleById(articleId);
+    
+    if (!article) {
+      throw new DataNotFoundError('文章不存在');
     }
 
-    return res;
+    return article;
   }
 }

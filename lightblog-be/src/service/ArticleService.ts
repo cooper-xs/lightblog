@@ -7,6 +7,7 @@ import {
   newArticle,
   QueryAsPageByCategoryAndTags,
   QueryAsPageByKeyword,
+updateArticle,
 } from '../types/article';
 import { tool } from '../utils/tool';
 
@@ -21,6 +22,8 @@ export default class ArticleService {
     const article = new Article();
     article.title = title;
     article.postAliasName = postAliasName;
+    article.createTime = new Date;
+    article.pushDate = new Date('2030-01-01 00:00:00')
     return ArticleRepository.save(article);
   }
 
@@ -292,5 +295,53 @@ export default class ArticleService {
         };
       }),
     };
+  }
+
+  /** 浏览量+1 */
+  public async updateArticleViewCount(articleId: number): Promise<void> {
+    await ArticleRepository.increment({ articleId }, 'readCount', 1);
+  }
+
+  /** 更新文章内容 */
+  public async updateArticle(params: updateArticle) {
+    const {
+      articleId,
+      title,
+      postAliasName,
+      topFlag,
+      articleSummary,
+      previewImageUrl,
+      categoryId,
+      contentMd,
+      contentHtml,
+    } = params;
+
+    const article = await ArticleRepository.findOne({
+      where: {
+        articleId: articleId,
+      },
+    });
+
+    if (!article) {
+      return null;
+    }
+
+    article.title = title;
+    article.postAliasName = postAliasName;
+    article.topFlag = topFlag;
+    article.articleSummary = articleSummary;
+    article.previewImageUrl = previewImageUrl;
+    article.categoryId = categoryId;
+    article.contentMd = contentMd;
+    article.contentHtml = contentHtml;
+    article.pushDate = new Date();
+    
+    const res = await ArticleRepository.save(article);
+
+    if (!res) {
+      return null;
+    }
+
+    return res;
   }
 }

@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { reactive, ref, watchEffect } from 'vue'
 import Http from '@/utils/Http';
-import type { ApiResponse, DiscussForm } from '@/types'
+import type { DiscussForm } from '@/types'
 import type { newUser, User } from '@/types/user'
 import type { newDiscuss, viewDiscuss } from '@/types/Discuss'
 import { ElNotification } from 'element-plus';
+import { DataValidationError } from '@/errors';
 
 const props = defineProps({
   articleId: {
@@ -23,9 +24,10 @@ const discussForm = reactive({ ...initDiscussForm })
 
 const getDiscussListByArticleId = async () => {
   const res = await Http.get<viewDiscuss[]>(
-    '/getDiscussListByArticleId', 
-    { params: { articleId: props.articleId } 
-  })
+    '/getDiscussListByArticleId',
+    {
+      params: { articleId: props.articleId }
+    })
   discussList.value = res;
 }
 
@@ -34,45 +36,52 @@ watchEffect(async () => {
 })
 
 // 提交留言按钮
-const submitDiscussForm = async () => {
-  // 查询用户是否存在
-  if (await checkUser(discussForm.email)) {
-    // 修改昵称为正确的昵称
-    discussForm.nickname = user.value!.userNickname;
-  } else {
-    console.log('用户不存在, 创建用户');
-    // 创建用户
-    await createUser({ userNickname: discussForm.nickname, email: discussForm.email });
+async function submitDiscussForm() {
+  try {
+    // 查询用户是否存在
+    const email = discussForm.email;
+    const flag = await Http.get<User>('/getUserByEmail', { params: { email } })
+    if (flag) {
+      // 修改昵称为正确的昵称
+      discussForm.nickname = user.value!.userNickname;
+    } else {
+      // todo 验证邮箱创建用户
+      await createUser({ userNickname: discussForm.nickname, email: discussForm.email });
+      ElNotification({
+        title: '欢迎您',
+        message: '创建用户成功 ' + user.value?.userNickname,
+        type: 'success',
+      })
+      // 创建用户
+    }
+    // 组成提交表单
+    const newDiscussForm: newDiscuss = {
+      userId: user.value!.userId,
+      articleId: props.articleId,
+      content: discussForm.content,
+    }
+    // 提交留言
+    if (await submitDiscuss(newDiscussForm)) {
+      // 提交成功
+      ElNotification({
+        title: '成功',
+        message: '提交留言成功',
+        type: 'success',
+      })
+      Object.assign(discussForm, initDiscussForm);
+    }
+    getDiscussListByArticleId();
+  } catch (DataValidationError) {
+    ElNotification({
+      title: '错误',
+      message: '提交格式不正确, 请检查!',
+      type: 'error',
+    })
   }
-  // 组成提交表单
-  const newDiscussForm: newDiscuss = {
-    userId: user.value!.userId,
-    articleId: props.articleId,
-    content: discussForm.content,
-  }
-  console.log(newDiscussForm);
-  // 提交留言
-  if (await submitDiscuss(newDiscussForm)) {
-    // 提交成功
-    console.log('提交成功');
-    // 清空表单
-    Object.assign(discussForm, initDiscussForm);
-  } else {
-    // 提交失败
-    console.log('提交失败');
-  }
-  getDiscussListByArticleId();
-}
-
-// 查询用户是否存在
-async function checkUser(email: string) {
-  const res = await Http.get<User>('/getUserByEmail', { params: { email } })
-  return res;
 }
 
 // 创建用户
 async function createUser(params: newUser) {
-  // error
   try {
     const res = await Http.post<User>('/addUser', params)
     user.value = res;

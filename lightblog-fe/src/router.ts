@@ -31,6 +31,7 @@ const router = createRouter({
       children: [
         {
           path: '',
+          name: 'AdminHome',
           redirect: '/admin/dashboard',
         },
         {
@@ -38,6 +39,21 @@ const router = createRouter({
           name: 'Dashboard',
           component: () => import('@/components/Admin/Dashboard.vue'),
         },
+        {
+          path: '/admin/articleList',
+          name: 'ArticleList',
+          component: () => import('@/components/Admin/ArticleList.vue'),
+        },
+        {
+          path: '/admin/addArticle',
+          name: 'AddArticle',
+          component: () => import('@/components/Admin/AddArticle.vue'),
+        },
+        {
+          path: '/admin/updateArticle',
+          name: 'UpdateArticle',
+          component: () => import('@/components/Admin/UpdateArticle.vue'),
+        }
       ],
     },
     {

@@ -31,3 +31,12 @@ export interface CategoryState {
   categorys: ViewCategory[];
   currentCategoryId: number;
 }
+
+export interface Category {
+  categoryId: number;
+  categoryName: string;
+  categoryAliasName: string;
+  description: string;
+  parentId: number;
+  createTime: string;
+}

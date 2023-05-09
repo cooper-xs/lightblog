@@ -70,14 +70,12 @@ export interface updateArticle {
   articleId: number;
   title: string;
   postAliasName: string;
-  pushDate: string;
   topFlag: number;
   articleSummary: string;
   previewImageUrl: string;
   categoryId: number;
   contentMd: string;
-  contentHTML: string;
-  tagIds: number[];
+  contentHtml: string;
 }
 
 // 关键词查询文章列表时，传入的参数

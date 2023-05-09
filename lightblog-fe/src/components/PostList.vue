@@ -5,6 +5,7 @@ import Http from '@/utils/Http';
 import type { ArticleListView, QueryAsPageByCategoryAndTags, ArticleCardView, QueryAsPageByKeyword } from '@/types/Article';
 import { ElNotification } from 'element-plus';
 import router from '@/router';
+import tools from '@/utils/tools';
 
 const loading = ref(false);
 const error = ref(false);
@@ -39,11 +40,11 @@ watchEffect(() => {
 async function fetchArticleData() {
   if (keywords.value) {
     paramsOfKeywords.keywords = keywords.value as string;
-    fetchPageDataByKeywords(paramsOfKeywords)
+    await fetchPageDataByKeywords(paramsOfKeywords)
   } else {
     paramsOfCategoryAndTags.categoryId = categoryId.value;
     paramsOfCategoryAndTags.tagIds = tagIds.value.join(',');
-    fetchPageDataByCateoryAndTags(paramsOfCategoryAndTags);
+    await fetchPageDataByCateoryAndTags(paramsOfCategoryAndTags);
   }
 }
 
