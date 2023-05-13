@@ -19,3 +19,11 @@ export interface DiscussForm {
   email: string;
   content: string;
 }
+
+export interface CategoryForm {
+  categoryId?: number;
+  categoryName: string;
+  categoryAliasName: string;
+  description: string;
+  parentId?: number;
+}

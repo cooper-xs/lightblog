@@ -129,11 +129,19 @@ async function submitUpdateForm() {
     ElNotification({
       title: '成功',
       message: '更新文章成功',
+      duration: 2000,
       type: 'success'
     })
     router.push({
       name: 'ArticleList'
     });
+  } else {
+    ElNotification({
+      title: '失败',
+      message: '更新文章失败嘞',
+      duration: 2000,
+      type: 'error'
+    })
   }
 }
 </script>

@@ -46,6 +46,9 @@ export default class CategoryService {
   /** 查询所有分类 */
   public async getAllCategory(): Promise<CategoryFamily> {
     const res = await CategoryRepository.find();
+    if(!res) {
+      return null;
+    }
     return {
       parent: null,
       children: res.map((item) => item.toViewCategory()),
@@ -59,6 +62,9 @@ export default class CategoryService {
         categoryId: id,
       },
     });
+    if(!res) {
+      return null;
+    }
     return res.toViewCategory();
   }
 
@@ -69,6 +75,9 @@ export default class CategoryService {
         parentId: id,
       },
     });
+    if(!res) {
+      return null;
+    }
     return {
       parent: null,
       children: res.map((item) => item.toViewCategory()),
@@ -84,6 +93,9 @@ export default class CategoryService {
         categoryName,
       },
     });
+    if(!res) {
+      return null;
+    }
     return res;
   }
 
@@ -96,6 +108,9 @@ export default class CategoryService {
         categoryAliasName,
       },
     });
+    if(!res) {
+      return null;
+    }
     return res;
   }
 }

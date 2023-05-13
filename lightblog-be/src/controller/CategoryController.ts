@@ -2,6 +2,7 @@ import { Context } from 'koa';
 import { DataValidationError, ParamsError } from '../errors';
 import ArticleService from '../service/ArticleService';
 import CategoryService from '../service/CategoryService';
+import { updateArticle } from '../types/article';
 import { tool } from '../utils/tool';
 
 export default class CategoryController {
@@ -141,15 +142,20 @@ export default class CategoryController {
     // 检查是否有子分类
     const childCategoryList = await this._categoryService.getCategoryByParentId(categoryId);
     if (childCategoryList.children.length > 0) {
-      throw new DataValidationError('请先删除该分类下的子分类');
+      throw new DataValidationError('请先删除该分类下的子分类或者取消父分类绑定');
     }
 
     // 检查是否有文章
     const articleList = await this._articleService.getArticleByCategoryId(categoryId);
 
-    if (articleList.length > 0) {
-      throw new DataValidationError('请先删除该分类下的文章');
-    }
+    // 修改对应文章, 抹除categoryId
+    articleList.forEach(async (item) => {
+      const params: updateArticle = {
+        articleId: item,
+        categoryId: null,
+      };
+      await this._articleService.updateArticle(params);
+    });
 
     const res = await this._categoryService.deleteCategory(categoryId);
 

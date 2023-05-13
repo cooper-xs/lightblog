@@ -30,6 +30,7 @@ export class tool {
 
   /** 将其他类型转换为数字类型 */
   public static toNumber(value: any, setValue?: any): any {
+    if(value === 0) return 0;
     return value ? Number(value) : setValue;
   }
 

@@ -53,6 +53,11 @@ const router = createRouter({
           path: '/admin/updateArticle',
           name: 'UpdateArticle',
           component: () => import('@/components/Admin/UpdateArticle.vue'),
+        },
+        {
+          path: '/admin/categoryManager',
+          name: 'CategoryManager',
+          component: () => import('@/components/Admin/CategoryManager.vue'),
         }
       ],
     },

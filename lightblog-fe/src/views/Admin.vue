@@ -2,51 +2,41 @@
   <div class="flex h-screen">
     <el-container class="flex-1">
       <el-aside class="w-50 h-full bg-gray-100">
-        <el-menu default-active="1" :default-openeds="['2']" @select="handleMenuSelect" >
+        <el-menu default-active="1" :default-openeds="['2']" @select="handleMenuSelect">
           <el-menu-item index="dashboard">
             <el-icon>
               <Odometer />
             </el-icon>
-            <span>
-              控制台
-            </span>
+            <span>控制台</span>
           </el-menu-item>
           <el-sub-menu index="2">
             <template #title>
               <el-icon>
                 <Menu />
               </el-icon>
-              <span>
-                管理文章
-              </span>
+              <span>文章管理</span>
             </template>
             <el-menu-item-group>
               <el-menu-item index="ArticleList">
                 <el-icon>
                   <List />
                 </el-icon>
-                <span>
-                  文章列表
-                </span>
+                <span>文章列表</span>
               </el-menu-item>
               <el-menu-item index="addArticle">
                 <el-icon>
                   <Plus />
                 </el-icon>
-                <span>
-                  添加新文章
-                </span>
+                <span>添加新文章</span>
               </el-menu-item>
-              <!-- <el-menu-item index="updateArticle">
-                <el-icon>
-                  <EditPen />
-                </el-icon>
-                <span>
-                  修改文章
-                </span>
-              </el-menu-item> -->
             </el-menu-item-group>
           </el-sub-menu>
+          <el-menu-item index="CategoryManager">
+            <template #title>
+              <el-icon><Files /></el-icon>
+              <span>分类管理</span>
+            </template>
+          </el-menu-item>
         </el-menu>
       </el-aside>
       <el-container class="flex-1 bg-blue-100">
@@ -76,8 +66,6 @@ const router = useRouter();
 
 function handleMenuSelect(route: string) {
   router.push('/admin/' + route);
-  // todo 选中updateArticle标签
-  
 }
 
 function logout() {

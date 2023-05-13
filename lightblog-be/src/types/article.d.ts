@@ -68,14 +68,14 @@ export interface newArticle {
 // 更新文章内容时的数据消息
 export interface updateArticle {
   articleId: number;
-  title: string;
-  postAliasName: string;
-  topFlag: number;
-  articleSummary: string;
-  previewImageUrl: string;
-  categoryId: number;
-  contentMd: string;
-  contentHtml: string;
+  title?: string;
+  postAliasName?: string;
+  topFlag?: number;
+  articleSummary?: string;
+  previewImageUrl?: string;
+  categoryId?: number;
+  contentMd?: string;
+  contentHtml?: string;
 }
 
 // 关键词查询文章列表时，传入的参数
