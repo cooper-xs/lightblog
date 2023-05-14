@@ -151,7 +151,7 @@ export default class CategoryController {
     // 修改对应文章, 抹除categoryId
     articleList.forEach(async (item) => {
       const params: updateArticle = {
-        articleId: item,
+        articleId: item.articleId,
         categoryId: null,
       };
       await this._articleService.updateArticle(params);

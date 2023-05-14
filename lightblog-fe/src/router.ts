@@ -58,7 +58,12 @@ const router = createRouter({
           path: '/admin/categoryManager',
           name: 'CategoryManager',
           component: () => import('@/components/Admin/CategoryManager.vue'),
-        }
+        },
+        {
+          path: '/admin/tagManager',
+          name: 'TagManager',
+          component: () => import('@/components/Admin/TagManager.vue'),
+        },
       ],
     },
     {

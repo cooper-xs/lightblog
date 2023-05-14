@@ -23,3 +23,8 @@ export interface TagState {
   tags: ViewTag[];
   currentTagsId: number[];
 }
+
+export interface TagStateAdmin {
+  tags: ViewTag[];
+  currentTagsId: number;
+}

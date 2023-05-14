@@ -16,6 +16,7 @@ import { DataNotFoundError, DataValidationError, ParamsError } from '../errors';
 import DiscussService from '../service/DiscussService';
 import { Article } from '../entities/Article';
 import { ViewCategory } from '../types/category';
+import console from 'console';
 
 const md = new MarkdownIt();
 
@@ -383,6 +384,52 @@ export default class ArticleController {
       throw new DataNotFoundError('文章不存在');
     }
 
-    return article;
+    // 获取文章标签信息
+    const tags = await this._tagService.getTagByArticleId(article.articleId);
+    const tagIds = tags.map((tag) => tag.tagId);
+
+    return {
+      article,
+      tagIds,
+    }
+  }
+
+  /** 根据分类id查找文章 */
+  public async getArticleListByCategoryId() {
+    let { categoryId } = this.ctx.query;
+
+    categoryId = tool.toNumber(categoryId);
+
+    // 检查参数
+    if (!categoryId) {
+      throw new ParamsError('查询文章缺少参数');
+    }
+    console.log(categoryId);
+    const articles = await this._articleService.getArticleByCategoryId(categoryId);
+    console.log(articles);
+    return articles;
+  }
+
+  /** 根据标签id查找文章 */
+  public async getArticleListByTagId() {
+    let { tagId } = this.ctx.query;
+
+    tagId = tool.toNumber(tagId);
+
+    // 检查参数
+    if (!tagId) {
+      throw new ParamsError('查询文章缺少参数');
+    }
+
+    const arts = await this._articleTagReferencedService.getArticleTagReferencedByTagId(tagId);
+
+    const articles = Promise.all(
+      arts.map(async (art) => {
+        const article = await this._articleService.getArticleById(art.articleId);
+        return article;
+      }),
+    );
+
+    return articles;
   }
 }

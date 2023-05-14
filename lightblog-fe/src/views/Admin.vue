@@ -37,6 +37,12 @@
               <span>分类管理</span>
             </template>
           </el-menu-item>
+          <el-menu-item index="TagManager">
+            <template #title>
+              <el-icon><CollectionTag /></el-icon>
+              <span>标签管理</span>
+            </template>
+          </el-menu-item>
         </el-menu>
       </el-aside>
       <el-container class="flex-1 bg-blue-100">

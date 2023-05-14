@@ -6,7 +6,7 @@
     <div v-else-if="loading">
       <ElEmpty description="正在加载中" />
     </div>
-    <div v-else-if="categoryState.categorys" class="space-y-4 w-2/3">
+    <div v-else-if="categoryState.categorys" class="space-y-4 w-2/3 w-min-250">
       <el-card class="flex flex-wrap gap-2 my-2 w-full">
         <el-tag v-for="category in categoryState.categorys" :key="category.categoryId" class="mx-1 hover:cursor-pointer"
           round cursor-pointer :effect="categoryState.currentCategoryId === category.categoryId ? 'dark' : 'light'"
@@ -14,19 +14,18 @@
           {{ category.categoryId }}: {{ category.categoryName }}
         </el-tag>
       </el-card>
-      <el-card v-if="dialogAddCategoryVisible || categoryState.currentCategoryId !== 0"
-        class="flex justify-center items-center w-full">
+      <el-card class="flex justify-center items-center w-full">
         <!-- 显示对应分类内容 -->
         <el-form :model="categoryForm" label-width="80px" class="w-full" @submit.prevent>
           <el-row>
             <el-col :span="9">
               <el-form-item label="分类名称">
-                <el-input v-model="categoryForm.categoryName" placeholder="请输入分类名" maxlength="10" show-word-limit />
+                <el-input v-model="categoryForm.categoryName" placeholder="请输入分类名" maxlength="30" show-word-limit />
               </el-form-item>
             </el-col>
             <el-col :span="9">
               <el-form-item label="分类别名">
-                <el-input v-model="categoryForm.categoryAliasName" placeholder="请输入分类别名" maxlength="20" show-word-limit />
+                <el-input v-model="categoryForm.categoryAliasName" placeholder="请输入分类别名" maxlength="30" show-word-limit />
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -45,7 +44,7 @@
             <el-col :span="3">
               <el-form-item>
                 <el-button type="primary" @click="submitCategoryForm()">
-                  提交
+                  {{ categoryForm.categoryId === 0 ? "添加" : "更新" }}
                 </el-button>
               </el-form-item>
             </el-col>
@@ -58,15 +57,19 @@
                 </el-button>
               </el-form-item>
             </el-col>
+            <el-col :span="3">
+              <el-form-item>
+                <el-button type="success" @click="clickAddCategory()">
+                  添加分类
+                </el-button>
+              </el-form-item>
+            </el-col>
           </el-row>
         </el-form>
       </el-card>
-      <el-button type="primary" @click="clickAddCategory()">
-        添加分类
-      </el-button>
     </div>
   </div>
-  <el-dialog v-model="dialogSelectParentCategoryVisible" title="选择父分类id">
+  <el-dialog v-model="dialogSelectParentCategoryVisible" title="选择父分类id, 选择当前分类则取消分类关联">
     <el-tag v-for="category in categoryState.categorys" :key="category.categoryId" class="mx-1 hover:cursor-pointer" round
       cursor-pointer :effect="categoryState.currentCategoryId === category.categoryId ? 'plain' : 'light'"
       @click="clickParentCategory(category.categoryId)">
@@ -87,7 +90,7 @@
 
 <script setup lang="ts">
 import type { CategoryForm } from '@/types';
-import type { ArticleListView, ArticleCardView } from '@/types/Article';
+import type { ArticleListView, ArticleCardView, Article } from '@/types/Article';
 import type { Category, CategoryFamily, CategoryState } from '@/types/category';
 import Http from '@/utils/Http';
 import { ElNotification } from 'element-plus';
@@ -108,15 +111,20 @@ const initCategoryForm: CategoryForm = {
 }
 const categoryForm = reactive({ ...initCategoryForm })
 const dialogSelectParentCategoryVisible = ref(false);
-const dialogAddCategoryVisible = ref(false);
 const dialogConfirmVisible = ref(false);
 const articlesByCategory = ref([] as string[])
 
 
-onMounted(() => {
+onMounted(async () => {
   loading.value = true;
   error.value = false;
-  fetchCategory();
+  await fetchCategory();
+  categoryState.value.currentCategoryId = categoryState.value.categorys[0].categoryId;
+  categoryForm.categoryId = categoryState.value.categorys[0].categoryId;
+  categoryForm.categoryName = categoryState.value.categorys[0].categoryName;
+  categoryForm.categoryAliasName = categoryState.value.categorys[0].categoryAliasName;
+  categoryForm.description = categoryState.value.categorys[0].description;
+  categoryForm.parentId = categoryState.value.categorys[0].parentId;
   loading.value = false;
 });
 
@@ -129,7 +137,6 @@ async function fetchCategory() {
   }
   categoryState.value.categorys = res.children ?? [];
 }
-
 
 function clickCategory(id: number) {
   if (categoryState.value.currentCategoryId === id) {
@@ -158,8 +165,8 @@ function clickParentCategory(id: number) {
 }
 
 function clickAddCategory() {
+  categoryState.value.currentCategoryId = 0;
   Object.assign(categoryForm, initCategoryForm);
-  dialogAddCategoryVisible.value = true;
 }
 
 /** 提交分类表格: 更新或者添加分类 */
@@ -216,15 +223,10 @@ async function checkDeleteCategory() {
     });
     return;
   }
-  const paramsToFindArticle = {
-    categoryId: categoryForm.categoryId,
-    limit: 1000
-  }
-  const findArticle = await Http.get<ArticleListView>('/getArticleListByCategoriesAndTagsAsPage', { params: paramsToFindArticle });
-  if (findArticle?.list.length > 0) {
-    articlesByCategory.value = findArticle.list.map(item => item.title)
+  const findArticle = await Http.get<Article[]>('/getArticleListByCategoryId', { params: { categoryId: categoryForm.categoryId } })
+  if (findArticle?.length > 0) {
+    articlesByCategory.value = findArticle.map(item => item.title);
     dialogConfirmVisible.value = true;
-    // 获取对话框的选择结果, 用户点击取消或关闭后, return; 用户点击确认后, 删除分类
     return;
   }
   deleteCategory()
@@ -232,15 +234,20 @@ async function checkDeleteCategory() {
 
 async function deleteCategory() {
   dialogConfirmVisible.value = false;
-  const deleteRes = await Http.delete<Category>('/deleteCategory', { params: { categoryId: categoryForm.categoryId } });
-  if (deleteRes) {
+  try {
+    await Http.delete<Category>('/deleteCategory', { params: { categoryId: categoryForm.categoryId } });
     ElNotification({
       title: '成功',
       message: '分类删除成功!',
       duration: 2000,
       type: 'success',
     });
-  } else {
+    fetchCategory();
+    Object.assign(categoryForm, initCategoryForm);
+    categoryForm.categoryId = 0;
+  } catch (error) {
+    console.log(error);
+
     ElNotification({
       title: '失败',
       message: '分类删除失败',
@@ -248,9 +255,5 @@ async function deleteCategory() {
       type: 'error',
     });
   }
-  fetchCategory();
-  Object.assign(categoryForm, initCategoryForm);
-  dialogAddCategoryVisible.value = false;
-  categoryForm.categoryId = 0;
 }
 </script>

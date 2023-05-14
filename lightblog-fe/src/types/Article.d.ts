@@ -77,7 +77,7 @@ export interface updateArticle {
   topFlag: number;
   articleSummary: string;
   previewImageUrl: string;
-  categoryId: number;
+  categoryId: number | null;
   contentMd: string;
 }
 
@@ -102,4 +102,9 @@ export interface Article {
   articleSummary: string;
   previewImageUrl: string;
   categoryId: number;
+}
+
+export interface ArticleWithTag {
+  article: Article;
+  tagIds: number[];
 }

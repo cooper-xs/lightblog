@@ -1,20 +1,20 @@
 <template>
-  <el-card v-for="articleItem in articles" :key="articleItem.articleId" class="my-4">
-    <RouterLink :to="{
-      name: 'UpdateArticle',
-      query: {
-        articleId: articleItem.articleId
-      }
-    }">
-      <h1 class="font-bold">
-        {{ articleItem.title }}
-      </h1>
-      <h2>
-        {{ articleItem.summary }}
-      </h2>
-    </RouterLink>
-  </el-card>
-  <div class="flex justify-center">
+  <div class="flex flex-col justify-center items-center">
+    <el-card v-for="articleItem in articles" :key="articleItem.articleId" class="my-4 w-3/4">
+      <RouterLink :to="{
+        name: 'UpdateArticle',
+        query: {
+          articleId: articleItem.articleId
+        }
+      }">
+        <h1 class="font-bold">
+          {{ articleItem.title }}
+        </h1>
+        <h2>
+          {{ articleItem.summary }}
+        </h2>
+      </RouterLink>
+    </el-card>
     <el-pagination class="" layout="prev, pager, next" :total="pagination.totalItem"
       :current-page="pagination.currentPage" :page-size="pagination.pageSize" @current-change="handleCurrentChange" />
   </div>

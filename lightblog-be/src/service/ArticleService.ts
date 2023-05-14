@@ -43,7 +43,7 @@ export default class ArticleService {
   /** 通过分类id查找文章
    * 返回所有分类id为categoryId的文章id
    */
-  public async getArticleByCategoryId(categoryId: number): Promise<number[]> {
+  public async getArticleByCategoryId(categoryId: number): Promise<Article[]> {
     const articles = await ArticleRepository.createQueryBuilder('article')
       .leftJoinAndSelect('article.category', 'category')
       .where('category.categoryId = :categoryId', { categoryId })
@@ -51,7 +51,7 @@ export default class ArticleService {
       if(!articles) {
         return null;
       }
-    return articles.map((article) => article.articleId);
+    return articles;
   }
 
   /** 通过别名查找文章 */
@@ -156,7 +156,7 @@ export default class ArticleService {
     };
   }
 
-  /** 通过文章id查找文章, 返回全部 */
+  /** 通过文章id查找文章 */
   public async getArticleById(articleId: number): Promise<Article> {
     const article = await ArticleRepository.findOne({
       where: {

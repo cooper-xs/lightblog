@@ -71,7 +71,7 @@ export default class ArticleTagReferencedController {
       return await this._articleTagReferencedService.deleteArticleTagReferencedById(atrId);
     }
 
-    if(!articleId || !tagId) {
+    if (!articleId || !tagId) {
       throw new ParamsError('文章id或标签id不能为空');
     }
 
@@ -101,5 +101,48 @@ export default class ArticleTagReferencedController {
     const articleTagReferenced = await this._articleTagReferencedService.deleteArticleTagReferencedById(atr.atrId);
 
     return articleTagReferenced;
+  }
+
+  /** 更新文章的标签关联 */
+  public async updateATRByArticleIdAndTagIds() {
+    let { articleId, tagIds } = this.ctx.request.body;
+
+    articleId = tool.toNumber(articleId);
+    tagIds = tagIds.split(',').map((tagId: string) => tool.toNumber(tagId));
+    console.log('articleId', articleId);
+    console.log('tagIds', tagIds)
+
+    // 检查文章是否存在
+    const article = await this._articleService.getArticleById(articleId);
+    if (!article) {
+      throw new DataNotFoundError('文章不存在');
+    }
+
+    // 获取文章当前的标签关联
+    const articleTagReferencedList = await this._articleTagReferencedService.getArticleTagReferencedByArticleId(
+      articleId,
+    );
+
+    // 获取文章当前的标签id
+    const currentTagIds = articleTagReferencedList.map((atr) => atr.tagId);
+
+    // 获取需要删除的标签id
+    const deleteTagIds = currentTagIds.filter((tagId) => !tagIds.includes(tagId));
+    for (const tagId of deleteTagIds) {
+      // 获取需要删除的关联id
+      const atr = articleTagReferencedList.find((atr) => atr.tagId === tagId);
+      if (atr) {
+        await this._articleTagReferencedService.deleteArticleTagReferencedById(atr.atrId);
+      }
+    }
+
+    // 获取需要添加的标签id
+    const addTagIds = tagIds.filter((tagId: number) => !currentTagIds.includes(tagId));
+    for (const tagId of addTagIds) {
+      // 获取需要添加的关联id
+      await this._articleTagReferencedService.addArticleTagReferenced({articleId, tagId});
+    }
+
+    return null;
   }
 }

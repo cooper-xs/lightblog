@@ -27,3 +27,10 @@ export interface CategoryForm {
   description: string;
   parentId?: number;
 }
+
+export interface TagForm {
+  tagId: number,
+  tagName: string,
+  tagAliasName: string,
+  description: string,
+}

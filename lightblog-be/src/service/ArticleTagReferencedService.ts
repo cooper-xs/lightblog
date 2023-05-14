@@ -16,7 +16,7 @@ export default class ArticleTagReferencedService {
     return res;
   }
 
-  /** 根据关联id删除所有关联 */
+  /** 根据关联id删除关联 */
   public async deleteArticleTagReferencedById(atrId: number) {
     const atr = await ArticleTagReferencedRepository.findOne({
       where: {
@@ -62,6 +62,9 @@ export default class ArticleTagReferencedService {
         tagId,
       },
     });
+    if(!res) {
+      return null;
+    }
     return res;
   }
 
@@ -72,6 +75,9 @@ export default class ArticleTagReferencedService {
         articleId,
       },
     });
+    if(!res) {
+      return null;
+    }
     return res;
   }
 }

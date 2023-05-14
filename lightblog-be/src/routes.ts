@@ -53,6 +53,18 @@ const routes: IRoute[] = [
     action: 'deleteArticleById',
   },
   {
+    method: 'get',
+    path: '/getArticleListByCategoryId',
+    controller: ArticleController,
+    action: 'getArticleListByCategoryId',
+  },
+  {
+    method: 'get',
+    path: '/getArticleListByTagId',
+    controller: ArticleController,
+    action: 'getArticleListByTagId',
+  },
+  {
     method: 'post',
     path: '/addCategory',
     controller: CategoryController,
@@ -112,6 +124,12 @@ const routes: IRoute[] = [
     path: '/deleteArticleTagReferenced',
     controller: ArticleTagReferencedController,
     action: 'deleteArticleTagReferenced',
+  },
+  {
+    method: 'post',
+    path: '/updateATRByArticleIdAndTagIds',
+    controller: ArticleTagReferencedController,
+    action: 'updateATRByArticleIdAndTagIds',
   },
   {
     method: 'post',
