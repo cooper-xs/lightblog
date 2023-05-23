@@ -157,15 +157,33 @@ const routes: IRoute[] = [
   },
   {
     method: 'post',
+    path: '/updateUser',
+    controller: UsersController,
+    action: 'updateUser',
+  },
+  {
+    method: 'post',
     path: '/addDiscuss',
     controller: DiscussController,
     action: 'addDiscuss',
   },
   {
     method: 'get',
+    path: '/getDiscussAll',
+    controller: DiscussController,
+    action: 'getDiscussAll',
+  },
+  {
+    method: 'get',
     path: '/getDiscussListByArticleId',
     controller: DiscussController,
     action: 'getDiscussListByArticleId',
+  },
+  {
+    method: 'delete',
+    path: '/deleteDiscussById',
+    controller: DiscussController,
+    action: 'deleteDiscussById',
   },
   {
     method: 'post',

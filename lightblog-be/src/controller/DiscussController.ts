@@ -87,4 +87,36 @@ export default class DiscussController {
 
     return res;
   }
+
+  public async getDiscussAll() {
+    const res = await this._discussService.getDiscussList();
+    // 遍历评论列表，通过用户ID获取用户昵称
+    // eslint-disable-next-line @typescript-eslint/prefer-for-of
+    for (let i = 0; i < res.length; i++) {
+      const user = await this._usersService.getUserById(res[i].userId);
+      res[i].userNickname = user.userNickname;
+    }
+    
+    return res;
+  }
+
+  public async deleteDiscussById() {
+    let { id } = this.ctx.query;
+
+    id = tool.toNumber(id);
+
+    if (!id) {
+      throw new ParamsError('评论ID不能为空');
+    }
+
+    const discuss = await this._discussService.getDiscussById(id);
+    if (!discuss) {
+      throw new DataValidationError('评论不存在');
+    }
+
+    const res = await this._discussService.deleteDiscussById(id);
+
+    return res;
+  }
+
 }

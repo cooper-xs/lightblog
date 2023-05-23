@@ -64,6 +64,21 @@ const router = createRouter({
           name: 'TagManager',
           component: () => import('@/components/Admin/TagManager.vue'),
         },
+        {
+          path: '/admin/discusses',
+          name: 'Discusses',
+          component: () => import('@/components/Admin/DiscussManager.vue'),
+        },
+        {
+          path: '/admin/users',
+          name: 'Users',
+          component: () => import('@/components/Admin/UserManager.vue'),
+        }
+        // {
+        //   path: '/admin/mediaManager',
+        //   name: 'MediaManager',
+        //   component: () => import('@/components/Admin/MediaManager.vue'),
+        // },
       ],
     },
     {

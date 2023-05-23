@@ -43,6 +43,24 @@
               <span>标签管理</span>
             </template>
           </el-menu-item>
+          <el-menu-item index="discusses">
+            <template #title>
+              <el-icon><Comment /></el-icon>
+              <span>评论管理</span>
+            </template>
+          </el-menu-item>
+          <el-menu-item index="users">
+            <template #title>
+              <el-icon><UserFilled /></el-icon>
+              <span>用户管理</span>
+            </template>
+          </el-menu-item>
+          <!-- <el-menu-item index="MediaManager">
+            <template #title>
+              <el-icon><Picture /></el-icon>
+              <span>媒体库</span>
+            </template>
+          </el-menu-item> -->
         </el-menu>
       </el-aside>
       <el-container class="flex-1 bg-blue-100">

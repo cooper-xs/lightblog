@@ -34,3 +34,9 @@ export interface TagForm {
   tagAliasName: string,
   description: string,
 }
+
+export interface UserForm {
+  userId?: number;
+  userNickname: string;
+  email: string;
+}

@@ -20,10 +20,26 @@ export default class DiscussService {
     return res;
   }
 
+  public async getDiscussList(): Promise<viewDiscuss[]> {
+    const res = await DiscussRepository.find();
+    const viewDiscussList = res.map((item) => ({
+      discussId: item.discussId,
+      createTime: tool.formatDate(item.createTime),
+      userId: item.userId,
+      articleId: item.articleId,
+      content: item.content,
+      parentId: item.parentId,
+    }));
+    return viewDiscussList;
+  }
+
   public async getDiscussById(discussId: number): Promise<viewDiscuss> {
     const res = await DiscussRepository.findOne({
       where: { discussId },
     });
+    if (!res) {
+      return null;
+    }
     return res.toViewDiscusses();
   }
 
@@ -63,13 +79,18 @@ export default class DiscussService {
     return discuss;
   }
 
-  public async deleteDiscussByUserId(userId: number): Promise<Discuss> {
-    const res = await DiscussRepository.findOne({
-      where: { userId },
-    });
-    if (!res) {
-      return null;
-    }
-    return await DiscussRepository.remove(res);
-  }
+  // public async deleteDiscussByUserId(userId: number): Promise<Discuss> {
+  //   const res = await DiscussRepository.find({
+  //     where: { 
+  //       userId: userId,
+  //     },
+  //   });
+  //   if (!res) {
+  //     return null;
+  //   }
+  //   // return await DiscussRepository.remove(res);
+  //   return res.forEach(async (item) => {
+  //     await DiscussRepository.remove(item);
+  //   });
+  // }
 }

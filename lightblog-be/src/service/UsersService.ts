@@ -60,4 +60,14 @@ export default class UsersService {
     }
     return res;
   }
+
+  public async updateUser(params: Users): Promise<Users> {
+    const user = await UsersRepository.findOne({
+      where: { userId: params.userId },
+    });
+    user.userNickname = params.userNickname;
+    user.email = params.email;
+    const res = await UsersRepository.save(user);
+    return res;
+  }
 }

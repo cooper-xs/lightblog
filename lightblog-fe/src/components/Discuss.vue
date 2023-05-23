@@ -2,10 +2,9 @@
 import { reactive, ref, watchEffect } from 'vue'
 import Http from '@/utils/Http';
 import type { DiscussForm } from '@/types'
-import type { newUser, User } from '@/types/user'
+import type { newUser, User } from '@/types/User'
 import type { newDiscuss, viewDiscuss } from '@/types/Discuss'
 import { ElNotification } from 'element-plus';
-import { DataValidationError } from '@/errors';
 
 const props = defineProps({
   articleId: {
@@ -127,7 +126,7 @@ async function submitDiscuss(newDiscussForm: newDiscuss) {
       <el-card v-for="item in discussList" :key="item.discussId" class="box-card my-3">
         <div>
           <span>留言人：{{ item.userNickname }}</span>
-          <el-link style="float: right; padding: 3px 0" type="primary">回复</el-link>
+          <!-- <el-link style="float: right; padding: 3px 0" type="primary">回复</el-link> -->
         </div>
         <div>
           <p>留言内容：{{ item.content }}</p>

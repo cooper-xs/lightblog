@@ -5,6 +5,7 @@ import UsersService from '../service/UsersService';
 import { newUser } from '../types/user';
 import { tool } from '../utils/tool';
 import { TOKEN_CONF } from '../config';
+import { Users } from '../entities/Users';
 // 引入jwt
 // import jwt from 'jsonwebtoken';
 
@@ -45,20 +46,19 @@ export default class UsersController {
     if (!userNickname) {
       throw new ParamsError('用户昵称不能为空');
     }
-    if (!email) {
-      throw new ParamsError('用户邮箱不能为空');
+
+    if (email) {
+      if (!tool.checkEmail(email)) {
+        throw new DataValidationError('用户邮箱格式不正确');
+      }
+  
+      if (await this._usersService.getUserByEmail(email)) {
+        throw new DataValidationError('用户邮箱已存在');
+      }
     }
 
     if (await this._usersService.getUserByNickname(userNickname)) {
       throw new DataValidationError('用户昵称已存在');
-    }
-
-    if (!tool.checkEmail(email)) {
-      throw new DataValidationError('用户邮箱格式不正确');
-    }
-
-    if (await this._usersService.getUserByEmail(email)) {
-      throw new DataValidationError('用户邮箱已存在');
     }
 
     const params: newUser = {
@@ -95,11 +95,57 @@ export default class UsersController {
     // 删除用户相关的评论
     const discussList = await this._discussService.getDiscussListByUserId(userId);
     if (discussList.length) {
-      await this._discussService.deleteDiscussByUserId(userId);
+      discussList.forEach(async (item) => {
+        await this._discussService.deleteDiscussById(item.discussId);
+      });
       this.ctx.warn('删除用户相关评论成功, 用户id = ', userId);
     }
 
     const res = await this._usersService.deleteUser(userId);
+
+    return res;
+  }
+
+  /** 根据id更新用户名 */
+  public async updateUser() {
+    let { userId, userNickname, email } = this.ctx.request.body;
+
+    userId = tool.toNumber(userId);
+
+    if (!userId) {
+      throw new ParamsError('用户ID不能为空');
+    }
+
+    if (!userNickname) {
+      throw new ParamsError('用户昵称不能为空');
+    }
+
+    if (!(await this._usersService.getUserById(userId))) {
+      throw new DataValidationError('用户不存在');
+    }
+    
+    const userT = await this._usersService.getUserByNickname(userNickname);
+    if (userT && userT.userId !== userId) {
+      throw new DataValidationError('用户昵称已存在');
+    }
+
+    if(email) {
+      if (!tool.checkEmail(email)) {
+        throw new DataValidationError('用户邮箱格式不正确');
+      }
+      const emailT = await this._usersService.getUserByEmail(email);
+      if (emailT && emailT.userId !== userId) {
+        throw new DataValidationError('用户邮箱已存在');
+      }
+    }
+
+    const params = {
+      userId,
+      userNickname,
+      email,
+    };
+
+    const res = await this._usersService.updateUser(params as Users);
 
     return res;
   }

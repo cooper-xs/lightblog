@@ -17,7 +17,7 @@ export class tool {
     const hour = ('0' + d.getHours()).slice(-2);
     const minute = ('0' + d.getMinutes()).slice(-2);
     const second = ('0' + d.getSeconds()).slice(-2);
-    return `${year}年${month}月${day}日 ${hour}:${minute}:${second}`;
+    return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
   }
 
   /** 将别名转化为安全的url路径 */
