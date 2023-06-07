@@ -55,12 +55,6 @@
               <span>用户管理</span>
             </template>
           </el-menu-item>
-          <!-- <el-menu-item index="MediaManager">
-            <template #title>
-              <el-icon><Picture /></el-icon>
-              <span>媒体库</span>
-            </template>
-          </el-menu-item> -->
         </el-menu>
       </el-aside>
       <el-container class="flex-1 bg-blue-100">
@@ -94,6 +88,8 @@ function handleMenuSelect(route: string) {
 
 function logout() {
   adminStore.logout();
-  router.push('/');
+  // 清除浏览器的本地存储（如 localStorage）
+  localStorage.clear();
+  router.push('/login');
 }
 </script>

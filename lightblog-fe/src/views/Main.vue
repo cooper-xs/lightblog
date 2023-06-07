@@ -25,8 +25,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div
-    class="flex justify-center items-center absolute w-4/5 mt-15 mb-30 min-w-2xl mx-auto left-1/2 transform -translate-x-1/2">
+  <!-- <div
+    class="flex justify-center items-center absolute w-4/5 mt-15 mb-30 min-w-2xl mx-auto left-1/2 transform -translate-x-1/2"> -->
     <el-container>
       <el-aside class="w-ms bg-teal-50">
         <Me />
@@ -40,5 +40,5 @@ onMounted(async () => {
         <RouterView v-if="article || router.currentRoute.value.path === '/home'" :article="article" />
       </el-main>
     </el-container>
-  </div>
+  <!-- </div> -->
 </template> 

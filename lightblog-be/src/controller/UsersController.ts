@@ -6,6 +6,7 @@ import { newUser } from '../types/user';
 import { tool } from '../utils/tool';
 import { TOKEN_CONF } from '../config';
 import { Users } from '../entities/Users';
+import jwt from 'jsonwebtoken';
 // 引入jwt
 // import jwt from 'jsonwebtoken';
 
@@ -152,15 +153,18 @@ export default class UsersController {
 
   /** 管理员登录 */
   public async login() {
-    let pws = this.ctx.request.body.pws;
-    this.ctx.info('管理员登录, pws = ', pws);
-    if(pws === TOKEN_CONF.secretToken) {
-      this.ctx.info('管理员登录成功');
+    let pwd = this.ctx.request.body.pwd;
+    this.ctx.info('管理员登录, pwd = ', pwd);
+    if(pwd === TOKEN_CONF.secretToken) {
+      this.ctx.info('密码验证正确');
       // 直接生成token
-
-
-      
-
+      const token = await jwt.sign({ pwd }, TOKEN_CONF.secretToken, { expiresIn: TOKEN_CONF.expiresIn });
+      this.ctx.session.token = token;
+      return {
+        token,
+      };
+    } else {
+      this.ctx.warn('密码验证失败', pwd);
     }
   }
 }

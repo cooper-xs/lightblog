@@ -8,8 +8,7 @@ import static_serve from 'koa-static';
 import { AppDataSource } from './config/data-source';
 import { loggerMount } from './utils/winstonLogger';
 import errorHandler from './utils/errorHandler';
-import koaJWT from 'koa-jwt';
-import { TOKEN_CONF } from './config';
+import session from 'koa-session'
 
 async function start() {
   const app = new Koa();
@@ -20,12 +19,12 @@ async function start() {
   app.use(loggerMount());
   app.use(errorHandler);
   app.use(routerResponse);
-  // app.use(
-  //   koaJWT({ secret: TOKEN_CONF.secretKey, algorithms: ['HS256'] }).unless({
-  //     path: [/^\/auth\/login/, /^\/auth\/register/],
-  //   }),
-  // );
   app.use(router.routes()).use(router.allowedMethods());
+  app.keys = ['lightblogkey', 'adminkey', 'mykey'];
+  app.use(session({
+    key: 'koa:sess', // cookie key
+    maxAge: 1 * 60 * 1000, // 1分钟过期
+  }, app))
 
   app.listen(3000, () => {
     console.log('后端运行在: http://localhost:3000');

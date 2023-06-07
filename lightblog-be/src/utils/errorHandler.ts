@@ -1,5 +1,5 @@
 import { Context, Next } from 'koa';
-import { ParamsError, DataValidationError, DataNotFoundError } from '../errors';
+import { ParamsError, DataValidationError, DataNotFoundError, NoAdminError } from '../errors';
 
 // 导出一个错误处理中间件
 export default async function errorHandler(ctx: Context, next: Next) {
@@ -15,6 +15,9 @@ export default async function errorHandler(ctx: Context, next: Next) {
       ctx.body = { message: err.message };
     } else if (err instanceof DataValidationError) {
       ctx.status = 409;
+      ctx.body = { message: err.message };
+    } else if (err instanceof NoAdminError) {
+      ctx.status = 401;
       ctx.body = { message: err.message };
     } else {
       ctx.status = 500;

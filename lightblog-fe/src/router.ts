@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Main from '@/views/Main.vue';
+import { useAdminStore } from './store/admin';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -74,11 +75,6 @@ const router = createRouter({
           name: 'Users',
           component: () => import('@/components/Admin/UserManager.vue'),
         }
-        // {
-        //   path: '/admin/mediaManager',
-        //   name: 'MediaManager',
-        //   component: () => import('@/components/Admin/MediaManager.vue'),
-        // },
       ],
     },
     {
@@ -92,6 +88,15 @@ const router = createRouter({
       component: () => import('@/views/NotFound.vue'),
     },
   ],
+});
+
+router.beforeEach((to, from, next) => {
+  const isLoggedIn = useAdminStore().isLoggedIn;
+  if (to.path.startsWith('/admin') && !isLoggedIn) {
+    next('/login');
+  } else {
+    next();
+  }
 });
 
 export default router;

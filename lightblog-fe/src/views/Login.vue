@@ -3,32 +3,41 @@ import { ElNotification } from 'element-plus';
 import { ref } from 'vue';
 import { useAdminStore } from '../store/admin';
 import router from '@/router';
+import Http from '@/utils/Http';
+import tools from '@/utils/tools';
 
 const adminStore = useAdminStore()
 const pwd = ref('')
 
-function login() {
+async function login() {
   if (pwd.value === '') {
     ElNotification({
-      title: '禁止通行',
-      message: '请输入过关口令',
+      title: '请输入过关口令',
       type: 'warning'
     })
     return;
-  } else if (pwd.value !== 'light') {
-    ElNotification({
-      title: '禁止通行',
-      message: '过关口令错误',
-      type: 'error'
-    })
-    return;
+  } else {
+    try {
+      const hashPwd = await tools.hashPassword(pwd.value, 'lightblogsalt');
+
+      const data = await Http.post<{token: string}>('/login', { pwd: hashPwd })      
+      
+      // 将 Token 存储在浏览器的本地存储（如 localStorage）
+      localStorage.setItem('token', data.token)
+
+      // 修改adminStore的isLogin状态
+      adminStore.login()
+
+      // todo 跳转到后台管理页面
+      router.push('/admin');
+    } catch {
+      ElNotification({
+        title: '过关口令错误',
+        type: 'error'
+      })
+      return;
+    }
   }
-
-  // todo 向后端发送请求, 获取token, 存到adminState中
-  adminStore.login();
-
-  // todo 跳转到后台管理页面
-  router.push('/admin');
 }
 
 const awesomePlace = ['女儿国', '米奇堡', '蟹堡王', '麦当劳', '肯德基', '盘丝洞', '火焰山', '巴黎圣母院']

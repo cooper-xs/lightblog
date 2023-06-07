@@ -24,3 +24,12 @@ export class DataNotFoundError extends Error {
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }
+
+// 没有admin权限
+export class NoAdminError extends Error {
+  public constructor(message: string) {
+    super(message);
+    this.name = 'NoAdminError';
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}

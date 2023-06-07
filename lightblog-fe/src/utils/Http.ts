@@ -7,6 +7,7 @@ class Http {
   private readonly client = axios.create({
     baseURL: '/api',
     timeout: 2000,
+    withCredentials: true,
   });
 
   public get<T>(url: string, config: AxiosRequestConfig = {}): Promise<T> {
@@ -31,6 +32,10 @@ class Http {
 
   private async request<T>(config: MyAxiosConfig): Promise<T> {
     const response: AxiosResponse<ApiResponse<T>> = await this.client.request(config);
+    const token = localStorage.getItem('token');
+    if (token) {
+      document.cookie = `token=${token};path=/`;
+    }
 
     // 所有2xx的响应都会进入这里
     if(response.status >= 200 && response.status < 300) {
@@ -50,6 +55,8 @@ class Http {
       throw new DataNotFoundError('数据不存在错误: ' + response.data.message);
     } else if(response.status === 409) {
       throw new DataValidationError('数据不合法错误: ' + response.data.message);
+    } else if(response.status === 401) {
+      throw new DataValidationError('没有管理员权限: ' + response.data.message);
     } else {
       throw new Error('HTTP错误: ' + response.status);
     }
