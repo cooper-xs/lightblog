@@ -2,7 +2,7 @@
 import { onMounted, ref, watchEffect } from 'vue';
 import router from '@/router';
 import Http from '@/utils/Http';
-import type { CategoryFamily, CategoryState, ViewCategory } from '@/types/category';
+import type { CategoryFamily, CategoryState } from '@/types/category';
 
 const props = defineProps({
   categoryId: {

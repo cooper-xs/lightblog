@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import ArticleCard from '@/components/ArticleCard.vue';
 import { ref, watch, watchEffect } from 'vue';
 import Http from '@/utils/Http';
 import type { ArticleListView, QueryAsPageByCategoryAndTags, ArticleCardView, QueryAsPageByKeyword } from '@/types/Article';
 import { ElNotification } from 'element-plus';
 import router from '@/router';
-import tools from '@/utils/tools';
 
 const loading = ref(false);
 const error = ref(false);
@@ -23,7 +21,6 @@ watch(
     keywords.value = newQuery.keywords as string;
     categoryId.value = Number(newQuery.categoryId);
     tagIds.value = newQuery.tagIds ? (newQuery.tagIds as string).split(',').map(Number) : [];
-    // console.log('更新query参数', newQuery);
   }
 )
 
@@ -124,7 +121,6 @@ function handleCurrentChange(page: number) {
   </div>
   <div v-else>
     <div>
-      <!-- <ArticleCard v-for="article in articles" :key="article.articleId" :article="article" /> -->
       <el-card v-for="article in articles" :key="article.articleId" class="box-card mb-10" shadow="hover">
         <div class="flex flex-col">
           <div class="flex flex-row">

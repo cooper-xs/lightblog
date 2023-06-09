@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import router from '@/router';
-import Http from '@/utils/Http';
-import { ElNotification } from 'element-plus';
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import Discuss from './Discuss.vue';
 import type { ArticleDetailView } from '@/types/Article';
+import ArticleContent from './ArticleContent.vue';
 
 const props = defineProps({
   article: {
@@ -29,7 +27,7 @@ const error = ref(false)
     </div>
   </div>
   <div v-else-if="props.article">
-    <div class="article-detail p-4 bg-white rounded-lg shadow">
+    <div class="article-detail py-10 px-30 bg-white rounded-lg shadow">
       <div class="article-header">
         <h1 class="text-2xl font-bold">
           {{ props.article.title }}
@@ -40,8 +38,7 @@ const error = ref(false)
         <span class="text-gray-500 ml-4">发布时间: {{ props.article.updateTime }}</span>
         <span class="text-gray-500 ml-4">阅读量: {{ props.article.readCount }}</span>
       </div>
-      <div class="article-content mt-4" v-html="props.article.contentHtml">
-      </div>
+      <ArticleContent :article="props.article" />
     </div>
     <div>
       <Discuss :articleId="article.articleId" />

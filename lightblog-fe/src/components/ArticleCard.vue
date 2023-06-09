@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import type { ArticleCardView } from '@/types/Article';
+import { onMounted } from 'vue';
 
 const props = defineProps<{ article: ArticleCardView }>();
 
+onMounted(() => {
+  console.log(props.article.category);
+})
 </script>
 
 <template>
@@ -14,11 +18,11 @@ const props = defineProps<{ article: ArticleCardView }>();
             name: 'Article',
             params: { postAliasName: article.postAliasName }
           }">
-            文章标题: {{ article.title }}
+            {{ article.title }}
           </router-link>
         </h2>
-        <el-tag class="ml-auto">
-          {{ article.category?.categoryName }}
+        <el-tag v-if="article.category.categoryName !== ''" class="ml-auto">
+          {{ article.category.categoryName }}
         </el-tag>
       </div>
       <div class="flex flex-row p-2">

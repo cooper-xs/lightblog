@@ -16,7 +16,7 @@ function clickSearch() {
 
 <template>
   <div class="flex flex-row justify-center mb-6 space-x-4">
-    <el-input v-model="searchContent" placeholder="请输入搜索内容" class="flex-auto" />
+    <el-input v-model="searchContent" placeholder="点击下方标签筛选" class="flex-auto" />
     <el-button class="w-15" type="primary" @click="clickSearch">搜索</el-button>
   </div>
 </template>
