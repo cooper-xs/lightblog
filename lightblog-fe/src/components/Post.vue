@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted } from 'vue';
 import Discuss from './Discuss.vue';
 import type { ArticleDetailView } from '@/types/Article';
 import ArticleContent from './ArticleContent.vue';
@@ -11,23 +11,15 @@ const props = defineProps({
   }
 });
 
-const loading = ref(false)
-const error = ref(false)
+// 设置标签页标题
+onMounted(() => {
+  document.title = props.article.title + ' | Light Blog';
+})
 </script>
 
 <template>
-  <div v-if="loading">
-    <div>
-      <el-empty description="正在加载中..." />
-    </div>
-  </div>
-  <div v-else-if="error">
-    <div>
-      <el-empty description="文章不存在" />
-    </div>
-  </div>
-  <div v-else-if="props.article">
-    <div class="article-detail py-10 px-30 bg-white rounded-lg shadow">
+  <div v-if="props.article" class="">
+    <div class="article-detail p-5 bg-white rounded-lg shadow">
       <div class="article-header">
         <h1 class="text-2xl font-bold">
           {{ props.article.title }}

@@ -150,7 +150,6 @@ const routes: IRoute[] = [
     path: '/addUser',
     controller: UsersController,
     action: 'addUser',
-    needLogin: true,
   },
   {
     method: 'delete',
@@ -183,7 +182,6 @@ const routes: IRoute[] = [
     path: '/addDiscuss',
     controller: DiscussController,
     action: 'addDiscuss',
-    needLogin: true,
   },
   {
     method: 'get',

@@ -29,10 +29,9 @@ onMounted(async () => {
 </script>
 
 <template>
-  <!-- <div
-    class="flex justify-center items-center absolute w-4/5 mt-15 mb-30 min-w-2xl mx-auto left-1/2 transform -translate-x-1/2"> -->
-    <el-container class="h-screen bg-gradient-to-r from-green-300 to-blue-200 font-serif">
-      <el-aside class="w-ms">
+  <div class="relative h-screen overflow-hidden">
+    <el-container class="h-full bg-gradient-to-r from-green-300 to-blue-200 flex flex-row">
+      <el-aside class="w-ms hidden md:block">
         <Me />
         <el-card class="box-card my-10 mx-4" shadow="hover">
           <Search />
@@ -40,9 +39,17 @@ onMounted(async () => {
           <Tag v-if="tagRender || router.currentRoute.value.path === '/home'" :tagIds="tagIds" />
         </el-card>
       </el-aside>
-      <el-main class="p-5">
+      <el-main class="flex-grow relative">
         <RouterView v-if="article || router.currentRoute.value.path === '/home'" :article="article" />
       </el-main>
     </el-container>
-  <!-- </div> -->
-</template> 
+    <div class="absolute bottom-0 right-0 m-9 md:hidden">
+      <router-link to="/home" class="block">
+        <button
+          class="h-10 w-14 bg-gradient-to-r rounded-lg transition duration-300 ease-in-out transform hover:scale-115 from-blue-400 to-green-400 active:scale-95">
+          Home
+        </button>
+      </router-link>
+    </div>
+  </div>
+</template>

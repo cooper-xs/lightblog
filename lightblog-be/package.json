@@ -12,14 +12,16 @@
     "typescript": "5.0.4"
   },
   "scripts": {
-    "start": "ts-node src/app.ts",
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
+    "build": "tsc",
+    "start": "cross-env NODE_ENV=production node dist/app.js",
     "typeorm": "typeorm-ts-node-commonjs"
   },
   "dependencies": {
     "@koa/cors": "^4.0.0",
     "@koa/router": "^10.0.0",
     "@types/node": "^18.15.12",
+    "cross-env": "^7.0.3",
     "jsonwebtoken": "^9.0.0",
     "koa": "^2.14.2",
     "koa-bodyparser": "^4.4.0",

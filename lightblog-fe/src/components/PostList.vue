@@ -121,7 +121,7 @@ function handleCurrentChange(page: number) {
   </div>
   <div v-else>
     <div>
-      <el-card v-for="article in articles" :key="article.articleId" class="box-card mb-10" shadow="hover">
+      <el-card v-for="article in articles" :key="article.articleId" class="box-card mb-10 min-w-sm " shadow="hover">
         <div class="flex flex-col">
           <div class="flex flex-row">
             <h2 class="text-xl font-bold ml-10 cursor-pointer">
@@ -129,18 +129,21 @@ function handleCurrentChange(page: number) {
                 name: 'Article',
                 params: { postAliasName: article.postAliasName }
               }" target="_blank">
-                文章标题: {{ article.title }}
+                {{ article.title }}
               </router-link>
             </h2>
-            <el-tag class="ml-auto">
-              {{ article.category?.categoryName }}
+            <el-tag v-if="article.category.categoryName !== ''" class="ml-auto">
+              {{ article.category.categoryName }}
+            </el-tag>
+            <el-tag v-if="article.topFlag !== 0" type="danger" class="ml-5">
+              置顶
             </el-tag>
           </div>
-          <div class="flex flex-row p-2">
-            <div class="flex items-center justify-center w-1/2 h-50 bg-cover bg-center"
+          <div class="flex flex-row p-2 <sm:flex-col">
+            <div class="flex items-center justify-center w-1/2 h-50 bg-cover bg-center <sm:w-full"
               :style="{ backgroundImage: `url(${article.previewImageUrl})` }">
             </div>
-            <div class="w-1/2 mx-5 mt-5 flex flex-col">
+            <div class="w-1/2 mx-5 mt-5 flex flex-col <sm:w-full">
               <div>
                 {{ article.summary }}
               </div>

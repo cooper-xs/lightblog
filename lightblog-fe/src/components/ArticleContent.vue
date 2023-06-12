@@ -4,7 +4,8 @@
 
 <script setup lang="ts">
 import type { ArticleDetailView } from '@/types/Article'
-import { computed, onMounted } from 'vue';
+import { computed } from 'vue';
+import '@/assets/fonts/stylesheet.css'
 
 const props = defineProps({
   article: {
@@ -19,17 +20,15 @@ const contentHtml = computed(() => {
 </script>
 
 <style lang="less" scoped>
-@font-face {
-  font-family: 'FiraCode';
-  src: url('@/assets/fonts/FiraCode-Regular.ttf') format('truetype');
-}
 
 .article-content {
   :deep(pre) {
-    font-family: 'FiraCode', monospace;
+    font-family: 'Fira Code';
+    font-weight: normal;
+    font-style: normal;
     font-size: 14px;
     line-height: 1.5;
-    background-color: #222;
+    background-color: #777;
     color: #fff;
     padding: 15px;
     border-radius: 5px;
@@ -37,6 +36,9 @@ const contentHtml = computed(() => {
   }
 
   :deep(pre) code {
+    font-family: 'Fira Code';
+    font-weight: normal;
+    font-style: normal;
     display: block;
   }
 

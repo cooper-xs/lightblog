@@ -8,6 +8,8 @@ import { Tag } from '../entities/Tag';
 import { Users } from '../entities/Users';
 import { DATASOURCE } from '../config';
 
+const isProd = process.env.NODE_ENV === 'production';
+
 export const AppDataSource = new DataSource({
   type: 'mysql',
   host: DATASOURCE.host,
@@ -16,7 +18,7 @@ export const AppDataSource = new DataSource({
   password: DATASOURCE.password,
   database: DATASOURCE.database,
   synchronize: DATASOURCE.synchronize,
-  entities: ['src/entities/*.ts', Article, ArticleTagReferenced, Category, Discuss, Tag, Users],
+  entities: [isProd ? 'dist/entities/*.js' : 'src/entities/*.ts'],
   migrations: [
     // "src/migrations/*.ts"
   ],

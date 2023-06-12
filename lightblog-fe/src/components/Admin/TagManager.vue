@@ -35,7 +35,7 @@
             <el-col :span="3">
               <el-form-item>
                 <el-button type="primary" @click="submitTagForm()">
-                  {{ tagForm.tagId === 0 ? "添加" : "更新" }}
+                  {{ tagForm.tagId === 0 ? "保存" : "更新" }}
                 </el-button>
               </el-form-item>
             </el-col>

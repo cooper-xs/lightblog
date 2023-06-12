@@ -17,7 +17,6 @@ export const useAdminStore = defineStore({
   actions: {
     // 登录
     login(): void {
-      // todo 调用登录接口进行身份验证
       this.$patch({ isAuthenticated: true });
     },
     // 注销

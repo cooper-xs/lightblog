@@ -6,7 +6,6 @@ export default async function errorHandler(ctx: Context, next: Next) {
   try {
     await next();
   } catch (err) {
-    
     if (err instanceof ParamsError) {
       ctx.status = 400;
       ctx.body = { message: err.message };

@@ -33,42 +33,52 @@
           </el-sub-menu>
           <el-menu-item index="CategoryManager">
             <template #title>
-              <el-icon><Files /></el-icon>
+              <el-icon>
+                <Files />
+              </el-icon>
               <span>分类管理</span>
             </template>
           </el-menu-item>
           <el-menu-item index="TagManager">
             <template #title>
-              <el-icon><CollectionTag /></el-icon>
+              <el-icon>
+                <CollectionTag />
+              </el-icon>
               <span>标签管理</span>
             </template>
           </el-menu-item>
           <el-menu-item index="discusses">
             <template #title>
-              <el-icon><Comment /></el-icon>
+              <el-icon>
+                <Comment />
+              </el-icon>
               <span>评论管理</span>
             </template>
           </el-menu-item>
           <el-menu-item index="users">
             <template #title>
-              <el-icon><UserFilled /></el-icon>
+              <el-icon>
+                <UserFilled />
+              </el-icon>
               <span>用户管理</span>
             </template>
           </el-menu-item>
         </el-menu>
       </el-aside>
-      <el-container class="flex-1 bg-blue-100">
-        <!-- 头部导航栏 -->
-        <el-header class="flex justify-center items-center space-x-20">
-          <span>个人博客后台管理系统</span>
-          <ElLink type="primary" @click="logout">
-            退出登录
-          </ElLink>
-        </el-header>
-        <!-- 内容区域 -->
-        <el-main>
-          <RouterView />
-        </el-main>
+      <el-container class="flex-1 w-full h-full bg-cover bg-center" :style="{ backgroundImage: `url(${imgUrl})` }">
+        <div class="bg-white bg-opacity-40 w-full h-full">
+          <!-- 头部导航栏 -->
+          <el-header class="flex justify-center items-center space-x-20">
+            <span>个人博客后台管理系统</span>
+            <ElLink type="primary" @click="logout">
+              退出登录
+            </ElLink>
+          </el-header>
+          <!-- 内容区域 -->
+          <el-main>
+            <RouterView />
+          </el-main>
+        </div>
       </el-container>
     </el-container>
   </div>
@@ -78,6 +88,19 @@
 import { useAdminStore } from '@/store/admin';
 import type { Menu } from '@element-plus/icons-vue';
 import { useRouter } from 'vue-router';
+import { onMounted, ref } from 'vue';
+
+const random = ref('');
+const imgUrl = ref('');
+
+onMounted(() => {
+  // setInterval(() => {
+  //   random.value = Math.floor(Math.random() * 200).toString().padStart(3, '0');
+  //   imgUrl.value = `/api/images/img-${random.value}.jpg`
+  // }, 0.5 * 1000)
+  random.value = Math.floor(Math.random() * 200).toString().padStart(3, '0');
+  imgUrl.value = `/api/images/img-${random.value}.jpg`
+})
 
 const adminStore = useAdminStore();
 const router = useRouter();

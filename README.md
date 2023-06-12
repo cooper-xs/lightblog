@@ -1,47 +1,40 @@
 # 技术栈
 
-高优先级:
+## 前端
 
-* [x] 前端框架：Vue3.2 + setup
+* [x] 前端框架：Vue3.2 + setup语法糖
+* [x] 构建工具：Vite4
 * [x] 样式库：Element Plus
 * [x] CSS框架：WindiCSS
 * [x] 状态管理：Pinia
 * [x] 路由管理：Vue Router
-* [x] 构建工具：Vite4
+* [x] 请求库：Axios
+
+## 后端
+
 * [x] 后端开发语言：Node.js
-* [x] 后端框架：koa / ~~egg.js~~ / ~~midway.js~~
+* [x] 后端框架：koa2
 * [x] 数据库：MySQL
-* [ ] DevOps相关：Docker、CI/CD、Nginx
-* [ ] 服务器端渲染（SSR）：<Mark>Vue SSR<Mark>
-* [x] 构建和部署工具：GitHub
-* [x] 代码规范：ESLint、Prettier
-* [ ] ~~暗夜模式（细节多，后期做）~~
-* [x] Markdown支持：markdown-it / mavonEditor?富文本编辑器
+* [x] Markdown支持：markdown-it
 * [x] 日志管理：Winston
 
----
+## DevOps
 
-低优先级:
-
-* [ ] 图片处理和管理：Cloudinary / AWS S3(TODO)
-* [ ] 搜索引擎优化（SEO）：Vue Meta(TODO)
-* [ ] ~~测试框架：Vitest~~
-* [ ] ~~接口开发：RESTful API设计原则(折磨自己)~~
-* [ ] ~~3D图形库：three.js(没空)~~
-* [ ] ~~国际化(相对鸡肋)~~
-* [ ] ~~静态网站生成器（SSG）：VuePress(只做SSR)~~
+* [x] 构建和部署工具：GitHub
+* [x] 代码规范：ESLint、Prettier
+* [ ] DevOps运维相关：Docker、CI/CD、Nginx
+* [ ] 服务器端渲染: SSR
 
 # 开发流程
 
+* [x] 代码规范、日志管理等方面的设置，例如ESLint、Prettier和Winston。
 * [X] 后端开发语言和框架的选择与搭建，以及数据库的连接和设计。
 * [x] 前端框架和样式库的选择和安装，例如Vue3和Element Plus。
 * [x] 路由管理和状态管理的设置与配置，例如Vue Router和Pinia。
 * [x] 开始编写前端页面代码，根据设计图逐步完成各个页面的构建，同时对应编写接口请求逻辑。
-* [x] 对于需要服务器端渲染（SSR）的页面，可以在前端框架中集成实现，例如Vue SSR。
 * [ ] 设置构建工具，例如Vite4，并进行项目构建和打包。
 * [ ] 进行DevOps相关的设置，例如使用Docker进行部署、CI/CD流程的构建等。
-* [x] 针对代码规范、日志管理等方面的问题，引入相应的工具和库进行优化。
-* [ ] 最后再考虑其他细节性功能的添加和调整，例如暗夜模式、图片处理和管理、富文本编辑器等。
+* [ ] 对于需要服务器端渲染（SSR）的页面，可以在前端框架中集成实现，例如Vue SSR。
 
 # 项目功能
 
@@ -65,8 +58,4 @@
 
 ### 管理员后台
 
-* [ ] 管理员可以管理用户、文章、分类和标签等信息，包括添加、编辑和删除操作。
-
-### 暗夜模式
-
-* [ ] 支持一键切换到暗夜模式
+* [x] 管理员可以管理用户、文章、分类和标签等信息，包括添加、编辑和删除操作。

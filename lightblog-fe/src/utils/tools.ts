@@ -20,4 +20,10 @@ export default class tools {
       .map(b => b.toString(16).padStart(2, '0'))
       .join('');
   }
+
+  /** 检查邮箱格式是否正确 */
+  public static checkEmail(email: string): boolean {
+    const reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+    return reg.test(email);
+  }
 }

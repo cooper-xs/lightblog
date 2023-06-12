@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { reactive, ref, watchEffect } from 'vue'
+import { onMounted, reactive, ref, watchEffect } from 'vue'
 import Http from '@/utils/Http';
 import type { DiscussForm } from '@/types'
-import type { newUser, User } from '@/types/User'
+import type { User } from '@/types/User'
 import type { newDiscuss, viewDiscuss } from '@/types/Discuss'
 import { ElNotification } from 'element-plus';
+import tools from '@/utils/tools';
+import 'element-plus/theme-chalk/display.css'
 
 const props = defineProps({
   articleId: {
@@ -20,83 +22,81 @@ const initDiscussForm: DiscussForm = {
   content: '',
 }
 const discussForm = reactive({ ...initDiscussForm })
+const submitLoading = ref(false)
 
 const getDiscussListByArticleId = async () => {
-  const res = await Http.get<viewDiscuss[]>(
-    '/getDiscussListByArticleId',
-    {
-      params: { articleId: props.articleId }
-    })
+  const res = await Http.get<viewDiscuss[]>('/getDiscussListByArticleId', { params: { articleId: props.articleId } })
   discussList.value = res;
 }
 
-watchEffect(async () => {
+onMounted(async () => {
   await getDiscussListByArticleId();
 })
 
 // 提交留言按钮
 async function submitDiscussForm() {
+  if (submitLoading.value) return;
+  submitLoading.value = true;
+
+  // 检查表单是否填写完整
+  if (!discussForm.nickname || !discussForm.email || !discussForm.content) {
+    ElNotification({
+      title: '错误',
+      message: '请将留言信息填写完整',
+      type: 'error',
+    })
+    submitLoading.value = false;
+    return;
+  }
+  // 检查邮箱格式
+  if (!tools.checkEmail(discussForm.email)) {
+    ElNotification({
+      title: '邮箱格式不正确',
+      type: 'error',
+    })
+    submitLoading.value = false;
+    return;
+  }
+
   try {
     // 查询用户是否存在
     const email = discussForm.email;
-    const flag = await Http.get<User>('/getUserByEmail', { params: { email } })
-    if (flag) {
-      // 修改昵称为正确的昵称
-      discussForm.nickname = user.value!.userNickname;
+    user.value = await Http.get<User>('/getUserByEmail', { params: { email } })
+    if (user.value) {
+      // 用户存在, 修改昵称为正确的昵称
+      discussForm.nickname = user.value.userNickname;
     } else {
-      // todo 验证邮箱创建用户
-      await createUser({ userNickname: discussForm.nickname, email: discussForm.email });
+      // 创建用户
+      user.value = await Http.post<User>('/addUser', { userNickname: discussForm.nickname, email: discussForm.email });
       ElNotification({
         title: '欢迎您',
-        message: '创建用户成功 ' + user.value?.userNickname,
+        message: '创建用户成功 ' + user.value.userNickname,
         type: 'success',
       })
-      // 创建用户
     }
     // 组成提交表单
     const newDiscussForm: newDiscuss = {
-      userId: user.value!.userId,
+      userId: user.value.userId,
       articleId: props.articleId,
       content: discussForm.content,
     }
     // 提交留言
-    if (await submitDiscuss(newDiscussForm)) {
-      // 提交成功
-      ElNotification({
-        title: '成功',
-        message: '提交留言成功',
-        type: 'success',
-      })
-      Object.assign(discussForm, initDiscussForm);
-    }
-    getDiscussListByArticleId();
-  } catch (DataValidationError) {
+    await Http.post<User>('/addDiscuss', newDiscussForm)
     ElNotification({
-      title: '错误',
-      message: '提交格式不正确, 请检查!',
-      type: 'error',
+      title: '提交留言成功',
+      type: 'success',
     })
-  }
-}
-
-// 创建用户
-async function createUser(params: newUser) {
-  try {
-    const res = await Http.post<User>('/addUser', params)
-    user.value = res;
+    Object.assign(discussForm, initDiscussForm);
+    getDiscussListByArticleId();
   } catch (err) {
     ElNotification({
       title: '错误',
-      message: '创建用户失败',
+      message: '提交格式不正确或用户名已存在',
       type: 'error',
     })
+  } finally {
+    submitLoading.value = false;
   }
-}
-
-// 提交留言请求
-async function submitDiscuss(newDiscussForm: newDiscuss) {
-  const res = await Http.post<User>('/addDiscuss', newDiscussForm)
-  return res
 }
 </script>
 
@@ -114,26 +114,35 @@ async function submitDiscuss(newDiscussForm: newDiscuss) {
           placeholder="请输入留言内容" maxlength="200" show-word-limit />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitDiscussForm">
+        <el-button type="primary" :loading="submitLoading" @click="submitDiscussForm">
           提交
         </el-button>
       </el-form-item>
     </el-form>
   </div>
   <div>
-    <el-divider>留言列表</el-divider>
+    <el-divider class="">留言列表</el-divider>
     <div class="mt-4">
       <el-card v-for="item in discussList" :key="item.discussId" class="box-card my-3">
-        <div>
-          <span>留言人：{{ item.userNickname }}</span>
-          <!-- <el-link style="float: right; padding: 3px 0" type="primary">回复</el-link> -->
-        </div>
-        <div>
-          <p>留言内容：{{ item.content }}</p>
-        </div>
-        <div>
-          <span>留言时间：{{ item.createTime }}</span>
-        </div>
+        <el-row>
+          <el-col :sm="12" :lg="19" :xl="16">
+            <div class="grid-content bg-purple">
+              <span>留言人：{{ item.userNickname }}</span>
+            </div>
+          </el-col>
+          <el-col :sm="12" :lg="5" :xl="8">
+            <div class="grid-content bg-purple">
+              <span>留言时间：{{ item.createTime }}</span>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <div class="grid-content bg-purple">
+              <p>留言内容：{{ item.content }}</p>
+            </div>
+          </el-col>
+        </el-row>
       </el-card>
     </div>
   </div>
