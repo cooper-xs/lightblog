@@ -1,5 +1,5 @@
 export const TOKEN_CONF = {
-  secretToken: 'd37157bc6c22c01c8e0b9cf4d1859afb1b34d900cf0bf817ab6a02ca73eb2e29',
+  secretToken: '4dffab4b7302739598ad0207f9fb76e7ab69ce3f54fd5adddf7d208825f12a2f',
   secretKey: 'access-token',
   expiresIn: '2h',
 };

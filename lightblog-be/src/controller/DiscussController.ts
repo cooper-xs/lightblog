@@ -45,9 +45,12 @@ export default class DiscussController {
     if (!user) {
       throw new DataNotFoundError('用户不存在');
     }
-    const parentDiscuss = await this._discussService.getDiscussById(parentId);
-    if (!parentDiscuss) {
-      throw new DataNotFoundError('父评论不存在');
+
+    if(parentId) {
+      const parentDiscuss = await this._discussService.getDiscussById(parentId);
+      if (!parentDiscuss) {
+        throw new DataNotFoundError('父评论不存在');
+      }
     }
 
     const params = {

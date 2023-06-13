@@ -15,7 +15,11 @@ export default class tools {
   public static async hashPassword(password: string, salt: string): Promise<string> {
     const encoder = new TextEncoder();
     const data = encoder.encode(`${password}${salt}`);
-    const buffer = await crypto.subtle.digest('SHA-256', data);
+    const buffer = await new Promise<ArrayBuffer>((resolve, reject) => {
+      crypto.subtle.digest('SHA-256', data)
+        .then(buffer => resolve(buffer))
+        .catch(error => reject(error));
+    });
     return Array.from(new Uint8Array(buffer))
       .map(b => b.toString(16).padStart(2, '0'))
       .join('');

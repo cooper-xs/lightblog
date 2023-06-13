@@ -18,10 +18,12 @@ export const useAdminStore = defineStore({
     // 登录
     login(): void {
       this.$patch({ isAuthenticated: true });
+      console.log("登陆! 当前状态", this.isAuthenticated ? "已登录" : "未登录");
     },
     // 注销
     logout(): void {
       this.$patch({ isAuthenticated: false });
+      console.log("注销! 当前状态", this.isAuthenticated ? "已登录" : "未登录");
     },
   },
 });
