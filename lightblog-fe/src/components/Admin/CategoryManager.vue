@@ -118,14 +118,26 @@ const articlesByCategory = ref([] as string[])
 onMounted(async () => {
   loading.value = true;
   error.value = false;
-  await fetchCategory();
-  categoryState.value.currentCategoryId = categoryState.value.categorys[0].categoryId;
-  categoryForm.categoryId = categoryState.value.categorys[0].categoryId;
-  categoryForm.categoryName = categoryState.value.categorys[0].categoryName;
-  categoryForm.categoryAliasName = categoryState.value.categorys[0].categoryAliasName;
-  categoryForm.description = categoryState.value.categorys[0].description;
-  categoryForm.parentId = categoryState.value.categorys[0].parentId;
-  loading.value = false;
+  try {
+    await fetchCategory();
+    if(categoryState.value.categorys.length === 0) {
+      return;
+    }
+    categoryState.value.currentCategoryId = categoryState.value.categorys[0].categoryId;
+    categoryForm.categoryId = categoryState.value.categorys[0].categoryId;
+    categoryForm.categoryName = categoryState.value.categorys[0].categoryName;
+    categoryForm.categoryAliasName = categoryState.value.categorys[0].categoryAliasName;
+    categoryForm.description = categoryState.value.categorys[0].description;
+    categoryForm.parentId = categoryState.value.categorys[0].parentId;
+  } catch {
+    ElNotification({
+      title: '错误',
+      message: '获取分类列表失败',
+      type: 'error',
+    });
+  } finally {
+    loading.value = false;
+  }
 });
 
 

@@ -1,4 +1,4 @@
-
+import { SHA256 } from 'crypto-js';
 
 export default class tools {
   // 将"年月日"格式的字符串转换为Date对象
@@ -12,17 +12,8 @@ export default class tools {
     return date;
   }
 
-  public static async hashPassword(password: string, salt: string): Promise<string> {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(`${password}${salt}`);
-    const buffer = await new Promise<ArrayBuffer>((resolve, reject) => {
-      crypto.subtle.digest('SHA-256', data)
-        .then(buffer => resolve(buffer))
-        .catch(error => reject(error));
-    });
-    return Array.from(new Uint8Array(buffer))
-      .map(b => b.toString(16).padStart(2, '0'))
-      .join('');
+  public static generateKey(password: string, salt: string): string {
+    return SHA256(password + salt).toString();
   }
 
   /** 检查邮箱格式是否正确 */

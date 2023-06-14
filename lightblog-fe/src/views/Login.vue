@@ -23,7 +23,7 @@ async function login() {
   }
   let hashPwd;
   try {
-    hashPwd = await tools.hashPassword(pwd.value, 'lightblogsalt');
+    hashPwd = tools.generateKey(pwd.value, 'lightblogsalt');
   } catch {
     ElNotification({
       title: '口令加密失败',
@@ -33,7 +33,7 @@ async function login() {
     return;
   }
   try {
-    const data = await Http.post<{ token: string }>('/login', { pwd: hashPwd })
+    const data = await Http.post<{ token: string }>('/login', { pwd: hashPwd });
 
     // 将 Token 存储在浏览器的本地存储（如 localStorage）
     localStorage.setItem('token', data.token)
@@ -63,8 +63,8 @@ const randomPlace = "前方前往" + awesomePlace[Math.floor(Math.random() * awe
       <ElInput v-model="pwd" :placeholder="randomPlace" class="w-80 mb-5 leading-18" type="password" />
       <el-button
         class="font-medium text-2xl bg-gradient-to-r rounded-md py-5 px-6 transition duration-300 ease-in-out transform hover:scale-115 hover:text-blue-gray-800 focus:text-blue-gray-600 from-blue-400 to-green-400 active:scale-95"
-        :loading="loginLoading" @click="login">
-        出发!
+        :loading="loginLoading" @click="login()">
+        出发! {{ randomPlace }}!
       </el-button>
     </div>
   </div>
