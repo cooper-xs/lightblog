@@ -1,6 +1,7 @@
 import { createLogger, format, transports } from 'winston';
 import { Context, Next } from 'koa';
-import { tool } from './tool';
+// const { getClientIP } = require('../utils/ip')
+import { getClientIP } from './ip';
 import "winston-daily-rotate-file";
 
 // 创建Winston日志记录器
@@ -34,16 +35,17 @@ const logger = createLogger({
 // 创建中间件函数 
 export function loggerMount() {
   return async (ctx: Context, next: Next) => {
+    const ip = getClientIP(ctx);
     ctx.info = (...args: any[]) => {
-      logger.info(`[${ctx.ip} ${ctx.url} ${ctx.method}]` + args.join(' '));
+      logger.info(`[${ip} ${ctx.url} ${ctx.method}]` + args.join(' '));
     };
 
     ctx.error = (...args: any[]) => {
-      logger.error(`[${ctx.ip} ${ctx.url} ${ctx.method}]` + args.join(' '));
+      logger.error(`[${ip} ${ctx.url} ${ctx.method}]` + args.join(' '));
     }
 
     ctx.warn = (...args: any[]) => {
-      logger.warn(`[${ctx.ip} ${ctx.url} ${ctx.method}]` + args.join(' '));
+      logger.warn(`[${ip} ${ctx.url} ${ctx.method}]` + args.join(' '));
     }
 
     await next();
