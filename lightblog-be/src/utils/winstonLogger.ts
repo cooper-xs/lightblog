@@ -35,17 +35,17 @@ const logger = createLogger({
 // 创建中间件函数 
 export function loggerMount() {
   return async (ctx: Context, next: Next) => {
-    const ip = getClientIP(ctx);
+    const ip = getClientIP(ctx.req);
     ctx.info = (...args: any[]) => {
-      logger.info(`[${ip} ${ctx.url} ${ctx.method}]` + args.join(' '));
+      logger.info(`[${ip} ${ctx.method}  ${ctx.url}]` + args.join(' '));
     };
 
     ctx.error = (...args: any[]) => {
-      logger.error(`[${ip} ${ctx.url} ${ctx.method}]` + args.join(' '));
+      logger.error(`[${ip} ${ctx.method}  ${ctx.url}]` + args.join(' '));
     }
 
     ctx.warn = (...args: any[]) => {
-      logger.warn(`[${ip} ${ctx.url} ${ctx.method}]` + args.join(' '));
+      logger.warn(`[${ip} ${ctx.method} ${ctx.url}]` + args.join(' '));
     }
 
     await next();

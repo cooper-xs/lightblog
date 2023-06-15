@@ -68,27 +68,27 @@ function loggerMount() {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    ip = (0, ip_1.getClientIP)(ctx);
+                    ip = (0, ip_1.getClientIP)(ctx.req);
                     ctx.info = function () {
                         var args = [];
                         for (var _i = 0; _i < arguments.length; _i++) {
                             args[_i] = arguments[_i];
                         }
-                        logger.info("[".concat(ip, " ").concat(ctx.url, " ").concat(ctx.method, "]") + args.join(' '));
+                        logger.info("[".concat(ip, " ").concat(ctx.method, "  ").concat(ctx.url, "]") + args.join(' '));
                     };
                     ctx.error = function () {
                         var args = [];
                         for (var _i = 0; _i < arguments.length; _i++) {
                             args[_i] = arguments[_i];
                         }
-                        logger.error("[".concat(ip, " ").concat(ctx.url, " ").concat(ctx.method, "]") + args.join(' '));
+                        logger.error("[".concat(ip, " ").concat(ctx.method, "  ").concat(ctx.url, "]") + args.join(' '));
                     };
                     ctx.warn = function () {
                         var args = [];
                         for (var _i = 0; _i < arguments.length; _i++) {
                             args[_i] = arguments[_i];
                         }
-                        logger.warn("[".concat(ip, " ").concat(ctx.url, " ").concat(ctx.method, "]") + args.join(' '));
+                        logger.warn("[".concat(ip, " ").concat(ctx.method, " ").concat(ctx.url, "]") + args.join(' '));
                     };
                     return [4 /*yield*/, next()];
                 case 1:
