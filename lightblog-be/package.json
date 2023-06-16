@@ -12,6 +12,7 @@
     "typescript": "5.0.4"
   },
   "scripts": {
+    "ci": "pnpm i --frozen-lockfile",
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
     "build": "tsc",
     "start": "cross-env NODE_ENV=production node dist/app.js",
