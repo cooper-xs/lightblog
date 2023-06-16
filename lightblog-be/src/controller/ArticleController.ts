@@ -15,8 +15,7 @@ import MarkdownIt from 'markdown-it';
 import { DataNotFoundError, DataValidationError, ParamsError } from '../errors';
 import DiscussService from '../service/DiscussService';
 import { Article } from '../entities/Article';
-import { ViewCategory } from '../types/category';
-import console from 'console';
+// import console from 'console';
 
 const md = new MarkdownIt();
 

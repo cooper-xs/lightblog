@@ -50,11 +50,15 @@ var data_source_1 = require("./config/data-source");
 var winstonLogger_1 = require("./utils/winstonLogger");
 var errorHandler_1 = __importDefault(require("./utils/errorHandler"));
 var koa_session_1 = __importDefault(require("koa-session"));
+var os_1 = __importDefault(require("os"));
 function start() {
     return __awaiter(this, void 0, void 0, function () {
-        var app;
+        var app, host, hostname, port;
         return __generator(this, function (_a) {
             app = new koa_1.default();
+            host = 'localhost';
+            hostname = os_1.default.hostname();
+            port = 3000;
             app.use((0, cors_1.default)({ origin: 'http://localhost:8080' }));
             app.use((0, koa_static_1.default)(__dirname + '/assets'));
             app.use((0, koa_bodyparser_1.default)());
@@ -65,10 +69,10 @@ function start() {
             app.keys = ['lightblogkey', 'adminkey', 'mykey'];
             app.use((0, koa_session_1.default)({
                 key: 'koa:sess',
-                maxAge: 1 * 60 * 1000, // 1分钟过期
+                maxAge: 7 * 24 * 60 * 1000, // 有效期为7天
             }, app));
-            app.listen(3000, function () {
-                console.log('后端运行在: http://localhost:3000');
+            app.listen(port, function () {
+                console.log("lightblog back-end running on http://".concat(host, ":").concat(port, "   hostname: ").concat(hostname));
             });
             return [2 /*return*/];
         });
@@ -91,7 +95,7 @@ function bootstrap() {
                     return [3 /*break*/, 4];
                 case 3:
                     error_1 = _a.sent();
-                    console.error('启动异常: ', error_1);
+                    console.error('Run Error: ', error_1);
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }

@@ -9,9 +9,13 @@ import { AppDataSource } from './config/data-source';
 import { loggerMount } from './utils/winstonLogger';
 import errorHandler from './utils/errorHandler';
 import session from 'koa-session'
+import os from 'os'
 
 async function start() {
   const app = new Koa();
+  const host = 'localhost';
+  const hostname = os.hostname();
+  const port = 3000;
 
   app.use(cors({ origin: 'http://localhost:8080' }));
   app.use(static_serve(__dirname + '/assets'));
@@ -23,11 +27,11 @@ async function start() {
   app.keys = ['lightblogkey', 'adminkey', 'mykey'];
   app.use(session({
     key: 'koa:sess', // cookie key
-    maxAge: 1 * 60 * 1000, // 1分钟过期
+    maxAge: 7 * 24 * 60 * 1000, // 有效期为7天
   }, app))
 
-  app.listen(3000, () => {
-    console.log('后端运行在: http://localhost:3000');
+  app.listen(port, () => {
+    console.log(`lightblog back-end running on http://${host}:${port}   hostname: ${hostname}`);
   });
 }
 
@@ -37,8 +41,9 @@ async function bootstrap() {
     await AppDataSource.initialize();
     await start();
   } catch (error) {
-    console.error('启动异常: ', error);
+    console.error('Run Error: ', error);
   }
 }
 
 bootstrap();
+

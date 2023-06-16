@@ -128,7 +128,8 @@ router.beforeEach((to, from, next) => {
   document.title = to.meta.title ? to.meta.title + ' | Light Blog' : 'Light Blog';
 
   // 检查是否需要登录
-  const isLoggedIn = useAdminStore().isLoggedIn;
+  // const isLoggedIn = useAdminStore().isLoggedIn;
+  const isLoggedIn = useAdminStore().isLoggedIn || localStorage.getItem('isLoggedIn') === 'true';
   if (to.path.startsWith('/admin') && !isLoggedIn) {
     next('/login');
   } else {

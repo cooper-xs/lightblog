@@ -38,6 +38,9 @@ async function login() {
     // 将 Token 存储在浏览器的本地存储（如 localStorage）
     localStorage.setItem('token', data.token)
 
+    // 将登录状态存储在浏览器的本地存储（如 localStorage）
+    localStorage.setItem('isLoggedIn', 'true');
+
     // 修改adminStore的isLogin状态
     adminStore.login()
 

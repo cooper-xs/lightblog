@@ -47,7 +47,7 @@ var tool_1 = require("../utils/tool");
 var markdown_it_1 = __importDefault(require("markdown-it"));
 var errors_1 = require("../errors");
 var DiscussService_1 = __importDefault(require("../service/DiscussService"));
-var console_1 = __importDefault(require("console"));
+// import console from 'console';
 var md = new markdown_it_1.default();
 var ArticleController = /** @class */ (function () {
     function ArticleController(ctx) {
@@ -489,11 +489,11 @@ var ArticleController = /** @class */ (function () {
                         if (!categoryId) {
                             throw new errors_1.ParamsError('查询文章缺少参数');
                         }
-                        console_1.default.log(categoryId);
+                        console.log(categoryId);
                         return [4 /*yield*/, this._articleService.getArticleByCategoryId(categoryId)];
                     case 1:
                         articles = _a.sent();
-                        console_1.default.log(articles);
+                        console.log(articles);
                         return [2 /*return*/, articles];
                 }
             });
