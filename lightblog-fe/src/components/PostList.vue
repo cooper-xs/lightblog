@@ -121,43 +121,44 @@ function handleCurrentChange(page: number) {
   </div>
   <div v-else>
     <div>
-      <el-card v-for="article in articles" :key="article.articleId" class="box-card mb-10 min-w-sm " shadow="hover">
-        <div class="flex flex-col">
-          <div class="flex flex-row">
-            <h2 class="text-xl font-bold ml-10 cursor-pointer">
-              <router-link :to="{
-                name: 'Article',
-                params: { postAliasName: article.postAliasName }
-              }" target="_blank">
+      <el-card v-for="article in articles" :key="article.articleId" class="box-card mb-10 min-w-40 " shadow="hover">
+        <router-link :to="{
+          name: 'Article',
+          params: { postAliasName: article.postAliasName }
+        }" target="_blank">
+          <div class="flex flex-col">
+            <div class="flex flex-row">
+              <h2 class="text-xl font-bold ml-5 cursor-pointer">
                 {{ article.title }}
-              </router-link>
-            </h2>
-            <el-tag v-if="article.category.categoryName !== ''" class="ml-auto">
-              {{ article.category.categoryName }}
-            </el-tag>
-            <el-tag v-if="article.topFlag !== 0" type="danger" class="ml-5">
-              置顶
-            </el-tag>
-          </div>
-          <div class="flex flex-row p-2 <sm:flex-col">
-            <div class="flex items-center justify-center w-1/2 h-50 bg-cover bg-center <sm:w-full"
-              :style="{ backgroundImage: `url(${article.previewImageUrl})` }">
+              </h2>
+              <el-tag v-if="article.category.categoryName !== ''" class="ml-auto">
+                {{ article.category.categoryName }}
+              </el-tag>
+              <el-tag v-if="article.topFlag !== 0" type="danger" class="ml-2">
+                置顶
+              </el-tag>
             </div>
-            <div class="w-1/2 mx-5 mt-5 flex flex-col <sm:w-full">
-              <div>
-                {{ article.summary }}
+            <div class="flex y-row p-2 <sm:flex-col">
+              <div class="flex items-center justify-center w-1/2 h-40 bg-cover bg-center <sm:w-full <sm:h-20"
+                :style="{ backgroundImage: `url(${article.previewImageUrl})` }">
               </div>
-              <div class="mt-auto ml-auto">
-                {{ article.updateTime }}
+              <div class="w-1/2 p-2 flex flex-col <sm:w-full">
+                <div>
+                  {{ article.summary }}
+                </div>
+                <div class="mt-auto ml-auto">
+                  {{ article.updateTime }}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </router-link>
       </el-card>
     </div>
     <div class="flex justify-center">
-      <el-pagination class="" layout="prev, pager, next" :total="pagination.totalItem"
-        :current-page="pagination.currentPage" :page-size="pagination.pageSize" @current-change="handleCurrentChange" />
+      <el-pagination class="" layout="prev, pager, next" :total="pagination.totalItem" background
+        :current-page="pagination.currentPage" :page-size="pagination.pageSize" hide-on-single-page
+        @current-change="handleCurrentChange" />
     </div>
   </div>
 </template>

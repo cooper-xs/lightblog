@@ -35,12 +35,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loggerMount = void 0;
 var winston_1 = require("winston");
 // const { getClientIP } = require('../utils/ip')
-var ip_1 = require("./ip");
+var ip_1 = __importDefault(require("./ip"));
 require("winston-daily-rotate-file");
+// import { DATASOURCE } from '../config';
 // 创建Winston日志记录器
 var logger = (0, winston_1.createLogger)({
     level: 'info',
@@ -68,13 +72,15 @@ function loggerMount() {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    ip = (0, ip_1.getClientIP)(ctx.req);
+                    ip = (0, ip_1.default)(ctx.req);
                     ctx.info = function () {
                         var args = [];
                         for (var _i = 0; _i < arguments.length; _i++) {
                             args[_i] = arguments[_i];
                         }
                         logger.info("[".concat(ip, " ").concat(ctx.method, "  ").concat(ctx.url, "]") + args.join(' '));
+                        // logger.info(DATASOURCE);
+                        // logger.info(process.env);
                     };
                     ctx.error = function () {
                         var args = [];

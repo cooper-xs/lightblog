@@ -29,7 +29,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="relative h-screen overflow-hidden">
+  <div class="h-screen overflow-hidden">
     <el-container class="h-full bg-gradient-to-r from-green-300 to-blue-200 flex flex-row">
       <el-aside class="w-ms hidden md:block">
         <Me />
@@ -43,7 +43,7 @@ onMounted(async () => {
         <RouterView v-if="article || router.currentRoute.value.path === '/home'" :article="article" />
       </el-main>
     </el-container>
-    <div class="absolute bottom-0 right-0 m-9 md:hidden">
+    <div class="fixed bottom-0 right-0 m-6 md:hidden">
       <router-link to="/home" class="block">
         <button
           class="h-10 w-14 bg-gradient-to-r rounded-lg transition duration-300 ease-in-out transform hover:scale-115 from-blue-400 to-green-400 active:scale-95">

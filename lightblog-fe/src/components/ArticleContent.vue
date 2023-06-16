@@ -20,7 +20,6 @@ const contentHtml = computed(() => {
 </script>
 
 <style lang="less" scoped>
-
 .article-content {
   :deep(pre) {
     font-family: 'Fira Code';
@@ -43,7 +42,7 @@ const contentHtml = computed(() => {
   }
 
   :deep(img) {
-    max-width: 80%;
+    max-width: 100%;
     height: auto;
   }
 
@@ -126,9 +125,11 @@ const contentHtml = computed(() => {
 
   :deep(blockquote) {
     margin-bottom: 1.5rem;
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem 1rem;
     color: #777;
     border-left: 0.25rem solid #ebedf0;
+    margin-inline-start: 20px;
+    margin-inline-end: 20px;
   }
 
   :deep(blockquote) :deep(p:last-child) {
@@ -141,6 +142,7 @@ const contentHtml = computed(() => {
 
   :deep(ol) {
     margin-bottom: 1.5rem;
+    padding-inline-start: 25px;
   }
 
   :deep(ul) :deep(li) {

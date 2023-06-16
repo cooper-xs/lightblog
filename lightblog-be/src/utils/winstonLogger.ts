@@ -1,8 +1,9 @@
 import { createLogger, format, transports } from 'winston';
 import { Context, Next } from 'koa';
 // const { getClientIP } = require('../utils/ip')
-import { getClientIP } from './ip';
+import getClientIP from './ip';
 import "winston-daily-rotate-file";
+// import { DATASOURCE } from '../config';
 
 // 创建Winston日志记录器
 const logger = createLogger({
@@ -38,6 +39,8 @@ export function loggerMount() {
     const ip = getClientIP(ctx.req);
     ctx.info = (...args: any[]) => {
       logger.info(`[${ip} ${ctx.method}  ${ctx.url}]` + args.join(' '));
+      // logger.info(DATASOURCE);
+      // logger.info(process.env);
     };
 
     ctx.error = (...args: any[]) => {

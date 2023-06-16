@@ -41,7 +41,7 @@ class Http {
     if(response.status >= 200 && response.status < 300) {
       const apiResponse = response.data;
       if (apiResponse.code === 20000 && apiResponse.data) {
-        console.log('success:', apiResponse.data);
+        // console.log('success:', apiResponse.data);
         return apiResponse.data;
       } else if(!apiResponse) {
         console.log('success: apiResponse = null');
