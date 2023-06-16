@@ -11,10 +11,10 @@ jobs:
         uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
       - uses: pnpm/action-setup@v2.2.2
         with:
-          version: 6.0.2
+          version: 8.2.0
       - run: cd lightblog-be && pnpm run ci
       - run: cd lightblog-be && pnpm run build
       - name: Set up Docker Buildx
