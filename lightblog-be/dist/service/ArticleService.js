@@ -390,10 +390,22 @@ var ArticleService = /** @class */ (function () {
     /** 浏览量+1 */
     ArticleService.prototype.updateArticleViewCount = function (articleId) {
         return __awaiter(this, void 0, void 0, function () {
+            var article;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, data_source_1.ArticleRepository.increment({ articleId: articleId }, 'readCount', 1)];
+                    case 0: return [4 /*yield*/, data_source_1.ArticleRepository.findOne({
+                            where: {
+                                articleId: articleId,
+                            },
+                        })];
                     case 1:
+                        article = _a.sent();
+                        if (!article) {
+                            return [2 /*return*/, null];
+                        }
+                        article.readCount += 1;
+                        return [4 /*yield*/, data_source_1.ArticleRepository.save(article)];
+                    case 2:
                         _a.sent();
                         return [2 /*return*/];
                 }
