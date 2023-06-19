@@ -299,7 +299,20 @@ export default class ArticleService {
 
   /** 浏览量+1 */
   public async updateArticleViewCount(articleId: number): Promise<void> {
-    await ArticleRepository.increment({ articleId }, 'readCount', 1);
+    // await ArticleRepository.increment({ articleId }, 'readCount', 1);
+    const article = await ArticleRepository.findOne({
+      where: {
+        articleId: articleId,
+      },
+    });
+
+    if (!article) {
+      return null;
+    }
+
+    article.readCount += 1;
+
+    await ArticleRepository.save(article);
   }
 
   /** 更新文章内容 */
