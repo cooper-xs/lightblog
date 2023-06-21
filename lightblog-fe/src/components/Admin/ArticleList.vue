@@ -16,7 +16,7 @@
       </RouterLink>
     </el-card>
     <el-pagination class="" layout="prev, pager, next" :total="pagination.totalItem"
-      :current-page="pagination.currentPage" :page-size="pagination.pageSize" @current-change="handleCurrentChange" />
+      :current-page="pagination.currentPage" :page-size="pagination.pageSize" background @current-change="handleCurrentChange"/>
   </div>
 </template>
 

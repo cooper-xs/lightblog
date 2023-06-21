@@ -65,17 +65,17 @@
           </el-menu-item>
         </el-menu>
       </el-aside>
-      <el-container class="flex-1 w-full h-full bg-cover bg-center" :style="{ backgroundImage: `url(${imgUrl})` }">
+      <el-container class="bg-cover bg-center" :style="{ backgroundImage: `url(${imgUrl})` }">
         <div class="bg-white bg-opacity-40 w-full h-full">
           <!-- 头部导航栏 -->
-          <el-header class="flex justify-center items-center space-x-20">
+          <el-header class="flex justify-center items-center space-x-20 h-16">
             <span>个人博客后台管理系统</span>
             <ElLink type="primary" @click="logout">
               退出登录
             </ElLink>
           </el-header>
           <!-- 内容区域 -->
-          <el-main>
+          <el-main class="h-[calc(100vh-4rem)] overflow-y-auto">
             <RouterView />
           </el-main>
         </div>
@@ -99,7 +99,7 @@ onMounted(() => {
   //   imgUrl.value = `/api/images/img-${random.value}.jpg`
   // }, 0.5 * 1000)
   random.value = Math.floor(Math.random() * 200).toString().padStart(3, '0');
-  imgUrl.value = `/api/images/img-${random.value}.jpg`
+  imgUrl.value = `https://lightblog.oss-cn-shenzhen.aliyuncs.com/images/img-${random.value}.jpg`
 })
 
 const adminStore = useAdminStore();
