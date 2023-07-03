@@ -1,4 +1,4 @@
-import { Context } from 'vm';
+import { Context } from 'koa';
 import { ArticleRepository } from '../config/data-source';
 import { Article } from '../entities/Article';
 import {
@@ -7,7 +7,7 @@ import {
   newArticle,
   QueryAsPageByCategoryAndTags,
   QueryAsPageByKeyword,
-updateArticle,
+  updateArticle,
 } from '../types/article';
 import { tool } from '../utils/tool';
 
@@ -22,8 +22,8 @@ export default class ArticleService {
     const article = new Article();
     article.title = title;
     article.postAliasName = postAliasName;
-    article.createTime = new Date;
-    article.pushDate = new Date('2030-01-01 00:00:00')
+    article.createTime = new Date();
+    article.pushDate = new Date('2030-01-01 00:00:00');
     return ArticleRepository.save(article);
   }
 
@@ -34,7 +34,7 @@ export default class ArticleService {
         articleId: articleId,
       },
     });
-    if(!article) {
+    if (!article) {
       return null;
     }
     return ArticleRepository.remove(article);
@@ -48,9 +48,9 @@ export default class ArticleService {
       .leftJoinAndSelect('article.category', 'category')
       .where('category.categoryId = :categoryId', { categoryId })
       .getMany();
-      if(!articles) {
-        return null;
-      }
+    if (!articles) {
+      return null;
+    }
     return articles;
   }
 
@@ -61,7 +61,7 @@ export default class ArticleService {
         postAliasName: postAliasName,
       },
     });
-    if(!article) {
+    if (!article) {
       return null;
     }
     return article;
@@ -74,7 +74,7 @@ export default class ArticleService {
         title: title,
       },
     });
-    if(!article) {
+    if (!article) {
       return null;
     }
     return article;
@@ -88,7 +88,7 @@ export default class ArticleService {
       },
     });
 
-    if(!article) {
+    if (!article) {
       return null;
     }
 
@@ -126,7 +126,7 @@ export default class ArticleService {
       },
     });
 
-    if(!article) {
+    if (!article) {
       return null;
     }
 
@@ -164,7 +164,7 @@ export default class ArticleService {
       },
     });
 
-    if(!article) {
+    if (!article) {
       return null;
     }
 
@@ -348,7 +348,7 @@ export default class ArticleService {
     article.contentMd = contentMd;
     article.contentHtml = contentHtml;
     article.pushDate = new Date();
-    
+
     const res = await ArticleRepository.save(article);
 
     if (!res) {

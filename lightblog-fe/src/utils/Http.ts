@@ -5,7 +5,8 @@ import { DataNotFoundError, DataValidationError, ParamsError } from '@/errors';
 
 class Http {
   private readonly client = axios.create({
-    baseURL: '/api',
+    baseURL: 'https://api.light-blog.top/api',
+    // baseURL: '//api.blog.blueverse.cc/api',
     timeout: 10 * 1000,
     withCredentials: true,
   });

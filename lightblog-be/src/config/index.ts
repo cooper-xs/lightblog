@@ -1,7 +1,7 @@
 export const TOKEN_CONF = {
   secretToken: '4dffab4b7302739598ad0207f9fb76e7ab69ce3f54fd5adddf7d208825f12a2f',
   secretKey: 'access-token',
-  expiresIn: '2h',
+  expiresIn: '7d', // 7天
 };
 
 // 从环境变量中获取配置值

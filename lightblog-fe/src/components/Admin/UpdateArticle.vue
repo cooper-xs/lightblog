@@ -55,7 +55,7 @@
         </el-col>
       </el-row>
       <el-form-item label="文章内容">
-        <el-input v-model="updateArticleForm.contentMd" type="textarea" placeholder="请输入文章内容" rows="30" />
+        <el-input v-model="updateArticleForm.contentMd" type="textarea" placeholder="请输入文章内容" rows="29" />
       </el-form-item>
       <el-row>
         <el-col :span="3">

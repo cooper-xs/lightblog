@@ -4,13 +4,9 @@ const { secretKey, expiresIn } = TOKEN_CONF;
 
 // 使用jwt生成token，传入用户id和权限
 function generateToken(payload: object) {
-  const token = jwt.sign(
-    payload,
-    secretKey,
-    {
-      expiresIn,
-    },
-  );
+  const token = jwt.sign(payload, secretKey, {
+    expiresIn,
+  });
   return token;
 }
 async function verifyToken(token: string) {
