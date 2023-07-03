@@ -16,8 +16,9 @@ async function start() {
   const host = 'localhost';
   const hostname = os.hostname();
   const port = 3000;
+  const origin = process.env.ORIGIN_URL || 'http://localhost:8080';
 
-  app.use(cors({ origin: '*' }));
+  app.use(cors({ origin }));
   app.use(static_serve(__dirname + '/assets'));
   app.use(bodyParser());
   app.use(loggerMount());
