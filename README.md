@@ -1,3 +1,6 @@
+一个前后端分离, 基于Vue3全家桶和Koa的, Node.js全栈同构开发的个人博客平台
+体验链接: [light-blog.top](https://light-blog.top)
+
 # 技术栈
 
 ## 前端
@@ -22,7 +25,7 @@
 
 * [x] 构建和部署工具：GitHub
 * [x] 代码规范：ESLint、Prettier
-* [x] DevOps运维相关：Docker、CI/CD、Nginx
+* [x] DevOps相关：Docker、CI/CD、Nginx、CDN
 
 # 开发流程
 
@@ -35,5 +38,5 @@
 * [x] 项目构建和部署，使用GitHub Actions进行CI/CD。
 * [x] 配置服务器环境，包括Nginx、Docker、MySQL等。
 * [x] 使用Docker进行容器化部署。
-* [ ] 使用阿里云CDN加速。
+* [x] 使用阿里云CDN加速。
 
